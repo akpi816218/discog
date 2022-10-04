@@ -1,0 +1,6 @@
+{
+	"applicationId": "",
+	"clientId": "",
+	"guildId": "",
+	"inviteLink": "https://discord.com/api/oauth2/authorize?client_id=INSERT_CLIENT_ID_OR_POTATO&permissions=2147732480&scope=bot%20applications.commands"
+}
