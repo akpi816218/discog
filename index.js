@@ -6,7 +6,7 @@ const {
 } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-const { inviteLink } = require('./config.json');
+const { applicationId, clientId, inviteLink, TOKEN } = require('./config.json');
 
 const app = require('express')();
 app.get('/', (req, res) => {
@@ -36,7 +36,7 @@ client.on('ready', () => {
 	client.user.setPresence({
 		activities: [
 			{
-				name: '/spudhelp',
+				name: '/coghelp',
 				type: ActivityType.Playing,
 			},
 		],
@@ -62,6 +62,6 @@ client.on('interactionCreate', async (interaction) => {
 	}
 });
 
-client.login(process.env.TOKEN).catch((e) => console.log);
+client.login(TOKEN).catch((e) => console.log);
 
-app.listen(443);
+app.listen(8000);

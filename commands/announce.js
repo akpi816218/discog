@@ -34,6 +34,9 @@ module.exports = {
 					color: 0xffff00,
 					title: `Announcement by @${interaction.user.tag}:`,
 					description: interaction.options.getString('message'),
+					footer: {
+						text: 'Announcement powered by DisCog',
+					},
 				},
 			],
 		});
