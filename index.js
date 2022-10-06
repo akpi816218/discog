@@ -7,7 +7,7 @@ const {
 const fs = require('node:fs');
 const path = require('node:path');
 const { applicationId, clientId, inviteLink } = require('./config.json');
-const { TOKEN } = require('./TOKEN.json')
+const { TOKEN } = require('./TOKEN.json');
 
 const app = require('express')();
 app.get('/', (req, res) => {
