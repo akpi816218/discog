@@ -1,6 +1,5 @@
 {
 	"applicationId": "1027383984675639348",
 	"clientId": "1027383984675639348",
-	"inviteLink": "https://discord.com/api/oauth2/authorize?client_id=1027383984675639348&permissions=2147732480&scope=bot%20applications.commands",
-	"TOKEN": "MTAyNzM4Mzk4NDY3NTYzOTM0OA.GUTOdm.lfvsl8w7gogPHMdxvxPRMMXMhoUxb5CEsOE_WI"
+	"inviteLink": "https://discord.com/api/oauth2/authorize?client_id=1027383984675639348&permissions=2147732480&scope=bot%20applications.commands"
 }

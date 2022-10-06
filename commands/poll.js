@@ -81,27 +81,65 @@ module.exports = {
 	execute: async (interaction) => {
 		//#region execute
 		let options = [];
+		// create array of options
 		for (let i = 1; i <= 9; i++) {
 			if (i <= 2)
 				options.push(interaction.options.getString(`option${i}`, true));
 			else if (interaction.options.getString(`options${i}`))
 				options.push(interaction.options.getString(`option${i}`, false));
 		}
+		// create embed
 		let embed = new EmbedBuilder()
 			.setColor(0x00ff00)
 			.setTimestamp()
 			.setTitle(interaction.options.getString('question'))
-			.setFooter({ text: 'Poll powered by DisCog' });
-		options.forEach((value) => {
-			embed.addField
+			.setFooter({
+				text: 'Poll powered by DisCog',
+				iconURL:
+					'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
+			});
+		// populate embed with options
+		options.forEach((value, index) => {
+			switch (index) {
+				case 0:
+					embed.addFields({ name: ':one:', value: value, inline: false });
+					break;
+				case 1:
+					embed.addFields({ name: ':two:', value: value, inline: false });
+					break;
+				case 2:
+					embed.addFields({ name: ':three:', value: value, inline: false });
+					break;
+				case 3:
+					embed.addFields({ name: ':four:', value: value, inline: false });
+					break;
+				case 4:
+					embed.addFields({ name: ':five:', value: value, inline: false });
+					break;
+				case 5:
+					embed.addFields({ name: ':six:', value: value, inline: false });
+					break;
+				case 6:
+					embed.addFields({ name: ':seven:', value: value, inline: false });
+					break;
+				case 7:
+					embed.addFields({ name: ':eight:', value: value, inline: false });
+					break;
+				case 8:
+					embed.addFields({ name: ':nine:', value: value, inline: false });
+					break;
+			}
 		});
+		// object to pass to .send()
 		let msgobj = {
 			content: ``,
 			embeds: [embed],
 		};
+		// send
 		let msg = await interaction.options
 			.getChannel('channel', true)
 			.send(msgobj);
+		// react
 		options.forEach(async (value, index) => {
 			switch (index) {
 				case 0:

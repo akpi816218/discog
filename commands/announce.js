@@ -22,7 +22,7 @@ module.exports = {
 				.setName('mention')
 				.setDescription('Whether @everyone should be mentioned');
 		}),
-	async execute(interaction) {
+	execute: async (interaction) => {
 		let msgContent = 'Pay attention.';
 		if (interaction.options.getBoolean('mention')) {
 			msgContent = '@everyone pay attention.';
@@ -36,6 +36,8 @@ module.exports = {
 					description: interaction.options.getString('message'),
 					footer: {
 						text: 'Announcement powered by DisCog',
+						iconURL:
+							'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
 					},
 				},
 			],
