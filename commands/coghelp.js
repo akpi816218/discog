@@ -30,6 +30,10 @@ module.exports = {
 						inline: false,
 					},
 					{
+						name: inlineCode('/cheesetouch'),
+						value: `Transfers the cheese touch to someone else\n${inlineCode('/cheesetouch <user: user>')}`
+					},
+					{
 						name: inlineCode('/coghelp'),
 						value: `Shows this help message\n${inlineCode(
 							'/coghelp [command: string]'
