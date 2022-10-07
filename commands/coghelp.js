@@ -29,6 +29,7 @@ module.exports = {
 						)}`,
 						inline: false,
 					},
+					{ name: inlineCode('/cheesetouch') },
 					{
 						name: inlineCode('/cheesetouch'),
 						value: `Transfers the cheese touch to someone else\n${inlineCode('/cheesetouch <user: user>')}`
@@ -40,6 +41,7 @@ module.exports = {
 						)}`,
 						inline: false,
 					},
+					{ name: inlineCode('/count') },
 					{
 						name: inlineCode('/count'),
 						value: `Progress the count!\n${inlineCode('/count')}`,
