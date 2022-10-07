@@ -29,11 +29,22 @@ module.exports = {
 						)}`,
 						inline: false,
 					},
+					{ name: inlineCode('/cheesetouch') },
+					{
+						name: inlineCode('/cheesetouch'),
+						value: `Transfers the cheese touch to someone else\n${inlineCode('/cheesetouch <user: user>')}`
+					},
 					{
 						name: inlineCode('/coghelp'),
 						value: `Shows this help message\n${inlineCode(
 							'/coghelp [command: string]'
 						)}`,
+						inline: false,
+					},
+					{ name: inlineCode('/count') },
+					{
+						name: inlineCode('/count'),
+						value: `Progress the count!\n${inlineCode('/count')}`,
 						inline: false,
 					},
 					{
