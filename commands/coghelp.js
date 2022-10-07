@@ -37,6 +37,11 @@ module.exports = {
 						inline: false,
 					},
 					{
+						name: inlineCode('/count'),
+						value: `Progress the count!\n${inlineCode('/count')}`,
+						inline: false,
+					},
+					{
 						name: inlineCode('/poll'),
 						value: `Creates a poll\n${inlineCode(
 							'/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
