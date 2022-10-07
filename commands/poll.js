@@ -1,9 +1,7 @@
 const {
 	EmbedBuilder,
-	inlineCode,
 	SlashCommandBuilder,
 	userMention,
-	InteractionCollector,
 } = require('discord.js');
 
 module.exports = {
@@ -21,6 +19,12 @@ module.exports = {
 			return option
 				.setName('channel')
 				.setDescription('The channel to post the poll to')
+				.setRequired(true);
+		})
+		.addBooleanOption((option) => {
+			return option
+				.setName('pingeveryone')
+				.setDescription('Ping @everyone?')
 				.setRequired(true);
 		})
 		.addStringOption((option) => {
@@ -90,7 +94,7 @@ module.exports = {
 		}
 		// create embed
 		let embed = new EmbedBuilder()
-			.setColor(0x00ff00)
+			.setColor(0x0f0)
 			.setTimestamp()
 			.setTitle(interaction.options.getString('question'))
 			.setFooter({
@@ -132,13 +136,17 @@ module.exports = {
 		});
 		// object to pass to .send()
 		let msgobj = {
-			content: ``,
+			content: '',
 			embeds: [embed],
 		};
+		// mention everyone?
+		if (interaction.options.getBoolean())
+			msgobj.content = `@everyone new poll by ${userMention(
+				interaction.user.id
+			)}`;
+		else msgobj.content = `New poll by ${userMention(interaction.user.id)}`;
 		// send
-		let msg = await interaction.options
-			.getChannel('channel', true)
-			.send(msgobj);
+		let msg = await interaction.options.getChannel('channel').send(msgobj);
 		// react
 		options.forEach(async (value, index) => {
 			switch (index) {
@@ -171,6 +179,7 @@ module.exports = {
 					break;
 			}
 		});
+		interaction.reply('Done.');
 		//#endregion execute
 	},
 };
