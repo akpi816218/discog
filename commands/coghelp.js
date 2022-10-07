@@ -29,6 +29,7 @@ module.exports = {
 						)}`,
 						inline: false,
 					},
+					{ name: inlineCode('/cheesetouch') },
 					{
 						name: inlineCode('/coghelp'),
 						value: `Shows this help message\n${inlineCode(
@@ -36,6 +37,7 @@ module.exports = {
 						)}`,
 						inline: false,
 					},
+					{ name: inlineCode('/count') },
 					{
 						name: inlineCode('/poll'),
 						value: `Creates a poll\n${inlineCode(
