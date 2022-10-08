@@ -41,6 +41,10 @@ client.on('ready', () => {
 		activities: [
 			{
 				name: '/coghelp',
+				type: ActivityType.Custom,
+			},
+			{
+				name: '/cheesetouch',
 				type: ActivityType.Playing,
 			},
 		],
