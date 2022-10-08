@@ -5,10 +5,10 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('count')
 		.setDescription('Increase the count!'),
-	execute: async (interaction) => {
+	async execute(interaction) {
 		let count = parseInt(readFileSync(__dirname + '/count.txt'));
 		count++;
-		writeFileSync(__dirname + '/count.txt', count);
+		writeFileSync(__dirname + '/count.txt', count.toString());
 		await interaction.reply(
 			`${userMention(interaction.user.id)} counted to ${count}!`
 		);

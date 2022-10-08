@@ -89,12 +89,13 @@ module.exports = {
 		for (let i = 1; i <= 9; i++) {
 			if (i <= 2)
 				options.push(interaction.options.getString(`option${i}`, true));
-			else if (interaction.options.getString(`options${i}`))
+			else if (interaction.options.getString(`option${i}`, false))
 				options.push(interaction.options.getString(`option${i}`, false));
 		}
+		console.log(options);
 		// create embed
 		let embed = new EmbedBuilder()
-			.setColor(0x0f0)
+			.setColor(0x00ff00)
 			.setTimestamp()
 			.setTitle(interaction.options.getString('question'))
 			.setFooter({
@@ -140,7 +141,7 @@ module.exports = {
 			embeds: [embed],
 		};
 		// mention everyone?
-		if (interaction.options.getBoolean())
+		if (interaction.options.getBoolean('pingeveryone'))
 			msgobj.content = `@everyone new poll by ${userMention(
 				interaction.user.id
 			)}`;
@@ -151,31 +152,31 @@ module.exports = {
 		options.forEach(async (value, index) => {
 			switch (index) {
 				case 0:
-					await msg.react(':one:');
+					await msg.react('1️⃣');
 					break;
 				case 1:
-					await msg.react(':two:');
+					await msg.react('2️⃣');
 					break;
 				case 2:
-					await msg.react(':three:');
+					await msg.react('3️⃣');
 					break;
 				case 3:
-					await msg.react(':four:');
+					await msg.react('4️⃣');
 					break;
 				case 4:
-					await msg.react(':five:');
+					await msg.react('5️⃣');
 					break;
 				case 5:
-					await msg.react(':six:');
+					await msg.react('6️⃣');
 					break;
 				case 6:
-					await msg.react(':seven:');
+					await msg.react('7️⃣');
 					break;
 				case 7:
-					await msg.react(':eight:');
+					await msg.react('8️⃣');
 					break;
 				case 8:
-					await msg.react(':nine:');
+					await msg.react('9️⃣');
 					break;
 			}
 		});

@@ -25,7 +25,7 @@ module.exports = {
 			content: '',
 			embeds: [
 				new EmbedBuilder()
-					.setColor(0x0f0)
+					.setColor(0x00ff00)
 					.setTimestamp()
 					.setTitle(interaction.options.getString('question'))
 					.setFooter({
@@ -41,9 +41,9 @@ module.exports = {
 			)}`;
 		else msgObj.content = `New poll by ${userMention(interaction.user.id)}`;
 		let msg = await interaction.options.getChannel('channel').send(msgObj);
-		await msg.react(':thumbsup:');
-		await msg.react(':thumbsdown:');
-		await msg.react(':face_with_monocle:');
+		await msg.react('👍');
+		await msg.react('👎');
+		await msg.react('🧐'); // face_with_monocle
 		await interaction.reply('Done.');
 	},
 };

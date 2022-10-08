@@ -31,7 +31,7 @@ module.exports = {
 			content: msgContent,
 			embeds: [
 				{
-					color: 0xffff00,
+					color: 0x00ff00,
 					title: `Announcement by @${interaction.user.tag}:`,
 					description: interaction.options.getString('message'),
 					footer: {
