@@ -3,7 +3,10 @@ const {
 	Client,
 	Collection,
 	GatewayIntentBits,
+	EmbedBuilder,
+	inlineCode,
 } = require('discord.js');
+const { writeFileSync } = require('node:fs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { applicationId, clientId, inviteLink } = require('./config.json');
@@ -61,6 +64,20 @@ client.on('interactionCreate', async (interaction) => {
 			ephemeral: true,
 		});
 	}
+});
+
+client.on('guildCreate', async (guild) => {
+	guild.systemChannel.send(
+		new EmbedBuilder()
+			.setColor(0x0f0)
+			.setTitle('DisCog is here!')
+			.setDescription(
+				`DisCog is a general purpose Discord bot. Type ${inlineCode(
+					'/coghelp'
+				)} to find out what I can do!`
+			)
+			.setTimestamp()
+	);
 });
 
 client.login(TOKEN).catch((e) => console.log);

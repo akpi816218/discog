@@ -6,8 +6,8 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('name')
-		.setDescription('description')
+		.setName('ynpoll')
+		.setDescription('Create a yes/no poll')
 		.addStringOption((option) => {
 			return option
 				.setName('question')

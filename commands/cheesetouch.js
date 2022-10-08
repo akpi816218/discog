@@ -3,8 +3,8 @@ const { readFileSync, writeFileSync, write } = require('node:fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('name')
-		.setDescription('description')
+		.setName('cheesetouch')
+		.setDescription('Transfer the cheesetouch')
 		.addUserOption((option) => {
 			return option
 				.setName('user')
