@@ -8,6 +8,8 @@
 		"discord-api-types": "^0.37.11",
 		"discord.js": "^14.5.0",
 		"express": "^4.18.1",
+		"jsoning": "^0.13.23",
+		"keyv": "^4.5.0",
 		"readline-sync": "^1.4.10"
 	},
 	"scripts": {

@@ -1,16 +1,17 @@
-const { SlashCommandBuilder, userMention } = require('discord.js');
-const { readFileSync, writeFileSync } = require('node:fs');
+const { bold, SlashCommandBuilder, userMention } = require('discord.js');
+const Jsoning = require('jsoning')
+const db = new Jsoning('main.db.json')
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('count')
 		.setDescription('Increase the count!'),
 	async execute(interaction) {
-		let count = parseInt(readFileSync(__dirname + '/count.txt'));
+		let count = parseInt(db.get('count'));
 		count++;
-		writeFileSync(__dirname + '/count.txt', count.toString());
+		db.set('count', count);
 		await interaction.reply(
-			`${userMention(interaction.user.id)} counted to ${count}!`
+			`${userMention(interaction.user.id)} counted to ${bold(count)}!`
 		);
 	},
 };
