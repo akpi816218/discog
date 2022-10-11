@@ -86,4 +86,8 @@ client.on('guildCreate', async (guild) => {
 
 client.login(TOKEN).catch((e) => console.log);
 
+process.on('SIGINT', () => {
+	client.destroy();
+});
+
 app.listen(8000);
