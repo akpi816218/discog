@@ -88,6 +88,7 @@ client.login(TOKEN).catch((e) => console.log);
 
 process.on('SIGINT', () => {
 	client.destroy();
+	process.exit(0);
 });
 
 app.listen(8000);
