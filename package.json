@@ -13,6 +13,7 @@
 		"readline-sync": "^1.4.10"
 	},
 	"scripts": {
+		"commit": "prettier -w . ; git commit -a",
 		"format": "prettier -w .",
 		"run": "node .",
 		"start": "bash start.sh",

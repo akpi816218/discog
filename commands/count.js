@@ -1,6 +1,6 @@
 const { bold, SlashCommandBuilder, userMention } = require('discord.js');
-const Jsoning = require('jsoning')
-const db = new Jsoning('main.db.json')
+const Jsoning = require('jsoning');
+const db = new Jsoning('main.db.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
