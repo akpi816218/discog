@@ -18,7 +18,7 @@ module.exports = {
 				.setDescription("This won't work unless you own the bot")
 				.setRequired(false);
 		}),
-	execute: async (interaction) => {
+	execute: async (interaction, client) => {
 		if (!interaction.options.getBoolean('force', false)) {
 			if (interaction.user.id == db.get('cheesetouch')) {
 				await db.set('cheesetouch', interaction.options.getUser('user').id);

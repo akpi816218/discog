@@ -82,7 +82,7 @@ module.exports = {
 				.setRequired(false);
 		}),
 	//#endregion data
-	execute: async (interaction) => {
+	execute: async (interaction, client) => {
 		//#region execute
 		let options = [];
 		// create array of options

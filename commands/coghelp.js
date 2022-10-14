@@ -51,6 +51,14 @@ module.exports = {
 					'true'
 				)} unless you own the bot.`,
 			},
+			coin: {
+				name: inlineCode('/coin'),
+				value: `Mine for gold, peek at people's bank accounts, and see who's on top!\n${inlineCode(
+					'/coin mine'
+				)}, ${inlineCode('/coin show [user: user]')}, ${inlineCode(
+					'/coin leaderboard'
+				)}`,
+			},
 			coghelp: {
 				name: inlineCode('/coghelp'),
 				value: `Shows general help or help for a specific command\n${inlineCode(
@@ -80,8 +88,7 @@ module.exports = {
 		};
 		if (!interaction.options.getString('command')) {
 			//#region general
-			embed
-				.addFields(Object.values(fields));
+			embed.addFields(Object.values(fields));
 			//#endregion general
 		} else {
 			switch (interaction.options.getString('command')) {

@@ -6,7 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('count')
 		.setDescription('Increase the count!'),
-	async execute(interaction) {
+	async execute(interaction, client) {
 		let count = parseInt(db.get('count'));
 		count++;
 		db.set('count', count);
