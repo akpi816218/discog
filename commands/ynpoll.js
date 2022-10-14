@@ -20,7 +20,7 @@ module.exports = {
 				.setDescription('The channel to send the poll to')
 				.setRequired(true);
 		}),
-	execute: async (interaction) => {
+	execute: async (interaction, client) => {
 		let msgObj = {
 			content: '',
 			embeds: [

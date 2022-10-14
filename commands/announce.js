@@ -22,7 +22,7 @@ module.exports = {
 				.setName('mention')
 				.setDescription('Whether @everyone should be mentioned');
 		}),
-	execute: async (interaction) => {
+	execute: async (interaction, client) => {
 		let msgContent = 'Pay attention.';
 		if (interaction.options.getBoolean('mention')) {
 			msgContent = '@everyone pay attention.';

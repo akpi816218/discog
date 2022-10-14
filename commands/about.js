@@ -4,7 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('about')
 		.setDescription('About DisCog'),
-	execute: async (interaction) => {
+	execute: async (interaction, client) => {
 		await interaction.reply({
 			embeds: [
 				new EmbedBuilder()
@@ -24,7 +24,9 @@ module.exports = {
 							'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
 					})
 					.setTitle('About DisCog')
-					.setDescription(`DisCog is a versatile general purpose Discord bot. DisCog features utility commands as well as some games.`),
+					.setDescription(
+						`DisCog is a versatile general purpose Discord bot. DisCog features utility commands as well as some games.`
+					),
 			],
 		});
 	},
