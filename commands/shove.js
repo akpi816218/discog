@@ -1,18 +1,23 @@
-const { SlashCommandBuilder, spoiler, userMention } = require('discord.js');
+'use strict';
 
-// ! When creating a new command, be sure to add it to `coghelp.js` in the `field` object.
+const { SlashCommandBuilder, spoiler, userMention } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('shove')
 		.setDescription('Shove someone')
+		.setDMPermission(false)
 		.addUserOption((option) => {
 			return option
 				.setName('user')
 				.setDescription('The user to shove')
 				.setRequired(true);
 		}),
-	execute: async (interaction) => {
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
+	execute: async (interaction, client) => {
 		const a = userMention(interaction.user.id),
 			b = userMention(interaction.options.getUser('user').id);
 		const r = [
@@ -31,6 +36,6 @@ module.exports = {
 			`${a} shoved ${b}	into ${spoiler('themselves')}`,
 			`${a} shoved ${b} so far into a certain viola that it had to be taken to Clock Tower Music to get fixed`,
 		];
-		await interaction.reply(r[Math.floor(Math.random()*r.length)]);
+		await interaction.reply(r[Math.floor(Math.random() * r.length)]);
 	},
 };

@@ -1,12 +1,11 @@
+'use strict';
+
 const {
 	ActivityType,
 	Client,
 	Collection,
 	GatewayIntentBits,
-	EmbedBuilder,
-	inlineCode,
 } = require('discord.js');
-const { writeFileSync } = require('node:fs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { applicationId, clientId, inviteLink } = require('./config.json');
@@ -35,6 +34,22 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs
+	.readdirSync(eventsPath)
+	.filter((file) => file.endsWith('.js'));
+
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+
+// Keep in index
 client.on('ready', () => {
 	console.log('Client#ready fired.');
 	client.user.setPresence({
@@ -51,14 +66,11 @@ client.on('ready', () => {
 		status: 'online',
 	});
 });
-
+// Keep in index
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
-
 	const command = client.commands.get(interaction.commandName);
-
 	if (!command) return;
-
 	try {
 		await command.execute(interaction, client);
 	} catch (e) {
@@ -68,20 +80,6 @@ client.on('interactionCreate', async (interaction) => {
 			ephemeral: true,
 		});
 	}
-});
-
-client.on('guildCreate', async (guild) => {
-	guild.systemChannel.send(
-		new EmbedBuilder()
-			.setColor(0x0f0)
-			.setTitle('DisCog is here!')
-			.setDescription(
-				`DisCog is a general purpose Discord bot. Type ${inlineCode(
-					'/coghelp'
-				)} to find out what I can do!`
-			)
-			.setTimestamp()
-	);
 });
 
 client.login(TOKEN).catch((e) => console.log);

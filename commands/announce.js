@@ -1,3 +1,5 @@
+'use strict';
+
 const { SlashCommandBuilder, userMention } = require('discord.js');
 
 module.exports = {
@@ -22,6 +24,10 @@ module.exports = {
 				.setName('mention')
 				.setDescription('Whether @everyone should be mentioned');
 		}),
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
 	execute: async (interaction, client) => {
 		let msgContent = 'Pay attention.';
 		if (interaction.options.getBoolean('mention')) {
@@ -36,8 +42,7 @@ module.exports = {
 					description: interaction.options.getString('message'),
 					footer: {
 						text: 'Announcement powered by DisCog',
-						iconURL:
-							'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
+						iconURL: client.user.displayAvatarURL(),
 					},
 				},
 			],

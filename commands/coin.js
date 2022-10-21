@@ -1,3 +1,5 @@
+'use strict';
+
 const {
 	EmbedBuilder,
 	inlineCode,
@@ -11,6 +13,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('coin')
 		.setDescription('Currency commands')
+		.setDMPermission(true)
 		.addSubcommand((subcommand) => {
 			return subcommand.setName('mine').setDescription('Mine for coins');
 		})
@@ -41,6 +44,10 @@ module.exports = {
 				.setName('leaderboard')
 				.setDescription('Show the top 5 rich kids');
 		}),
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
 	execute: async (interaction, client) => {
 		switch (interaction.options.getSubcommand(false)) {
 			case 'mine':

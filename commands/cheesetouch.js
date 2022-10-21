@@ -1,3 +1,5 @@
+'use strict';
+
 const { SlashCommandBuilder, userMention, bold } = require('discord.js');
 const Jsoning = require('jsoning');
 const db = new Jsoning('main.db.json');
@@ -6,6 +8,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('cheesetouch')
 		.setDescription('Transfer the cheesetouch')
+		.setDMPermission(false)
 		.addUserOption((option) => {
 			return option
 				.setName('user')
@@ -18,6 +21,10 @@ module.exports = {
 				.setDescription("This won't work unless you own the bot")
 				.setRequired(false);
 		}),
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
 	execute: async (interaction, client) => {
 		if (!interaction.options.getBoolean('force', false)) {
 			if (interaction.user.id == db.get('cheesetouch')) {

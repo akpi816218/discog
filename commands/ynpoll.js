@@ -1,3 +1,5 @@
+'use strict';
+
 const {
 	SlashCommandBuilder,
 	userMention,
@@ -8,6 +10,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ynpoll')
 		.setDescription('Create a yes/no poll')
+		.setDMPermission()
 		.addStringOption((option) => {
 			return option
 				.setName('question')
@@ -20,6 +23,10 @@ module.exports = {
 				.setDescription('The channel to send the poll to')
 				.setRequired(true);
 		}),
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
 	execute: async (interaction, client) => {
 		let msgObj = {
 			content: '',
@@ -30,8 +37,7 @@ module.exports = {
 					.setTitle(interaction.options.getString('question'))
 					.setFooter({
 						text: 'Poll powered by DisCog',
-						iconURL:
-							'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
+						iconURL: client.user.displayAvatarURL(),
 					}),
 			],
 		};

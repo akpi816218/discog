@@ -1,3 +1,5 @@
+'use strict';
+
 const { EmbedBuilder, inlineCode, SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
@@ -10,7 +12,11 @@ module.exports = {
 				.setDescription('The command to show the help for')
 				.setRequired(false);
 		}),
-	execute: async (interaction) => {
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
+	execute: async (interaction, client) => {
 		let embed = new EmbedBuilder()
 			.setTitle('DisCog Help')
 			.setDescription(
@@ -23,8 +29,7 @@ module.exports = {
 			.setTimestamp()
 			.setFooter({
 				text: `Requested by ${interaction.user.tag}`,
-				iconURL:
-					'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
+				iconURL: client.user.displayAvatarURL(),
 			})
 			.setColor(0x00ff00);
 		// ! New commands go here in the `fields` object
@@ -78,6 +83,15 @@ module.exports = {
 				)}`,
 				inline: false,
 			},
+			shove: {
+				name: inlineCode('/shove'),
+				value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
+				inline: false,
+			},
+			whois: {
+				name: inlineCode('/whois'),
+				value: `Info about a user\n${inlineCode('/whois <user: user>')}`,
+			},
 			ynpoll: {
 				name: inlineCode('/ynpoll'),
 				value: `Creates a yes/no poll\n${inlineCode(
@@ -86,40 +100,16 @@ module.exports = {
 				inline: false,
 			},
 		};
-		if (!interaction.options.getString('command')) {
-			//#region general
+		if (!interaction.options.getString('command'))
 			embed.addFields(Object.values(fields));
-			//#endregion general
-		} else {
-			switch (interaction.options.getString('command')) {
-				case 'about':
-					embed.addFields(fields.about);
-					break;
-				case 'announce':
-					embed.addFields(fields.announce);
-					break;
-				case 'cheesetouch':
-					embed.addFields(fields.cheesetouch);
-					break;
-				case 'coghelp':
-					embed.addFields(fields.coghelp);
-					break;
-				case 'count':
-					embed.addFields(fields.count);
-					break;
-				case 'poll':
-					embed.addFields(fields.poll);
-					break;
-				case 'ynpoll':
-					embed.addFields(fields.ynpoll);
-					break;
-				default:
-					await interaction.reply(
-						`${interaction.options.getString('command')} is not a valid command`
-					);
-					return;
-			}
-		}
+		else if (fields[interaction.options.getString('command')])
+			embed.addFields(fields[interaction.options.getString('command')]);
+		else
+			embed.setDescription(
+				`The command ${interaction.options.getString(
+					'command'
+				)} was  not found.`
+			);
 		await interaction.reply({
 			embeds: [embed],
 		});

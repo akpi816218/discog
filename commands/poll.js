@@ -1,3 +1,5 @@
+'use strict';
+
 const {
 	EmbedBuilder,
 	SlashCommandBuilder,
@@ -8,6 +10,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('poll')
 		.setDescription('Create a poll')
+		.setDMPermission(false)
 		//#region data
 		.addStringOption((option) => {
 			return option
@@ -82,6 +85,10 @@ module.exports = {
 				.setRequired(false);
 		}),
 	//#endregion data
+	/**
+	 * @param {ChatInputCommandInteraction} interaction
+	 * @param {Client} client
+	 */
 	execute: async (interaction, client) => {
 		//#region execute
 		let options = [];
@@ -100,8 +107,7 @@ module.exports = {
 			.setTitle(interaction.options.getString('question'))
 			.setFooter({
 				text: 'Poll powered by DisCog',
-				iconURL:
-					'https://raw.githubusercontent.com/akpi816218/discog/gitmaster/discog.png',
+				iconURL: client.user.displayAvatarURL(),
 			});
 		// populate embed with options
 		options.forEach((value, index) => {
