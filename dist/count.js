@@ -1,0 +1,20 @@
+import { bold, SlashCommandBuilder, userMention } from 'discord.js';
+import Jsoning from 'jsoning';
+('use strict');
+const db = new Jsoning('main.db.json');
+export const data = new SlashCommandBuilder()
+	.setName('count')
+	.setDescription('Increase the count!')
+	.setDMPermission(true);
+export async function execute(interaction, client) {
+	let count = parseInt(db.get('count'));
+	count++;
+	db.set('count', count);
+	await interaction.reply(
+		`${userMention(interaction.user.id)} counted to ${bold(count)}!`
+	);
+}
+export default {
+	data,
+	execute,
+};

@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"type": "module",
 	"dependencies": {
 		"@discordjs/rest": "^1.2.0",
 		"discord-api-types": "^0.37.11",
@@ -23,6 +24,7 @@
 	"author": "Akhil Pilai",
 	"license": "ISC",
 	"devDependencies": {
+		"cjstoesm": "^2.1.2",
 		"prettier": "^2.7.1"
 	}
 }
