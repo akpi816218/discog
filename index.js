@@ -61,16 +61,6 @@ for (const file of eventFiles) {
 client.on('ready', () => {
 	console.log('Client#ready fired.');
 	client.user.setPresence({
-		activities: [
-			{
-				name: '/coghelp',
-				type: ActivityType.Custom,
-			},
-			{
-				name: '/cheesetouch',
-				type: ActivityType.Playing,
-			},
-		],
 		status: 'online',
 	});
 });
@@ -91,7 +81,7 @@ client.on('interactionCreate', async (interaction) => {
 	}
 });
 
-client.login(TOKEN).catch((e) => console.log);
+client.login(TOKEN).catch((e) => console.error(e));
 
 process.on('SIGINT', () => {
 	client.destroy();

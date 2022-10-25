@@ -1,3 +1,3 @@
 export const TOKEN =
-	'MTAyNzM4Mzk4NDY3NTYzOTM0OA.GC1Nt3.QzVd-1YFwC4GO47kQnYoQMlx2PkfTdwTIlEzrQ';
-export default 'MTAyNzM4Mzk4NDY3NTYzOTM0OA.GC1Nt3.QzVd-1YFwC4GO47kQnYoQMlx2PkfTdwTIlEzrQ';
+	'MTAzNDU2MTUzODcyMTMyNTA1Ng.GO1foi.BU5Y3biZo_mLyZvhQx6j6SK_BrdcnYnW3CItNQ';
+export default TOKEN;
