@@ -1,15 +1,13 @@
-'use strict';
-
-const { EmbedBuilder, Events, userMention } = require('discord.js');
-
-module.exports = {
-	// ! Edit the event type
-	name: Events.yourEvent,
-	once: false,
-	/**
-	 * @param {Object} o
-	 */
-	execute: async (o) => {
-		console.log(o);
-	},
+import { EmbedBuilder, Events, userMention } from 'discord.js';
+('use strict');
+// ! Add event property
+export const name = Events;
+export const once = false;
+export const execute = async (o) => {
+	console.log(o);
+};
+export default {
+	name,
+	once,
+	execute,
 };
