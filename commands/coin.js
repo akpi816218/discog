@@ -49,9 +49,8 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
 	switch (interaction.options.getSubcommand(false)) {
 		case 'mine':
-			let mcoins;
-			if (!db.get(interaction.user.id.toString())) mcoins = 0;
-			else mcoins = db.get(interaction.user.id.toString()).coins;
+			let mcoins = db.get(interaction.user.id.toString()).coins;
+			if (!mcoins) mcoins = 0;
 			let add = 9 + Math.ceil(Math.random() * 5);
 			mcoins += add;
 			await db.set(interaction.user.id.toString(), {
@@ -68,7 +67,7 @@ export const execute = async (interaction) => {
 			await interaction.reply(
 				'This feature is still in development! Check back soon!'
 			);
-      
+
 			break;
 		case 'show':
 			if (!interaction.options.getUser('user')) {
@@ -76,7 +75,9 @@ export const execute = async (interaction) => {
 				if (uacoins == null) uacoins = 0;
 				await interaction.reply(`You have ${uacoins} coins.`);
 			} else {
-				let ubcoins = db.get(interaction.options.getUser('user').id.toString()).coins;
+				let ubcoins = db.get(
+					interaction.options.getUser('user').id.toString()
+				).coins;
 				if (ubcoins == null) ubcoins = 0;
 				await interaction.reply(
 					`${userMention(
