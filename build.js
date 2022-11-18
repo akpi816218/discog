@@ -17,7 +17,7 @@ for (const file of commandFiles) {
 	const command = await import(filePath);
 	commands.push(command.data.toJSON());
 }
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 rest
 	.put(Routes.applicationCommands(clientId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))

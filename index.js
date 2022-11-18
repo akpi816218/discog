@@ -34,7 +34,7 @@ const client = new Client({
 	],
 });
 
-client.on('debug', console.debug).on('warn', console.debug);
+client.on('debug', console.log).on('warn', console.log);
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -92,4 +92,5 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
+app.listen(443);
 app.listen(443);
