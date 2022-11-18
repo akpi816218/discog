@@ -1,7 +1,7 @@
 import {
+	ChatInputCommandInteraction,
 	EmbedBuilder,
 	inlineCode,
-	IntegrationApplication,
 	SlashCommandBuilder,
 	userMention,
 } from 'discord.js';
@@ -42,7 +42,11 @@ export const data = new SlashCommandBuilder()
 			.setName('leaderboard')
 			.setDescription('Show the top 5 rich kids');
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	switch (interaction.options.getSubcommand(false)) {
 		case 'mine':
 			let mcoins = db.get(interaction.user.id.toString()).coins;

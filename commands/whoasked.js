@@ -16,7 +16,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription('The user who was not asked')
 			.setRequired(true);
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	const a = userMention(interaction.user.id),
 		b = userMention(interaction.options.getUser('user').id);
 	const r = [

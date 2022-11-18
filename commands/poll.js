@@ -1,4 +1,9 @@
-import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
+	userMention,
+} from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('poll')
@@ -77,7 +82,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription('An answer')
 			.setRequired(false);
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	//#region execute
 	let options = [];
 	// create array of options
@@ -94,7 +103,7 @@ export const execute = async (interaction, client) => {
 		.setTitle(interaction.options.getString('question'))
 		.setFooter({
 			text: 'Poll powered by DisCog',
-			iconURL: client.user.displayAvatarURL(),
+			iconURL: interaction.client.user.displayAvatarURL(),
 		});
 	// populate embed with options
 	options.forEach((value, index) => {

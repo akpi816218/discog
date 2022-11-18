@@ -1,22 +1,25 @@
+('use strict');
+
+console.log('RunID: %d', Math.floor(Math.random() * 100));
+
 import {
-	ActivityType,
+	ChatInputCommandInteraction,
 	Client,
 	Collection,
 	GatewayIntentBits,
 } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { applicationId, clientId, inviteLink } from './config.js';
+import { inviteLink } from './config.js';
 import { TOKEN } from './TOKEN.js';
 import express from 'express';
-('use strict');
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.get('/', (req, res) => {
-	res.send('foof');
+	res.status(200).end();
 });
 app.get('/invite', (req, res) => {
 	res.redirect(inviteLink);
@@ -31,6 +34,8 @@ const client = new Client({
 		GatewayIntentBits.GuildPresences,
 	],
 });
+
+client.on('debug', console.debug).on('warn', console.debug);
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -58,28 +63,27 @@ for (const file of eventFiles) {
 }
 
 // Keep in index
-client.on('ready', () => {
-	console.log('Client#ready fired.');
-	client.user.setPresence({
-		status: 'online',
-	});
-});
-
-// Keep in index
-client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isChatInputCommand()) return;
-	const command = client.commands.get(interaction.commandName);
-	if (!command) return;
-	try {
-		await command.execute(interaction, client);
-	} catch (e) {
-		console.error(e);
-		await interaction.reply({
-			content: 'There was an error while running this command.',
-			ephemeral: true,
+client
+	.on('ready', () => {
+		console.log('Client#ready fired.');
+		client.user.setPresence({
+			status: 'online',
 		});
-	}
-});
+	})
+	.on('interactionCreate', async (interaction) => {
+		if (!interaction.isChatInputCommand()) return;
+		const command = client.commands.get(interaction.commandName);
+		if (!command) return;
+		try {
+			await command.execute(interaction);
+		} catch (e) {
+			console.error(e);
+			await interaction.reply({
+				content: 'There was an error while running this command.',
+				ephemeral: true,
+			});
+		}
+	});
 
 client.login(TOKEN).catch((e) => console.error(e));
 
