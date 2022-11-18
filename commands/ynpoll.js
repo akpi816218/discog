@@ -16,7 +16,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription('The channel to send the poll to')
 			.setRequired(true);
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	let msgObj = {
 		content: '',
 		embeds: [
@@ -26,7 +30,7 @@ export const execute = async (interaction, client) => {
 				.setTitle(interaction.options.getString('question'))
 				.setFooter({
 					text: 'Poll powered by DisCog',
-					iconURL: client.user.displayAvatarURL(),
+					iconURL: interaction.client.user.displayAvatarURL(),
 				}),
 		],
 	};

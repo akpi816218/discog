@@ -1,6 +1,7 @@
 import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { clientId } from './config.js';
+import { TOKEN } from './TOKEN.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { dirname } from 'path';

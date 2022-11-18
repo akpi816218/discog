@@ -1,4 +1,9 @@
-import { EmbedBuilder, inlineCode, SlashCommandBuilder } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	EmbedBuilder,
+	inlineCode,
+	SlashCommandBuilder,
+} from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('coghelp')
@@ -9,7 +14,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription('The command to show the help for')
 			.setRequired(false);
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	let embed = new EmbedBuilder()
 		.setTitle('DisCog Help')
 		.setDescription(
@@ -49,6 +58,13 @@ export const execute = async (interaction, client) => {
 				'true'
 			)} unless you own the bot.`,
 		},
+		coghelp: {
+			name: inlineCode('/coghelp'),
+			value: `Shows general help or help for a specific command\n${inlineCode(
+				'/coghelp [command: string]'
+			)}`,
+			inline: false,
+		},
 		coin: {
 			name: inlineCode('/coin'),
 			value: `Mine for gold, peek at people's bank accounts, and see who's on top!\n${inlineCode(
@@ -56,13 +72,6 @@ export const execute = async (interaction, client) => {
 			)}, ${inlineCode('/coin show [user: user]')}, ${inlineCode(
 				'/coin leaderboard'
 			)}`,
-		},
-		coghelp: {
-			name: inlineCode('/coghelp'),
-			value: `Shows general help or help for a specific command\n${inlineCode(
-				'/coghelp [command: string]'
-			)}`,
-			inline: false,
 		},
 		count: {
 			name: inlineCode('/count'),
@@ -76,9 +85,21 @@ export const execute = async (interaction, client) => {
 			)}`,
 			inline: false,
 		},
+		random: {
+			name: inlineCode('/randint'),
+			value: `Generates an integer between 1 and the specified integer (inclusive)\n${inlineCode(
+				'/randint <high: integer>'
+			)}`,
+			inline: false,
+		},
 		shove: {
 			name: inlineCode('/shove'),
 			value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
+			inline: false,
+		},
+		whoasked: {
+			name: inlineCode('/whoasked'),
+			value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`,
 			inline: false,
 		},
 		whois: {
@@ -99,7 +120,7 @@ export const execute = async (interaction, client) => {
 		embed.addFields(fields[interaction.options.getString('command')]);
 	else
 		embed.setDescription(
-			`The command ${interaction.options.getString('command')} was  not found.`
+			`The command ${interaction.options.getString('command')} was not found.`
 		);
 	await interaction.reply({
 		embeds: [embed],

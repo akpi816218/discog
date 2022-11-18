@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, userMention } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('announce')
@@ -21,7 +21,11 @@ export const data = new SlashCommandBuilder()
 			.setName('mention')
 			.setDescription('Whether @everyone should be mentioned');
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	let msgContent = 'Pay attention.';
 	if (interaction.options.getBoolean('mention')) {
 		msgContent = '@everyone pay attention.';
@@ -35,7 +39,7 @@ export const execute = async (interaction, client) => {
 				description: interaction.options.getString('message'),
 				footer: {
 					text: 'Announcement powered by DisCog',
-					iconURL: client.user.displayAvatarURL(),
+					iconURL: interaction.client.user.displayAvatarURL(),
 				},
 			},
 		],

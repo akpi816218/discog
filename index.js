@@ -1,5 +1,9 @@
+('use strict');
+
+console.log('RunID: %d', Math.floor(Math.random() * 100));
+
 import {
-	ActivityType,
+	ChatInputCommandInteraction,
 	Client,
 	Collection,
 	GatewayIntentBits,
@@ -8,14 +12,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { applicationId, clientId, inviteLink } from './config.js';
 import express from 'express';
-('use strict');
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.get('/', (req, res) => {
-	res.send('foof');
+	res.status(200).end();
 });
 app.get('/invite', (req, res) => {
 	res.redirect(inviteLink);
@@ -59,38 +62,27 @@ for (const file of eventFiles) {
 }
 
 // Keep in index
-client.on('ready', () => {
-	console.log('Client#ready fired.');
-	client.user.setPresence({
-		activities: [
-			{
-				name: '/coghelp',
-				type: ActivityType.Custom,
-			},
-			{
-				name: '/cheesetouch',
-				type: ActivityType.Playing,
-			},
-		],
-		status: 'online',
-	});
-});
-
-// Keep in index
-client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isChatInputCommand()) return;
-	const command = client.commands.get(interaction.commandName);
-	if (!command) return;
-	try {
-		await command.execute(interaction, client);
-	} catch (e) {
-		console.error(e);
-		await interaction.reply({
-			content: 'There was an error while running this command.',
-			ephemeral: true,
+client
+	.on('ready', () => {
+		console.log('Client#ready fired.');
+		client.user.setPresence({
+			status: 'online',
 		});
-	}
-});
+	})
+	.on('interactionCreate', async (interaction) => {
+		if (!interaction.isChatInputCommand()) return;
+		const command = client.commands.get(interaction.commandName);
+		if (!command) return;
+		try {
+			await command.execute(interaction);
+		} catch (e) {
+			console.error(e);
+			await interaction.reply({
+				content: 'There was an error while running this command.',
+				ephemeral: true,
+			});
+		}
+	});
 
 client.login(process.env.TOKEN).catch((e) => console.log(e));
 
@@ -100,4 +92,5 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
+app.listen(443);
 app.listen(443);

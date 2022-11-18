@@ -1,9 +1,17 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
+} from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('about')
 	.setDescription('About DisCog');
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	await interaction.reply({
 		embeds: [
 			new EmbedBuilder()

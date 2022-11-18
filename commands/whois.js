@@ -14,9 +14,8 @@ export const data = new SlashCommandBuilder()
 	});
 /**
  * @param {ChatInputCommandInteraction} interaction
- * @param {Client} client
  */
-export const execute = async (interaction, client) => {
+export const execute = async (interaction) => {
 	const user = await interaction.options.getUser('user').fetch(true);
 	await interaction.reply({
 		embeds: [
@@ -32,7 +31,7 @@ export const execute = async (interaction, client) => {
 				.setTimestamp()
 				.setFooter({
 					text: 'Powered by DisCog',
-					iconURL: client.user.displayAvatarURL(),
+					iconURL: interaction.client.user.displayAvatarURL(),
 				}),
 		],
 	});

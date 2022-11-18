@@ -1,4 +1,10 @@
-import { SlashCommandBuilder, userMention, bold } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	Client,
+	SlashCommandBuilder,
+	userMention,
+	bold,
+} from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
 const db = new Jsoning('main.db.json');
@@ -18,7 +24,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription("This won't work unless you own the bot")
 			.setRequired(false);
 	});
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	if (!interaction.options.getBoolean('force', false)) {
 		if (interaction.user.id == db.get('cheesetouch')) {
 			await db.set('cheesetouch', interaction.options.getUser('user').id);

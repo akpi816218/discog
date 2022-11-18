@@ -1,9 +1,13 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('name')
 	.setDescription('description');
-export const execute = async (interaction, client) => {
+/**
+ *
+ * @param {ChatInputCommandInteraction} interaction
+ */
+export const execute = async (interaction) => {
 	await interaction.reply('reply message');
 };
 export default {
