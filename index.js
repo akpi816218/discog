@@ -10,8 +10,7 @@ import {
 } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { inviteLink } from './config.js';
-import { TOKEN } from './TOKEN.js';
+import { applicationId, clientId, inviteLink } from './config.js';
 import express from 'express';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -85,7 +84,7 @@ client
 		}
 	});
 
-client.login(TOKEN).catch((e) => console.error(e));
+client.login(process.env.TOKEN).catch((e) => console.log(e));
 
 process.on('SIGINT', () => {
 	client.destroy();
@@ -93,4 +92,4 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(8000);
+app.listen(443);

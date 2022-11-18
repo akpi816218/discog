@@ -22,3 +22,4 @@ rest
 	.put(Routes.applicationCommands(clientId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
 	.catch(console.error);
+console.log(await rest.get(Routes.applicationCommands(clientId)));
