@@ -7,7 +7,6 @@ import {
 import fs from 'node:fs';
 import path from 'node:path';
 import { applicationId, clientId, inviteLink } from './config.js';
-import { TOKEN } from './TOKEN.js';
 import express from 'express';
 ('use strict');
 import { dirname } from 'path';
@@ -31,6 +30,8 @@ const client = new Client({
 		GatewayIntentBits.GuildPresences,
 	],
 });
+
+client.on('debug', console.log).on('warn', console.log);
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -91,7 +92,7 @@ client.on('interactionCreate', async (interaction) => {
 	}
 });
 
-client.login(TOKEN).catch((e) => console.log);
+client.login(process.env.TOKEN).catch((e) => console.log(e));
 
 process.on('SIGINT', () => {
 	client.destroy();
@@ -99,4 +100,4 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(8000);
+app.listen(443);
