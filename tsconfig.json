@@ -7,6 +7,6 @@
 		"outDir": "dist",
 		"strict": true,
 		"skipLibCheck": true,
-		"target": "esnext",
+		"target": "esnext"
 	}
 }
