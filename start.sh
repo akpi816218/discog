@@ -1,5 +1,5 @@
-node build.js
+node dist/build.js
 
 echo "Current Git Branch: $(git branch --show-current)"
 
-node index.js
+node dist/index.js
