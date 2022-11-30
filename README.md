@@ -1,6 +1,6 @@
 # discog
 
-this is a general-purpose Discord bot.
+...is a general-purpose Discord bot.
 
 ## contributions
 
