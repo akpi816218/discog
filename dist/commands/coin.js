@@ -36,16 +36,14 @@ export const data = new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Show the top 5 rich kids');
 });
-/**
- *
- * @param {ChatInputCommandInteraction} interaction
- */
 export const execute = async (interaction) => {
     switch (interaction.options.getSubcommand(false)) {
         case 'mine':
-            let mcoins = db.get(interaction.user.id.toString()).coins;
-            if (!mcoins)
+            let mcoins;
+            if (!db.get(interaction.user.id.toString()))
                 mcoins = 0;
+            else
+                mcoins = db.get(interaction.user.id.toString()).coins;
             let add = 9 + Math.ceil(Math.random() * 5);
             mcoins += add;
             await db.set(interaction.user.id.toString(), {

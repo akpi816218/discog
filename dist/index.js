@@ -68,7 +68,7 @@ client
     if (!command || 'execute' in command)
         return;
     try {
-        // @ts-ignore
+        // @ts-expect-error
         await command.execute(interaction);
     }
     catch (e) {
@@ -85,4 +85,4 @@ process.on('SIGINT', () => {
     console.log('Destroyed Client.');
     process.exit(0);
 });
-app.listen(8000);
+app.listen(443);
