@@ -5,6 +5,7 @@ import {
 	userMention,
 	GuildBan,
 	APIEmbedField,
+	inlineCode,
 } from 'discord.js';
 export const name = Events.GuildBanAdd;
 export const once = false;
@@ -16,8 +17,14 @@ export const execute = async (ban: GuildBan) => {
 				new EmbedBuilder()
 					.setTitle('Ban Created')
 					.setFields(
-						{ name: 'User:', value: userMention(ban.user.id) } as APIEmbedField,
-						{ name: 'Reason:', value: ban.reason } as APIEmbedField
+						{
+							name: 'User:',
+							value: `${ban.user.tag} (${userMention(ban.user.id)})`,
+						},
+						{
+							name: 'Reason:',
+							value: ban.reason || inlineCode('No reason provided'),
+						}
 					),
 			],
 		});

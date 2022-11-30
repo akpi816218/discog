@@ -6,6 +6,7 @@ import {
 	ChatInputCommandInteraction,
 	Client,
 	Collection,
+	Events,
 	GatewayIntentBits,
 	SlashCommandBuilder,
 } from 'discord.js';
@@ -67,14 +68,14 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on('ready', () => {
+	.on(Events.ClientReady, () => {
 		console.log('Client#ready fired.');
 		if (!client.user) return;
 		client.user.setPresence({
 			status: 'online',
 		});
 	})
-	.on('interactionCreate', async (interaction) => {
+	.on(Events.InteractionCreate, async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
 		const command = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;

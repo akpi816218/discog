@@ -1,4 +1,4 @@
-import { TextChannel, SlashCommandBuilder, } from 'discord.js';
+import { TextChannel, SlashCommandBuilder, PermissionFlagsBits, } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
     .setName('announce')
@@ -20,7 +20,12 @@ export const data = new SlashCommandBuilder()
     return option
         .setName('mention')
         .setDescription('Whether @everyone should be mentioned');
-});
+})
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild |
+    PermissionFlagsBits.ManageMessages |
+    PermissionFlagsBits.ManageEvents |
+    PermissionFlagsBits.MentionEveryone |
+    PermissionFlagsBits.ModerateMembers);
 export const execute = async (interaction) => {
     let msgContent = 'Pay attention.';
     if (interaction.options.getBoolean('mention')) {
@@ -38,7 +43,7 @@ export const execute = async (interaction) => {
                 title: `Announcement by @${interaction.user.tag}:`,
                 description: message,
                 footer: {
-                    text: 'Announcement powered by DisCog',
+                    text: 'Powered by DisCog',
                     icon_url: interaction.client.user.displayAvatarURL(),
                 },
             },

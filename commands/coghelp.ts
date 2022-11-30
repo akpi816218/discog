@@ -75,6 +75,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			value: `Progress the count!\n${inlineCode('/count')}`,
 			inline: false,
 		},
+		dm: { name: inlineCode('/dm'), value: ``, inline: false },
 		poll: {
 			name: inlineCode('/poll'),
 			value: `Creates a poll\n${inlineCode(
@@ -82,7 +83,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			)}`,
 			inline: false,
 		},
-		random: {
+		randint: {
 			name: inlineCode('/randint'),
 			value: `Generates an integer between 1 and the specified integer (inclusive)\n${inlineCode(
 				'/randint <high: integer>'
@@ -94,6 +95,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
 			inline: false,
 		},
+		timeout: { name: inlineCode('/timeout'), value: ``, inline: false },
 		whoasked: {
 			name: inlineCode('/whoasked'),
 			value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`,
@@ -102,6 +104,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		whois: {
 			name: inlineCode('/whois'),
 			value: `Info about a user\n${inlineCode('/whois <user: user>')}`,
+			inline: false,
 		},
 		ynpoll: {
 			name: inlineCode('/ynpoll'),
@@ -113,7 +116,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	};
 	let command = interaction.options.getString('command');
 	if (!command) embed.addFields(Object.values(fields));
-	// @ts-ignore
+	// @ts-expect-error
 	else if (fields[command]) embed.addFields(fields[command]);
 	else embed.setDescription(`The command ${command} was not found.`);
 	await interaction.reply({

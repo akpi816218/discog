@@ -49,12 +49,13 @@ export const execute = async (interaction) => {
             value: `Progress the count!\n${inlineCode('/count')}`,
             inline: false,
         },
+        dm: { name: inlineCode('/dm'), value: ``, inline: false },
         poll: {
             name: inlineCode('/poll'),
             value: `Creates a poll\n${inlineCode('/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]')}`,
             inline: false,
         },
-        random: {
+        randint: {
             name: inlineCode('/randint'),
             value: `Generates an integer between 1 and the specified integer (inclusive)\n${inlineCode('/randint <high: integer>')}`,
             inline: false,
@@ -64,6 +65,7 @@ export const execute = async (interaction) => {
             value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
             inline: false,
         },
+        timeout: { name: inlineCode('/timeout'), value: ``, inline: false },
         whoasked: {
             name: inlineCode('/whoasked'),
             value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`,
@@ -72,6 +74,7 @@ export const execute = async (interaction) => {
         whois: {
             name: inlineCode('/whois'),
             value: `Info about a user\n${inlineCode('/whois <user: user>')}`,
+            inline: false,
         },
         ynpoll: {
             name: inlineCode('/ynpoll'),
@@ -82,7 +85,7 @@ export const execute = async (interaction) => {
     let command = interaction.options.getString('command');
     if (!command)
         embed.addFields(Object.values(fields));
-    // @ts-ignore
+    // @ts-expect-error
     else if (fields[command])
         embed.addFields(fields[command]);
     else

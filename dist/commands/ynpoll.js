@@ -31,7 +31,7 @@ export const execute = async (interaction) => {
                 .setTimestamp()
                 .setTitle(interaction.options.getString('question'))
                 .setFooter({
-                text: 'Poll powered by DisCog',
+                text: 'Powered by DisCog',
                 iconURL: interaction.client.user.displayAvatarURL(),
             }),
         ],

@@ -1,4 +1,4 @@
-node dist/build.js
+npm run build
 
 echo "Current Git Branch: $(git branch --show-current)"
 

@@ -1,5 +1,5 @@
 ('use strict');
-import { EmbedBuilder, Events, userMention, } from 'discord.js';
+import { EmbedBuilder, Events, userMention, inlineCode, } from 'discord.js';
 export const name = Events.GuildBanAdd;
 export const once = false;
 export const execute = async (ban) => {
@@ -8,7 +8,13 @@ export const execute = async (ban) => {
             embeds: [
                 new EmbedBuilder()
                     .setTitle('Ban Created')
-                    .setFields({ name: 'User:', value: userMention(ban.user.id) }, { name: 'Reason:', value: ban.reason }),
+                    .setFields({
+                    name: 'User:',
+                    value: `${ban.user.tag} (${userMention(ban.user.id)})`,
+                }, {
+                    name: 'Reason:',
+                    value: ban.reason || inlineCode('No reason provided'),
+                }),
             ],
         });
 };
