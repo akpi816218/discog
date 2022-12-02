@@ -80,7 +80,7 @@ client
 		const command = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;
 		try {
-			// @ts-ignore
+			// @ts-expect-error
 			await command.execute(interaction);
 		} catch (e) {
 			console.error(e);
@@ -99,4 +99,4 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(8000);
+app.listen(443);

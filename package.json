@@ -16,6 +16,7 @@
 	"scripts": {
 		"build": "rm -drf dist ; prettier -w ; tsc ; node dist/buildCommands.js",
 		"commit": "prettier -w . ; git commit -a",
+    "compile": "tsc",
 		"format": "prettier -w .",
 		"start": "bash start.sh",
 		"test": "echo \"Error: no test specified\" && exit 1"
