@@ -3,6 +3,7 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	PermissionFlagsBits,
+	ChannelType,
 } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -13,6 +14,7 @@ export const data = new SlashCommandBuilder()
 		return option
 			.setName('channel')
 			.setDescription('The channel to send the announcement to')
+			.addChannelTypes(ChannelType.GuildText)
 			.setRequired(true);
 	})
 	.addStringOption((option) => {
