@@ -53,11 +53,11 @@ for (const file of eventFiles) {
 }
 // Keep in index
 client
-    .on(Events.ClientReady, () => {
+    .on(Events.ClientReady, (readyClient) => {
     console.log('Client#ready fired.');
-    if (!client.user)
+    if (!readyClient.user)
         return;
-    client.user.setPresence({
+    readyClient.user.setPresence({
         status: 'online',
     });
 })
@@ -69,7 +69,6 @@ client
     if (!command || 'execute' in command)
         return;
     try {
-        // @ts-expect-error
         await command.execute(interaction);
     }
     catch (e) {
