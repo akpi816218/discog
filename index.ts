@@ -8,11 +8,10 @@ import {
 	Collection,
 	Events,
 	GatewayIntentBits,
-	SlashCommandBuilder,
 } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { applicationId, clientId, inviteLink } from './config.js';
+import { inviteLink } from './config.js';
 import express from 'express';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -68,20 +67,19 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on(Events.ClientReady, () => {
+	.on(Events.ClientReady, (readyClient) => {
 		console.log('Client#ready fired.');
-		if (!client.user) return;
-		client.user.setPresence({
+		if (!readyClient.user) return;
+		readyClient.user.setPresence({
 			status: 'online',
 		});
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
 		await interaction.deferReply();
-		const command = g.commands.get(interaction.commandName);
+		const command: any = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;
 		try {
-			// @ts-expect-error
 			await command.execute(interaction);
 		} catch (e) {
 			console.error(e);
