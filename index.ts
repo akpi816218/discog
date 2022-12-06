@@ -77,6 +77,7 @@ client
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
+		await interaction.deferReply();
 		const command = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;
 		try {
