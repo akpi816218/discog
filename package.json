@@ -16,7 +16,6 @@
 	"scripts": {
 		"commit": "prettier -w . ; git commit -a",
 		"format": "prettier -w .",
-		"run": "node .",
 		"start": "bash start.sh",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
