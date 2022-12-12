@@ -14,8 +14,9 @@
 		"readline-sync": "^1.4.10"
 	},
 	"scripts": {
-		"commit": "prettier -w . ; git commit -a",
-		"format": "prettier -w .",
+		"commit": "tsc ; prettier -w . ; git commit -a",
+		"compile": "tsc",
+		"format": "tsc ; prettier -w .",
 		"start": "bash start.sh",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},

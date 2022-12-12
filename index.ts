@@ -2,16 +2,10 @@
 
 console.log('RunID: %d', Math.floor(Math.random() * 100));
 
-import {
-	ChatInputCommandInteraction,
-	Client,
-	Collection,
-	GatewayIntentBits,
-	SlashCommandBuilder,
-} from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { applicationId, clientId, inviteLink } from './config.js';
+import { inviteLink } from './config.js';
 import express from 'express';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -76,7 +70,7 @@ client
 	})
 	.on('interactionCreate', async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
-		const command = g.commands.get(interaction.commandName);
+		const command: any = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;
 		try {
 			// @ts-ignore
@@ -90,7 +84,7 @@ client
 		}
 	});
 
-client.login(process.env.TOKEN).catch((e) => console.log(e));
+client.login(process.env.TOKEN as string).catch((e) => console.log(e));
 
 process.on('SIGINT', () => {
 	client.destroy();
