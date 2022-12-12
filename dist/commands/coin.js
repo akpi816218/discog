@@ -41,10 +41,6 @@ export const data = new SlashCommandBuilder()
 			.setName('leaderboard')
 			.setDescription('Show the top 5 rich kids');
 	});
-/**
- *
- * @param {ChatInputCommandInteraction} interaction
- */
 export const execute = async (interaction) => {
 	switch (interaction.options.getSubcommand(false)) {
 		case 'mine':

@@ -31,7 +31,7 @@ export const execute = async (interaction) => {
 				.setTimestamp()
 				.setTitle(interaction.options.getString('question'))
 				.setFooter({
-					text: 'Poll powered by DisCog',
+					text: 'Powered by DisCog',
 					iconURL: interaction.client.user.displayAvatarURL(),
 				}),
 		],
@@ -46,7 +46,7 @@ export const execute = async (interaction) => {
 	let msg = await channel.send(msgObj);
 	await msg.react('👍');
 	await msg.react('👎');
-	await msg.react('🧐'); // face_with_monocle
+	await msg.react('🧐');
 	await interaction.reply('Done.');
 };
 export default {

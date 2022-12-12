@@ -1,4 +1,5 @@
 import { bold, SlashCommandBuilder, userMention } from 'discord.js';
+import { bold, SlashCommandBuilder, userMention } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
 const db = new Jsoning('main.db.json');
