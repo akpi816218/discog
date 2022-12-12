@@ -3,13 +3,11 @@ import { Events, userMention } from 'discord.js';
 export const name = Events.GuildMemberRemove;
 export const once = false;
 export const execute = async (member) => {
-	if (member.guild.systemChannel)
-		await member.guild.systemChannel.send(
-			`${userMention(member.id)} just poofed.`
-		);
+    if (member.guild.systemChannel)
+        await member.guild.systemChannel.send(`${userMention(member.id)} just poofed.`);
 };
 export default {
-	name,
-	once,
-	execute,
+    name,
+    once,
+    execute,
 };
