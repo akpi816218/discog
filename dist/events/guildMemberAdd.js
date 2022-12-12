@@ -5,9 +5,9 @@ export const once = false;
 export const execute = async (member) => {
 	if (member.guild.systemChannel)
 		await member.guild.systemChannel.send(
-			`Welcome to ${member.guild.name}, ${userMention(member.id)}! (Member #${
-				member.guild.memberCount
-			})`
+			`Welcome to ${member.guild.name}, ${member.user.tag} (${userMention(
+				member.id
+			)})! You are Member #${member.guild.memberCount}.`
 		);
 };
 export default {

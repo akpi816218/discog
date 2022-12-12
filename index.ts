@@ -2,7 +2,13 @@
 
 console.log('RunID: %d', Math.floor(Math.random() * 100));
 
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	Client,
+	Collection,
+	Events,
+	GatewayIntentBits,
+} from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { inviteLink } from './config.js';
@@ -61,19 +67,19 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on('ready', () => {
+	.on(Events.ClientReady, (readyClient) => {
 		console.log('Client#ready fired.');
-		if (!client.user) return;
-		client.user.setPresence({
+		if (!readyClient.user) return;
+		readyClient.user.setPresence({
 			status: 'online',
 		});
 	})
-	.on('interactionCreate', async (interaction) => {
+	.on(Events.InteractionCreate, async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
+		await interaction.deferReply();
 		const command: any = g.commands.get(interaction.commandName);
 		if (!command || 'execute'! in command) return;
 		try {
-			// @ts-ignore
 			await command.execute(interaction);
 		} catch (e) {
 			console.error(e);
@@ -92,4 +98,4 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(8000);
+app.listen(443);

@@ -14,8 +14,9 @@
 		"readline-sync": "^1.4.10"
 	},
 	"scripts": {
-		"commit": "tsc ; prettier -w . ; git commit -a",
+		"build": "rm -drf dist ; prettier -w ; tsc ; node dist/buildCommands.js",
 		"compile": "tsc",
+		"commit": "tsc ; prettier -w . ; git commit -a",
 		"format": "tsc ; prettier -w .",
 		"start": "bash start.sh",
 		"test": "echo \"Error: no test specified\" && exit 1"
