@@ -1,6 +1,5 @@
 import {
 	ChatInputCommandInteraction,
-	EmbedAssertions,
 	EmbedBuilder,
 	GuildMember,
 	PermissionFlagsBits,
@@ -28,8 +27,6 @@ export const data = new SlashCommandBuilder()
 	.setDefaultMemberPermissions(
 		PermissionFlagsBits.ManageGuild & PermissionFlagsBits.ModerateMembers
 	);
-
-// ! edit entry in `help.ts`
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	let admin = interaction.member as GuildMember,

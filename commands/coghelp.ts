@@ -51,7 +51,18 @@ const fields = {
 		value: `Progress the count!\n${inlineCode('/count')}`,
 		inline: false,
 	},
-	dm: { name: inlineCode('/dm'), value: ``, inline: false },
+	dm: {
+		name: inlineCode('/dm'),
+		value: `Send an official server message to a user via DMs\n${inlineCode(
+			'/dm <user: user> <message: string>'
+		)}`,
+		inline: false,
+	},
+	mute: {
+		name: inlineCode('/mute'),
+		value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`,
+		inline: false,
+	},
 	poll: {
 		name: inlineCode('/poll'),
 		value: `Creates a poll\n${inlineCode(
