@@ -14,6 +14,7 @@
 		"readline-sync": "^1.4.10"
 	},
 	"scripts": {
+		"build": "rm -drf dist ; prettier -w ; tsc ; node dist/buildCommands.js",
 		"commit": "prettier -w . ; git commit -a",
     "compile": "tsc",
 		"format": "prettier -w .",

@@ -1,4 +1,4 @@
-import { EmbedBuilder, inlineCode, SlashCommandBuilder, userMention, } from 'discord.js';
+import { EmbedBuilder, inlineCode, PermissionFlagsBits, SlashCommandBuilder, userMention, } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
     .setName('timeout')
@@ -27,20 +27,14 @@ export const data = new SlashCommandBuilder()
         .setDescription('Toggle on (False => off)?')
         .setRequired(false);
 })
-    .setDMPermission(false);
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers);
 export const execute = async (interaction) => {
     let user = interaction.member, user2 = interaction.options.getUser('user');
     if (!user || !user2 || !interaction.guild)
         throw new Error();
     let member = await interaction.guild.members.fetch(user2.id.toString());
-    if (!user.permissions.has('ModerateMembers')) {
-        await interaction.reply({
-            content: 'Insufficient permissions',
-            ephemeral: true,
-        });
-        return;
-    }
-    else if (!member.manageable) {
+    if (!member.manageable) {
         await interaction.reply({
             content: "I can't manage that user.",
             ephemeral: true,
@@ -63,9 +57,15 @@ export const execute = async (interaction) => {
             member.timeout(interaction.options.getInteger('duration') * 1000, interaction.options.getString('reason'));
         await interaction.reply({
             embeds: [
-                new EmbedBuilder().setTitle('User Timeout Toggled').addFields({ name: 'Acting User:', value: userMention(user.user.id) }, { name: 'Modified User:', value: userMention(member.user.id) }, {
+                new EmbedBuilder()
+                    .setTitle('User Timeout Toggled')
+                    .addFields({ name: 'Acting User:', value: userMention(user.user.id) }, { name: 'Modified User:', value: userMention(member.user.id) }, {
                     name: 'Currently Timed Out?',
                     value: toggle ? inlineCode('true') : inlineCode('false'),
+                })
+                    .setFooter({
+                    text: 'Powered by DisCog',
+                    iconURL: interaction.client.user.displayAvatarURL(),
                 }),
             ],
         });

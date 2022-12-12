@@ -4,7 +4,7 @@ export const name = Events.GuildMemberRemove;
 export const once = false;
 export const execute = async (member) => {
     if (member.guild.systemChannel)
-        await member.guild.systemChannel.send(`${userMention(member.id)} just poofed.`);
+        await member.guild.systemChannel.send(`${member.user.tag} (${userMention(member.id)}) just poofed.`);
 };
 export default {
     name,
