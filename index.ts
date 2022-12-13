@@ -16,10 +16,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const errordb = new Jsoning('error.db.json');
 
 const app = express();
-app.get('/', (req: any, res: any) => {
+app.get('/', (_req: any, res: any) => {
 	res.status(200).end();
 });
-app.get('/invite', (req: any, res: any) => {
+app.get('/invite', (_req: any, res: any) => {
 	res.redirect(inviteLink);
 });
 
@@ -65,9 +65,8 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on(Events.ClientReady, async (readyClient) => {
+	.on(Events.ClientReady, (readyClient) => {
 		console.log('Client#ready fired.');
-		if (!readyClient.user) return;
 		readyClient.user.setPresence({
 			status: 'online',
 		});
@@ -92,7 +91,7 @@ client
 		throw error;
 	});
 
-client.login(TOKEN).catch((e) => console.log(e));
+await client.login(TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
