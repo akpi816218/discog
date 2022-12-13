@@ -8,9 +8,12 @@ import path from 'node:path';
 import { inviteLink } from './config.js';
 import TOKEN from './TOKEN.js';
 import express from 'express';
+import Jsoning from 'jsoning';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const errordb = new Jsoning('error.db.json');
 
 const app = express();
 app.get('/', (req: any, res: any) => {
@@ -62,7 +65,7 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on(Events.ClientReady, (readyClient) => {
+	.on(Events.ClientReady, async (readyClient) => {
 		console.log('Client#ready fired.');
 		if (!readyClient.user) return;
 		readyClient.user.setPresence({
@@ -83,6 +86,10 @@ client
 				ephemeral: true,
 			});
 		}
+	})
+	.on(Events.Error, async (error) => {
+		errordb.set(Date.toString(), error);
+		throw error;
 	});
 
 client.login(TOKEN).catch((e) => console.log(e));
