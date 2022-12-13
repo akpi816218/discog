@@ -17,7 +17,6 @@ export const data = new SlashCommandBuilder()
 })
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild & PermissionFlagsBits.ModerateMembers);
-// ! edit entry in `help.ts`
 export const execute = async (interaction) => {
     let admin = interaction.member, dm = await interaction.options.getUser('user').createDM();
     await dm.send({

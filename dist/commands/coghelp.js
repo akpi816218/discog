@@ -30,7 +30,16 @@ const fields = {
         value: `Progress the count!\n${inlineCode('/count')}`,
         inline: false,
     },
-    dm: { name: inlineCode('/dm'), value: ``, inline: false },
+    dm: {
+        name: inlineCode('/dm'),
+        value: `Send an official server message to a user via DMs\n${inlineCode('/dm <user: user> <message: string>')}`,
+        inline: false,
+    },
+    mute: {
+        name: inlineCode('/mute'),
+        value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`,
+        inline: false,
+    },
     poll: {
         name: inlineCode('/poll'),
         value: `Creates a poll\n${inlineCode('/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]')}`,
@@ -46,7 +55,11 @@ const fields = {
         value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
         inline: false,
     },
-    timeout: { name: inlineCode('/timeout'), value: ``, inline: false },
+    timeout: {
+        name: inlineCode('/timeout'),
+        value: `Timeout a user\n${inlineCode('/timeout <user: user> [toggle: boolean || false]')}`,
+        inline: false,
+    },
     whoasked: {
         name: inlineCode('/whoasked'),
         value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`,

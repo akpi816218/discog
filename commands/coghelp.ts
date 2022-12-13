@@ -82,7 +82,13 @@ const fields = {
 		value: `Shoves someone\n${inlineCode('/shove <user: user>')}`,
 		inline: false,
 	},
-	timeout: { name: inlineCode('/timeout'), value: ``, inline: false },
+	timeout: {
+		name: inlineCode('/timeout'),
+		value: `Timeout a user\n${inlineCode(
+			'/timeout <user: user> [toggle: boolean || false]'
+		)}`,
+		inline: false,
+	},
 	whoasked: {
 		name: inlineCode('/whoasked'),
 		value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`,
