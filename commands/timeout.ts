@@ -17,12 +17,6 @@ export const data = new SlashCommandBuilder()
 			.setDescription('The user to timeout')
 			.setRequired(true);
 	})
-	.addIntegerOption((option) => {
-		return option
-			.setName('duration')
-			.setDescription('How long? (seconds)')
-			.setRequired(true);
-	})
 	.addStringOption((option) => {
 		return option
 			.setName('reason')

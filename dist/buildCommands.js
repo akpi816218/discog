@@ -1,9 +1,9 @@
 import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { clientId } from './config.js';
+import TOKEN from './TOKEN.js';
 import fs from 'node:fs';
-import path from 'node:path';
-import { dirname } from 'path';
+import { dirname, default as path } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const commands = [];
@@ -16,9 +16,7 @@ for (const file of commandFiles) {
     const command = await import(filePath);
     commands.push(command.data.toJSON());
 }
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-rest
-    .put(Routes.applicationCommands(clientId), { body: commands })
-    .then(() => console.log('Successfully registered application commands.'))
-    .catch(console.error);
+const rest = new REST({ version: '10' }).setToken(TOKEN);
+await rest.put(Routes.applicationCommands(clientId), { body: [] });
+await rest.put(Routes.applicationCommands(clientId), { body: commands });
 console.log(await rest.get(Routes.applicationCommands(clientId)));

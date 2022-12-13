@@ -2,16 +2,11 @@
 
 console.log('RunID: %d', Math.floor(Math.random() * 100));
 
-import {
-	ChatInputCommandInteraction,
-	Client,
-	Collection,
-	Events,
-	GatewayIntentBits,
-} from 'discord.js';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { inviteLink } from './config.js';
+import TOKEN from './TOKEN.js';
 import express from 'express';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -75,10 +70,10 @@ client
 		});
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
+		console.log('Client#interactionCreate');
 		if (!interaction.isChatInputCommand()) return;
-		await interaction.deferReply();
+		console.log('Is ChatInputCommandInteraction');
 		const command: any = g.commands.get(interaction.commandName);
-		if (!command || 'execute'! in command) return;
 		try {
 			await command.execute(interaction);
 		} catch (e) {
@@ -90,7 +85,7 @@ client
 		}
 	});
 
-client.login(process.env.TOKEN).catch((e) => console.log(e));
+client.login(TOKEN).catch((e) => console.log(e));
 
 process.on('SIGINT', () => {
 	client.destroy();
@@ -98,4 +93,4 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(443);
+app.listen(8000);

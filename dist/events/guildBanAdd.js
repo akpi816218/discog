@@ -6,9 +6,7 @@ export const execute = async (ban) => {
     if (ban.guild.systemChannel)
         await ban.guild.systemChannel.send({
             embeds: [
-                new EmbedBuilder()
-                    .setTitle('Ban Created')
-                    .setFields({
+                new EmbedBuilder().setTitle('Ban Created').setFields({
                     name: 'User:',
                     value: `${ban.user.tag} (${userMention(ban.user.id)})`,
                 }, {
