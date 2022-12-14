@@ -29,6 +29,7 @@ export const data = new SlashCommandBuilder()
 	);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+	await interaction.deferReply();
 	let admin = interaction.member as GuildMember,
 		dm = await (interaction.options.getUser('user') as User).createDM();
 	await dm.send({

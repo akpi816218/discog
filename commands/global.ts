@@ -20,6 +20,7 @@ export const data = new SlashCommandBuilder()
 // ! Do NOT add command to `coghelp.ts`
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+	await interaction.deferReply();
 	const messageid = interaction.options.getString('messageid');
 	if (!devIds.includes(interaction.user.id) || !messageid) return;
 	let message = await interaction.channel?.messages.fetch(messageid.toString());

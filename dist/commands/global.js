@@ -13,6 +13,7 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 // ! Do NOT add command to `coghelp.ts`
 export const execute = async (interaction) => {
+	await interaction.deferReply();
 	const messageid = interaction.options.getString('messageid');
 	if (!devIds.includes(interaction.user.id) || !messageid) return;
 	let message = await interaction.channel?.messages.fetch(messageid.toString());

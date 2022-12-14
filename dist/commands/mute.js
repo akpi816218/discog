@@ -23,6 +23,7 @@ export const data = new SlashCommandBuilder()
 	)
 	.setDMPermission(false);
 export const execute = async (interaction) => {
+	await interaction.deferReply();
 	let user = await interaction.member.fetch(true),
 		member = await interaction.guild.members.fetch(
 			interaction.options.getUser('user').id

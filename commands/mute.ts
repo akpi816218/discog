@@ -30,6 +30,7 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(false);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+	await interaction.deferReply();
 	let user = await (interaction.member as GuildMember).fetch(true),
 		member = await (interaction.guild as Guild).members.fetch(
 			(interaction.options.getUser('user') as User).id

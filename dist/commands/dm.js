@@ -25,6 +25,7 @@ export const data = new SlashCommandBuilder()
 		PermissionFlagsBits.ManageGuild & PermissionFlagsBits.ModerateMembers
 	);
 export const execute = async (interaction) => {
+	await interaction.deferReply();
 	let admin = interaction.member,
 		dm = await interaction.options.getUser('user').createDM();
 	await dm.send({
