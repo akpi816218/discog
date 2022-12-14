@@ -13,7 +13,7 @@
 		"keyv": "^4.5.0"
 	},
 	"scripts": {
-		"build": "rm -drf dist ; tsc ; prettier -w . node dist/buildCommands.js",
+		"build": "rm -drf dist ; tsc ; prettier -w . ; node dist/buildCommands.js",
 		"commit": "prettier -w . ; git commit -a",
 		"compile": "tsc ; prettier -w .",
 		"format": "prettier -w .",

@@ -74,7 +74,6 @@ client
 	.on(Events.InteractionCreate, async (interaction) => {
 		console.log('Client#interactionCreate');
 		if (!interaction.isChatInputCommand()) return;
-		console.log('Is ChatInputCommandInteraction');
 		const command: any = g.commands.get(interaction.commandName);
 		try {
 			await command.execute(interaction);
