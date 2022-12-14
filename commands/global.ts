@@ -9,7 +9,7 @@ import { devIds } from '../config.js';
 export const data = new SlashCommandBuilder()
 	.setName('global')
 	.setDescription('Dev-only command')
-	.addNumberOption((option) => {
+	.addStringOption((option) => {
 		return option
 			.setName('messageid')
 			.setDescription('The ID of the message')
