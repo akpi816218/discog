@@ -24,7 +24,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const messageid = interaction.options.getString('messageid');
 	if (!devIds.includes(interaction.user.id) || !messageid) return;
 	let message = await interaction.channel?.messages.fetch(messageid.toString());
-	if (typeof message == 'undefined' || parseInt(messageid)) {
+	if (typeof message == 'undefined') {
 		await interaction.reply({ content: 'Invalid message ID', ephemeral: true });
 		return;
 	}
