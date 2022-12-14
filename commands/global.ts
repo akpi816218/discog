@@ -9,7 +9,7 @@ import { devIds } from '../config.js';
 export const data = new SlashCommandBuilder()
 	.setName('global')
 	.setDescription('Dev-only command')
-	.addIntegerOption((option) => {
+	.addNumberOption((option) => {
 		return option
 			.setName('messageid')
 			.setDescription('The ID of the message')
@@ -20,10 +20,10 @@ export const data = new SlashCommandBuilder()
 // ! Do NOT add command to `coghelp.ts`
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const messageid = interaction.options.getInteger('messageid');
+	const messageid = interaction.options.getString('messageid');
 	if (!devIds.includes(interaction.user.id) || !messageid) return;
 	let message = await interaction.channel?.messages.fetch(messageid.toString());
-	if (typeof message == 'undefined') {
+	if (typeof message == 'undefined' || parseInt(messageid)) {
 		await interaction.reply({ content: 'Invalid message ID', ephemeral: true });
 		return;
 	}

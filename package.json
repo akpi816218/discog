@@ -13,11 +13,11 @@
 		"keyv": "^4.5.0"
 	},
 	"scripts": {
-		"build": "rm -drf dist ; prettier -w . ; tsc ; node dist/buildCommands.js",
-		"commit": "prettier -w . ; git commit -a",
-		"compile": "tsc",
+		"build": "rm -drf dist ; tsc ; prettier -w . ; node dist/buildCommands.js",
+		"commit": "rm -drf dist ; tsc ; prettier -w . ; git commit -a",
+		"compile": "rm -drf dist ; tsc ; prettier -w .",
 		"format": "prettier -w .",
-		"start": "bash start.sh",
+		"start": "node dist/buildCommands.js ; echo \"Current Git Branch: $(git branch --show-current)\" ; node dist/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],

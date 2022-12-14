@@ -8,15 +8,18 @@ import path from 'node:path';
 import { inviteLink } from './config.js';
 import TOKEN from './TOKEN.js';
 import express from 'express';
+import Jsoning from 'jsoning';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const errordb = new Jsoning('error.db.json');
+
 const app = express();
-app.get('/', (req: any, res: any) => {
+app.get('/', (_req: any, res: any) => {
 	res.status(200).end();
 });
-app.get('/invite', (req: any, res: any) => {
+app.get('/invite', (_req: any, res: any) => {
 	res.redirect(inviteLink);
 });
 
@@ -64,7 +67,6 @@ for (const file of eventFiles) {
 client
 	.on(Events.ClientReady, (readyClient) => {
 		console.log('Client#ready fired.');
-		if (!readyClient.user) return;
 		readyClient.user.setPresence({
 			status: 'online',
 		});
@@ -72,7 +74,6 @@ client
 	.on(Events.InteractionCreate, async (interaction) => {
 		console.log('Client#interactionCreate');
 		if (!interaction.isChatInputCommand()) return;
-		console.log('Is ChatInputCommandInteraction');
 		const command: any = g.commands.get(interaction.commandName);
 		try {
 			await command.execute(interaction);
@@ -83,9 +84,13 @@ client
 				ephemeral: true,
 			});
 		}
+	})
+	.on(Events.Error, async (error) => {
+		errordb.set(Date.toString(), error);
+		throw error;
 	});
 
-client.login(TOKEN).catch((e) => console.log(e));
+await client.login(TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
