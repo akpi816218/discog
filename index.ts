@@ -1,8 +1,21 @@
 ('use strict');
 
+import { default as c } from 'colors';
+
+const log = {
+	debug: (m: any) => console.log(c.blue(m.toString())),
+	event: (m: any) => console.log(c.yellow(m.toString())),
+};
+
 console.log('RunID: %d', Math.floor(Math.random() * 100));
 
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import {
+	Client,
+	Collection,
+	Colors,
+	Events,
+	GatewayIntentBits,
+} from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { inviteLink } from './config.js';
@@ -66,13 +79,12 @@ for (const file of eventFiles) {
 // Keep in index
 client
 	.on(Events.ClientReady, (readyClient) => {
-		console.log('Client#ready fired.');
+		log.event('Client#ready');
 		readyClient.user.setPresence({
 			status: 'online',
 		});
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
-		console.log('Client#interactionCreate');
 		if (!interaction.isChatInputCommand()) return;
 		const command: any = g.commands.get(interaction.commandName);
 		try {

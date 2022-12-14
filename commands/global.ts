@@ -22,7 +22,10 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();
 	const messageid = interaction.options.getString('messageid');
-	if (!devIds.includes(interaction.user.id) || !messageid) return;
+	if (!devIds.includes(interaction.user.id) || !messageid) {
+		await interaction.reply('Restricted Commmand');
+		return;
+	}
 	let message = await interaction.channel?.messages.fetch(messageid.toString());
 	if (typeof message == 'undefined') {
 		await interaction.reply({ content: 'Invalid message ID', ephemeral: true });
