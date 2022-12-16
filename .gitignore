@@ -1,1 +1,3 @@
-**/TOKEN.*
+**TOKEN**
+node_modules
+.env
