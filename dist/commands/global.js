@@ -13,15 +13,19 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 // ! Do NOT add command to `coghelp.ts`
 export const execute = async (interaction) => {
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	const messageid = interaction.options.getString('messageid');
+	if (!interaction.channel) throw new Error();
 	if (!devIds.includes(interaction.user.id) || !messageid) {
-		await interaction.reply('Restricted Commmand');
+		await interaction.followUp('Restricted Commmand');
 		return;
 	}
-	let message = await interaction.channel?.messages.fetch(messageid.toString());
+	let message = await interaction.channel.messages.fetch(messageid.toString());
 	if (typeof message == 'undefined') {
-		await interaction.reply({ content: 'Invalid message ID', ephemeral: true });
+		await interaction.followUp({
+			content: 'Invalid message ID',
+			ephemeral: true,
+		});
 		return;
 	}
 	interaction.client.guilds.cache.forEach((guild) => {
@@ -39,6 +43,7 @@ export const execute = async (interaction) => {
 			],
 		});
 	});
+	interaction.followUp({ content: 'Done.', ephemeral: true });
 };
 export default {
 	data,

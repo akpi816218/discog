@@ -11,18 +11,11 @@ import path from 'node:path';
 import { inviteLink } from './config.js';
 import TOKEN from './TOKEN.js';
 import express from 'express';
-import Jsoning from 'jsoning';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
+import Jsoning from 'jsoning';
 const errordb = new Jsoning('error.db.json');
-const app = express();
-app.get('/', (_req, res) => {
-	res.status(200).end();
-});
-app.get('/invite', (_req, res) => {
-	res.redirect(inviteLink);
-});
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -31,6 +24,13 @@ const client = new Client({
 		GatewayIntentBits.GuildScheduledEvents,
 		GatewayIntentBits.GuildPresences,
 	],
+});
+const app = express();
+app.get('/', (_req, res) => {
+	res.status(200).end(client.isReady().toString());
+});
+app.get('/invite', (_req, res) => {
+	res.redirect(inviteLink);
 });
 client.on('debug', console.log).on('warn', console.log);
 let g = {
@@ -73,14 +73,21 @@ client
 			await command.execute(interaction);
 		} catch (e) {
 			console.error(e);
-			await interaction.reply({
-				content: 'There was an error while running this command.',
-				ephemeral: true,
-			});
+			if (interaction.deferred || interaction.replied) {
+				await interaction.followUp({
+					content: 'There was an error while running this command.',
+					ephemeral: true,
+				});
+			} else {
+				await interaction.reply({
+					content: 'There was an error while running this command.',
+					ephemeral: true,
+				});
+			}
 		}
 	})
 	.on(Events.Error, async (error) => {
-		errordb.set(Date.toString(), error);
+		errordb.set(new Date().toString(), error.toString());
 		throw error;
 	});
 await client.login(TOKEN);
