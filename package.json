@@ -2,7 +2,7 @@
 	"name": "discog",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"type": "module",
 	"dependencies": {
 		"@discordjs/rest": "^1.2.0",

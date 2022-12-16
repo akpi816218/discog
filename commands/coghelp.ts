@@ -1,14 +1,14 @@
 import {
-	APIApplicationCommandOptionChoice,
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	inlineCode,
 	SlashCommandBuilder,
 } from 'discord.js';
+import { APIEmbedField } from 'discord.js';
 ('use strict');
 
 // ! New commands go here in the `fields` object
-const fields = {
+const fields: { [key: string]: APIEmbedField } = {
 	about: {
 		name: inlineCode('/about'),
 		value: `About this bot\n${inlineCode('/about')}`,
@@ -58,6 +58,11 @@ const fields = {
 		)}`,
 		inline: false,
 	},
+	guildinfo: {
+		name: inlineCode('/guildinfo'),
+		value: `Get some guild info\n${inlineCode('/guildinfo')}`,
+		inline: false,
+	},
 	mute: {
 		name: inlineCode('/mute'),
 		value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`,
@@ -67,13 +72,6 @@ const fields = {
 		name: inlineCode('/poll'),
 		value: `Creates a poll\n${inlineCode(
 			'/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
-		)}`,
-		inline: false,
-	},
-	randint: {
-		name: inlineCode('/randint'),
-		value: `Generates an integer between 1 and the specified integer (inclusive)\n${inlineCode(
-			'/randint <high: integer>'
 		)}`,
 		inline: false,
 	},
@@ -100,7 +98,7 @@ const fields = {
 		inline: false,
 	},
 };
-let choices: Array<any> = [];
+let choices: Array<any>;
 Object.keys(fields).forEach((val) => {
 	choices.push({ name: val, value: val });
 });
@@ -134,7 +132,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		.setColor(0x00ff00);
 	let command = interaction.options.getString('command');
 	if (!command) embed.addFields(Object.values(fields));
-	// @ts-expect-error
 	else if (fields[command]) embed.addFields(fields[command]);
 	else embed.setDescription(`The command ${command} was not found.`);
 	await interaction.reply({
