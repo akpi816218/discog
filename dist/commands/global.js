@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, inlineCode, SlashCommandBuilder } from 'discord.js';
 import { devIds } from '../config.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -13,7 +13,7 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 // ! Do NOT add command to `coghelp.ts`
 export const execute = async (interaction) => {
-	await interaction.deferReply({ ephemeral: true });
+	await interaction.reply('Working...');
 	const messageid = interaction.options.getString('messageid');
 	if (!interaction.channel) throw new Error();
 	if (!devIds.includes(interaction.user.id) || !messageid) {
@@ -22,28 +22,56 @@ export const execute = async (interaction) => {
 	}
 	let message = await interaction.channel.messages.fetch(messageid.toString());
 	if (typeof message == 'undefined') {
-		await interaction.followUp({
-			content: 'Invalid message ID',
-			ephemeral: true,
-		});
+		await interaction.followUp('Invalid Message ID');
 		return;
 	}
-	interaction.client.guilds.cache.forEach((guild) => {
-		guild.systemChannel?.send({
-			content: '@everyone',
-			embeds: [
-				new EmbedBuilder()
-					.setTitle('DisCog System Announcement')
-					.setDescription(message.content)
-					.setTimestamp()
-					.setFooter({
-						text: `Sent by ${interaction.user.tag}`,
-						iconURL: interaction.user.displayAvatarURL(),
-					}),
-			],
-		});
+	if (message.content.length == 0) {
+		await interaction.followUp('No message content');
+		return;
+	}
+	let badGuilds = [];
+	interaction.client.guilds.cache.forEach(async (guild) => {
+		guild.fetch();
+		if (!guild.systemChannel) {
+			await (
+				await (await guild.fetchOwner()).createDM()
+			).send(
+				`Hi there! I'm part of your server called ${
+					guild.name
+				}. My developer just sent a global announcement to all my guilds, and I couldn't deliver it to yours because it didn't have a system channel. Go to ${inlineCode(
+					'Server Settings > Overview > System Messages Channel'
+				)} to choose a system channel. In the meantime, please use my ${inlineCode(
+					'/announce'
+				)} command to give everyone in your server the following message:\n${
+					message.content
+				}`
+			);
+			badGuilds.push(guild.name);
+		} else {
+			guild.systemChannel.send({
+				content: '@everyone',
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('DisCog System Announcement')
+						.setDescription(message.content)
+						.setTimestamp()
+						.setFooter({
+							text: `Sent by ${interaction.user.tag}`,
+							iconURL: interaction.user.displayAvatarURL(),
+						}),
+				],
+			});
+		}
 	});
-	interaction.followUp({ content: 'Done.', ephemeral: true });
+	await interaction.followUp(
+		`Done. ${
+			badGuilds.length == 0
+				? 'All guilds recieved the announcement.'
+				: `The following guilds did not recieve the announcement: ${badGuilds.join(
+						', '
+				  )}.`
+		}`
+	);
 };
 export default {
 	data,

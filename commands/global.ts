@@ -1,14 +1,8 @@
 import {
-	BaseChannel,
 	ChatInputCommandInteraction,
-	CommandInteractionOptionResolver,
 	EmbedBuilder,
-	Guild,
 	inlineCode,
-	Message,
-	NonThreadGuildBasedChannel,
 	SlashCommandBuilder,
-	Snowflake,
 } from 'discord.js';
 import { devIds } from '../config.js';
 ('use strict');
@@ -26,7 +20,7 @@ export const data = new SlashCommandBuilder()
 // ! Do NOT add command to `coghelp.ts`
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply({ ephemeral: true });
+	await interaction.reply('Working...');
 	const messageid = interaction.options.getString('messageid');
 	if (!interaction.channel) throw new Error();
 	if (!devIds.includes(interaction.user.id) || !messageid) {
@@ -35,12 +29,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	}
 	let message = await interaction.channel.messages.fetch(messageid.toString());
 	if (typeof message == 'undefined') {
-		await interaction.followUp({
-			content: 'Invalid message ID',
-			ephemeral: true,
-		});
+		await interaction.followUp('Invalid Message ID');
 		return;
 	}
+	if (message.content.length == 0) {
+		await interaction.followUp('No message content');
+		return;
+	}
+	let badGuilds: string[] = [];
 	interaction.client.guilds.cache.forEach(async (guild) => {
 		guild.fetch();
 		if (!guild.systemChannel) {
@@ -57,27 +53,32 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					message.content
 				}`
 			);
-			await interaction.followUp({
-				content: `${guild.name} does not have a system channel, so they did not recieve the global announcement.`,
-				ephemeral: true,
+			badGuilds.push(guild.name);
+		} else {
+			guild.systemChannel.send({
+				content: '@everyone',
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('DisCog System Announcement')
+						.setDescription(message.content)
+						.setTimestamp()
+						.setFooter({
+							text: `Sent by ${interaction.user.tag}`,
+							iconURL: interaction.user.displayAvatarURL(),
+						}),
+				],
 			});
-			return;
 		}
-		guild.systemChannel.send({
-			content: '@everyone',
-			embeds: [
-				new EmbedBuilder()
-					.setTitle('DisCog System Announcement')
-					.setDescription(message.content)
-					.setTimestamp()
-					.setFooter({
-						text: `Sent by ${interaction.user.tag}`,
-						iconURL: interaction.user.displayAvatarURL(),
-					}),
-			],
-		});
 	});
-	await interaction.followUp({ content: 'Done.', ephemeral: true });
+	await interaction.followUp(
+		`Done. ${
+			badGuilds.length == 0
+				? 'All guilds recieved the announcement.'
+				: `The following guilds did not recieve the announcement: ${badGuilds.join(
+						', '
+				  )}.`
+		}`
+	);
 };
 export default {
 	data,

@@ -25,11 +25,11 @@ export const data = new SlashCommandBuilder()
 	})
 	.setDMPermission(false)
 	.setDefaultMemberPermissions(
-		PermissionFlagsBits.ManageGuild & PermissionFlagsBits.ModerateMembers
+		PermissionFlagsBits.ManageGuild && PermissionFlagsBits.ModerateMembers
 	);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	let admin = interaction.member as GuildMember,
 		dm = await (interaction.options.getUser('user') as User).createDM();
 	await dm.send({
@@ -56,7 +56,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				}),
 		],
 	});
-	await interaction.reply({ content: 'Done.', ephemeral: true });
+	await interaction.followUp({ content: 'Done.', ephemeral: true });
 };
 export default {
 	data,
