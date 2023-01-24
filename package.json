@@ -12,14 +12,15 @@
 		"discord.js": "^14.6.0",
 		"express": "^4.18.2",
 		"jsoning": "^0.13.23",
-		"keyv": "^4.5.0"
+		"keyv": "^4.5.0",
+		"nodemailer": "^6.9.0",
+		"pino": "^8.8.0"
 	},
 	"scripts": {
-		"build": "rm -drf dist ; tsc ; prettier -w . ; node dist/buildCommands.js",
-		"commit": "rm -drf dist ; tsc ; prettier -w . ; git commit -a",
-		"compile": "rm -drf dist ; tsc ; prettier -w .",
-		"format": "prettier -w .",
-		"start": "node dist/buildCommands.js ; echo \"Current Git Branch: $(git branch --show-current)\" ; node dist/index.js",
+		"build": "node dist/buildCommands.js",
+		"compile": "rm -drf dist ; tsc ; prettier -w . ;",
+		"format": "prettier -w . ;",
+		"start": "node dist/index.js ;",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -27,6 +28,7 @@
 	"license": "ISC",
 	"repository": "https://github.com/akpi816218/discog",
 	"devDependencies": {
+		"@types/nodemailer": "^6.4.7",
 		"prettier": "^2.8.1",
 		"typescript": "^4.9.4"
 	}

@@ -39,6 +39,10 @@ const fields = {
 			'/coin leaderboard'
 		)}`,
 	},
+	contact: {
+		name: inlineCode('/contact'),
+		value: `Send an email to the developers\n${inlineCode('/contact')}`,
+	},
 	count: {
 		name: inlineCode('/count'),
 		value: `Progress the count!\n${inlineCode('/count')}`,
@@ -48,6 +52,13 @@ const fields = {
 		name: inlineCode('/dm'),
 		value: `Send an official server message to a user via DMs\n${inlineCode(
 			'/dm <user: user> <message: string>'
+		)}`,
+		inline: false,
+	},
+	info: {
+		name: inlineCode('/guildinfo'),
+		value: `Get some info\n${inlineCode('/info channel')}, ${inlineCode(
+			'/info guild'
 		)}`,
 		inline: false,
 	},
@@ -63,11 +74,11 @@ const fields = {
 		)}`,
 		inline: false,
 	},
-	randint: {
-		name: inlineCode('/randint'),
-		value: `Generates an integer between 1 and the specified integer (inclusive)\n${inlineCode(
-			'/randint <high: integer>'
-		)}`,
+	pronouns: {
+		name: inlineCode('/pronouns'),
+		value: `Views or sets user pronouns\n${inlineCode(
+			'/pronouns set'
+		)}, ${inlineCode('/pronouns view <user: user>')}`,
 		inline: false,
 	},
 	shove: {
@@ -125,7 +136,6 @@ export const execute = async (interaction) => {
 		.setColor(0x00ff00);
 	let command = interaction.options.getString('command');
 	if (!command) embed.addFields(Object.values(fields));
-	// @ts-expect-error
 	else if (fields[command]) embed.addFields(fields[command]);
 	else embed.setDescription(`The command ${command} was not found.`);
 	await interaction.reply({

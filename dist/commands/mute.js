@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
-const db = new Jsoning('mute.db.json');
+const db = new Jsoning('botfiles/mute.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('mute')
 	.setDescription('Mute/unmute a user')

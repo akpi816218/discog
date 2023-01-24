@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
-const db = new Jsoning('coin.db.json');
+const db = new Jsoning('botfiles/coin.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('coin')
 	.setDescription('Currency commands')
