@@ -1,18 +1,18 @@
 import {
-	bold,
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	userMention,
+	bold,
+	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
-('use strict');
+
 const db = new Jsoning('main.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('count')
 	.setDescription('Increase the count!')
 	.setDMPermission(true);
 
-export async function execute(interaction: ChatInputCommandInteraction) {
+export async function execute (interaction: ChatInputCommandInteraction) {
 	let count = parseInt(db.get('count'));
 	count++;
 	db.set('count', count);
@@ -22,5 +22,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 }
 export default {
 	data,
-	execute,
+	execute
 };

@@ -1,11 +1,11 @@
 import {
-	SlashCommandBuilder,
-	userMention,
-	EmbedBuilder,
 	ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
 	TextChannel,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('ynpoll')
 	.setDescription('Create a yes/no poll')
@@ -30,7 +30,7 @@ export const data = new SlashCommandBuilder()
 	});
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	let msgObj = {
+	const msgObj = {
 		content: '',
 		embeds: [
 			new EmbedBuilder()
@@ -38,25 +38,26 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				.setTimestamp()
 				.setTitle(interaction.options.getString('question'))
 				.setFooter({
-					text: 'Powered by DisCog',
 					iconURL: interaction.client.user.displayAvatarURL(),
-				}),
-		],
+					text: 'Powered by DisCog'
+				})
+		]
 	};
 	if (interaction.options.getBoolean('pingall'))
 		msgObj.content = `@everyone new poll by ${userMention(
 			interaction.user.id
 		)}`;
 	else msgObj.content = `New poll by ${userMention(interaction.user.id)}`;
-	let channel = interaction.options.getChannel('channel');
+	const channel = interaction.options.getChannel('channel', true);
 	if (!channel) throw new Error();
-	let msg = await (channel as TextChannel).send(msgObj);
+	// eslint-disable-next-line no-extra-parens
+	const msg = await (channel as TextChannel).send(msgObj);
 	await msg.react('👍');
 	await msg.react('👎');
-	await msg.react('🧐'); // face_with_monocle
+	await msg.react('🧐'); // Face_with_monocle
 	await interaction.reply('Done.');
 };
 export default {
 	data,
-	execute,
+	execute
 };

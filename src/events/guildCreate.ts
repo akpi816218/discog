@@ -1,5 +1,5 @@
 import { EmbedBuilder, Events, Guild, inlineCode } from 'discord.js';
-('use strict');
+
 export const name = Events.GuildCreate;
 export const once = false;
 export const execute = async (guild: Guild) => {
@@ -14,12 +14,12 @@ export const execute = async (guild: Guild) => {
 							'/coghelp'
 						)} or view my profile to find out what I can do!`
 					)
-					.setTimestamp(),
-			],
+					.setTimestamp()
+			]
 		});
 };
 export default {
-	name,
-	once,
 	execute,
+	name,
+	once
 };

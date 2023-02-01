@@ -3,7 +3,7 @@ import {
 	ModalBuilder,
 	SlashCommandBuilder,
 	TextInputBuilder,
-	TextInputStyle,
+	TextInputStyle
 } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -27,5 +27,5 @@ export const execute = async (interaction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };

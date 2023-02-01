@@ -4,9 +4,9 @@ import {
 	ModalBuilder,
 	SlashCommandBuilder,
 	TextInputBuilder,
-	TextInputStyle,
+	TextInputStyle
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('contact')
 	.setDescription('Send an email to the developers');
@@ -29,5 +29,5 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };

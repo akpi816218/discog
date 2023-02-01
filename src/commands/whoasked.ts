@@ -1,12 +1,12 @@
 import {
-	bold,
 	ChatInputCommandInteraction,
-	italic,
 	SlashCommandBuilder,
+	bold,
+	italic,
 	spoiler,
-	userMention,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('whoasked')
 	.setDescription('Who? ...ASKED')
@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
 	});
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	let user = interaction.options.getUser('user');
+	const user = interaction.options.getUser('user');
 	if (!user) throw new Error();
 	const a = userMention(interaction.user.id),
 		b = userMention(user.id);
@@ -40,11 +40,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		`${b} guess what: ${a} did not request your opinion.`,
 		`${b} guess what: ${a} did not request your vocalization.`,
 		`${b} guess what: ${a} didn't ask. Neither did ${spoiler('UR MOM')}.`,
-		`${b} HUSH CHILD because ${a} didn't ask.`,
+		`${b} HUSH CHILD because ${a} didn't ask.`
 	];
 	await interaction.reply(r[Math.floor(Math.random() * r.length)]);
 };
 export default {
 	data,
-	execute,
+	execute
 };

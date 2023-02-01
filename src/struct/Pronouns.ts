@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 export enum PronounCodes {
-	theyThem = 'They/Them',
 	heHim = 'He/Him',
-	sheHer = 'She/Her',
 	other = 'Other',
+	sheHer = 'She/Her',
+	theyThem = 'They/Them'
 }
 
 export type PronounValue = PronounCodes | `CustomPronoun:${string}/${string}`;
@@ -17,6 +18,7 @@ export interface PronounObject {
 	value?: PronounValue;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isPronounObject(o: any): o is PronounObject {
 	return 'prnnbjct' in o;
 }
@@ -40,7 +42,7 @@ export class Pronoun {
 	toJSON() {
 		return {
 			code: this.code,
-			value: this.value,
+			value: this.value
 		};
 	}
 	toString() {
@@ -49,9 +51,9 @@ export class Pronoun {
 }
 
 export const DefaultPronouns = {
-	theyThem: new Pronoun(PronounCodes.theyThem),
 	heHim: new Pronoun(PronounCodes.theyThem),
-	sheHer: new Pronoun(PronounCodes.sheHer),
 	other: new Pronoun(PronounCodes.other),
+	sheHer: new Pronoun(PronounCodes.sheHer),
+	theyThem: new Pronoun(PronounCodes.theyThem)
 };
 export default DefaultPronouns;

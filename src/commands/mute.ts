@@ -1,17 +1,15 @@
 import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
-	Guild,
 	GuildMember,
 	GuildMemberRoleManager,
 	PermissionFlagsBits,
 	Role,
 	SlashCommandBuilder,
 	User,
-	userMention,
+	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
-('use strict');
 const db = new Jsoning('botfiles/mute.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('mute')
@@ -31,28 +29,35 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();
-	let user = await (interaction.member as GuildMember).fetch(true),
-		member = await (interaction.guild as Guild).members.fetch(
+	if (!interaction.guild) return;
+	const member = await interaction.guild.members.fetch(
+			// eslint-disable-next-line no-extra-parens
 			(interaction.options.getUser('user') as User).id
-		);
-	await (interaction.guild as Guild).fetch();
+		),
+		// eslint-disable-next-line no-extra-parens
+		user = await (interaction.member as GuildMember).fetch(true);
+	await interaction.guild.fetch();
 	if (!member.manageable) {
 		await interaction.reply({
+			// eslint-disable-next-line quotes
 			content: "I can't manage that user.",
-			ephemeral: true,
+			ephemeral: true
 		});
 		return;
 	} else if (
+		// eslint-disable-next-line no-extra-parens
 		(user.roles as GuildMemberRoleManager).highest.position <=
+		// eslint-disable-next-line no-extra-parens
 		(member.roles as GuildMemberRoleManager).highest.position
 	) {
 		await interaction.reply({
+			// eslint-disable-next-line quotes
 			content: "You can't manage that user",
-			ephemeral: true,
+			ephemeral: true
 		});
 		return;
 	} else {
-		let guildObj = db.get(member.guild.id),
+		const guildObj = db.get(member.guild.id),
 			roles = guildObj[member.id];
 		if (Object.keys(roles).length != 0) {
 			await member.roles.set(guildObj[member.id]);
@@ -67,20 +72,20 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							{ name: 'Unmuted User:', value: userMention(member.id) }
 						)
 						.setFooter({
-							text: 'Powered by DisCog',
 							iconURL: interaction.client.user.displayAvatarURL(),
-						}),
+							text: 'Powered by DisCog'
+						})
 				],
 
-				ephemeral: true,
+				ephemeral: true
 			});
 			return;
 		}
-		let currentRoles: Array<string> = [];
+		const currentRoles: Array<string> = [];
 		member.roles.cache.forEach((role) => currentRoles.push(role.id));
 		Object.defineProperty(guildObj, member.id, currentRoles);
 		await member.roles.set([]);
-		await db.set((interaction.guild as Guild).id, guildObj);
+		await db.set(interaction.guild.id, guildObj);
 		member.roles.add(member.guild.roles.cache.at(1) as Role);
 		await interaction.reply({
 			embeds: [
@@ -91,14 +96,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						{ name: 'Muted User:', value: userMention(member.id) }
 					)
 					.setFooter({
-						text: 'Powered by DisCog',
 						iconURL: interaction.client.user.displayAvatarURL(),
-					}),
-			],
+						text: 'Powered by DisCog'
+					})
+			]
 		});
 	}
 };
 export default {
 	data,
-	execute,
+	execute
 };

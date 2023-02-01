@@ -1,5 +1,4 @@
-('use strict');
-import { Events, userMention, GuildMember } from 'discord.js';
+import { Events, GuildMember, userMention } from 'discord.js';
 export const name = Events.GuildMemberAdd;
 export const once = false;
 
@@ -12,7 +11,7 @@ export const execute = async (member: GuildMember) => {
 		);
 };
 export default {
-	name,
-	once,
 	execute,
+	name,
+	once
 };

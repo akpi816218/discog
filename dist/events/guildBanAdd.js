@@ -9,18 +9,18 @@ export const execute = async (ban) => {
 				new EmbedBuilder().setTitle('Ban Created').setFields(
 					{
 						name: 'User:',
-						value: `${ban.user.tag} (${userMention(ban.user.id)})`,
+						value: `${ban.user.tag} (${userMention(ban.user.id)})`
 					},
 					{
 						name: 'Reason:',
-						value: ban.reason || inlineCode('No reason provided'),
+						value: ban.reason || inlineCode('No reason provided')
 					}
-				),
-			],
+				)
+			]
 		});
 };
 export default {
 	name,
 	once,
-	execute,
+	execute
 };

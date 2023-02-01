@@ -30,7 +30,7 @@ export class Pronoun {
 	toJSON() {
 		return {
 			code: this.code,
-			value: this.value,
+			value: this.value
 		};
 	}
 	toString() {
@@ -41,6 +41,6 @@ export const DefaultPronouns = {
 	theyThem: new Pronoun(PronounCodes.theyThem),
 	heHim: new Pronoun(PronounCodes.theyThem),
 	sheHer: new Pronoun(PronounCodes.sheHer),
-	other: new Pronoun(PronounCodes.other),
+	other: new Pronoun(PronounCodes.other)
 };
 export default DefaultPronouns;

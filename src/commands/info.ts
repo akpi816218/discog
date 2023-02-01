@@ -1,14 +1,15 @@
+/* eslint-disable indent */
 import {
-	channelMention,
 	ChannelType,
 	ChatInputCommandInteraction,
 	EmbedBuilder,
-	inlineCode,
 	SlashCommandBuilder,
+	channelMention,
+	inlineCode,
 	time,
-	userMention,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('guildinfo')
 	.setDescription('Get some guild info')
@@ -41,11 +42,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						{ name: 'Created At', value: time(channel.createdAt) },
 						{
 							name: 'Rate Limit',
-							value: channel.rateLimitPerUser.toFixed(0),
+							value: channel.rateLimitPerUser.toFixed(0)
 						},
 						{ name: 'NSFW', value: channel.nsfw.toString() }
-					),
-				],
+					)
+				]
 			});
 			break;
 		case 'guild':
@@ -71,48 +72,48 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								name: 'Owner',
 								value: `${(await guild.fetchOwner()).user.tag} (${userMention(
 									guild.ownerId
-								)})`,
+								)})`
 							},
 							{
 								name: 'Created At',
-								value: time(guild.createdAt),
+								value: time(guild.createdAt)
 							},
 							{
 								name: 'System Channel',
 								value: guild.systemChannel
 									? channelMention(guild.systemChannel.id)
-									: 'None',
+									: 'None'
 							},
 							{
 								name: 'Rules Channel',
 								value: guild.rulesChannel
 									? channelMention(guild.rulesChannel.name)
-									: 'None',
+									: 'None'
 							},
 							{
 								name: 'AFK Channel',
 								value: guild.afkChannel
 									? channelMention(guild.afkChannel.name)
-									: 'None',
+									: 'None'
 							},
 							{
 								name: 'Public Updates Channel',
 								value: guild.publicUpdatesChannelId
 									? channelMention(guild.publicUpdatesChannelId)
-									: 'None',
+									: 'None'
 							}
 						)
 						.setThumbnail(guild.iconURL())
 						.setFooter({
-							text: 'Powered by DisCog',
 							iconURL: interaction.client.user.displayAvatarURL(),
-						}),
-				],
+							text: 'Powered by DisCog'
+						})
+				]
 			});
 			break;
 	}
 };
 export default {
 	data,
-	execute,
+	execute
 };

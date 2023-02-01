@@ -11,5 +11,5 @@ export const execute = async (member) => {
 export default {
 	name,
 	once,
-	execute,
+	execute
 };

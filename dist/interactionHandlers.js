@@ -1,4 +1,5 @@
-import { EmbedBuilder, inlineCode, time } from 'discord.js';
+import { EmbedBuilder, codeBlock, inlineCode, time } from 'discord.js';
+import { format } from 'prettier';
 import { createTransport } from 'nodemailer';
 import logger from './logger.js';
 import Jsoning from 'jsoning';
@@ -6,39 +7,67 @@ import { Pronoun, PronounCodes, isPronounValue } from './struct/Pronouns.js';
 export const InteractionHandlers = {
 	async Button(interaction) {},
 	ContextMenu: {
-		async Message(interaction) {},
-		async User(interaction) {
-			const user = await interaction.targetUser.fetch(true);
-			let mutfields = [];
-			if (interaction.guild && interaction.targetMember) {
-				mutfields.push({
-					name: 'Server join date',
-					value: time(interaction.targetMember.joinedAt || undefined),
-				});
-			}
-			await interaction.reply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor(user.hexAccentColor || null)
-						.setTitle(`Who is ${user.tag}?`)
-						.setThumbnail(user.displayAvatarURL())
-						.addFields(
-							{ name: 'ID:', value: user.id },
-							{
-								name: 'Discord join date:',
-								value: time(user.createdAt),
-							},
-							{ name: 'Is bot?', value: user.bot.toString() }
+		async Message(interaction) {
+			switch (interaction.commandName) {
+				case 'JSON':
+					await interaction.reply(
+						codeBlock(
+							format(JSON.stringify(interaction.targetMessage.toJSON()), {
+								parser: 'json5',
+								tabWidth: 2,
+								useTabs: false
+							})
 						)
-						.setTimestamp()
-						.setFooter({
-							text: 'Powered by DisCog',
-							iconURL: interaction.client.user.displayAvatarURL(),
-						})
-						.addFields(mutfields),
-				],
-			});
+					);
+					break;
+			}
 		},
+		async User(interaction) {
+			switch (interaction.commandName) {
+				case 'User Info':
+					const infouser = await interaction.targetUser.fetch(true);
+					let mutfields = [];
+					if (interaction.guild && interaction.targetMember) {
+						mutfields.push({
+							name: 'Server join date',
+							value: time(interaction.targetMember.joinedAt || undefined)
+						});
+					}
+					await interaction.reply({
+						embeds: [
+							new EmbedBuilder()
+								.setColor(infouser.hexAccentColor || null)
+								.setTitle(`Who is ${infouser.tag}?`)
+								.setThumbnail(infouser.displayAvatarURL())
+								.addFields(
+									{ name: 'ID:', value: infouser.id },
+									{
+										name: 'Discord join date:',
+										value: time(infouser.createdAt)
+									},
+									{ name: 'Is bot?', value: infouser.bot.toString() }
+								)
+								.setTimestamp()
+								.setFooter({
+									text: 'Powered by DisCog',
+									iconURL: interaction.client.user.displayAvatarURL()
+								})
+								.addFields(mutfields)
+						]
+					});
+					break;
+				case 'JSON':
+					await interaction.reply(
+						codeBlock(
+							format(JSON.stringify(interaction.targetUser.toJSON()), {
+								parser: 'json5',
+								tabWidth: 2,
+								useTabs: false
+							})
+						)
+					);
+			}
+		}
 	},
 	async ModalSubmit(interaction) {
 		switch (interaction.customId) {
@@ -46,16 +75,16 @@ export const InteractionHandlers = {
 				let transport = createTransport({
 					name: 'example.com',
 					sendmail: true,
-					path: '/usr/sbin/sendmail',
+					path: '/usr/sbin/sendmail'
 				});
 				transport
 					.sendMail({
 						from: ``,
 						to: [
-							'Akhil Pillai <akhilzebra@gmail.com>, Akhil Pillai <816218@seq.org>',
+							'Akhil Pillai <akhilzebra@gmail.com>, Akhil Pillai <816218@seq.org>'
 						],
 						subject: `DisCog Developer Contact Form ${interaction.user.tag} (${interaction.user.id})`,
-						text: interaction.fields.getTextInputValue('/contact.text'),
+						text: interaction.fields.getTextInputValue('/contact.text')
 					})
 					.then((v) => logger.info(v));
 				interaction.reply('Email sent.');
@@ -83,8 +112,8 @@ export const InteractionHandlers = {
 											.setFields(
 												{ name: 'Guild Name', value: guild.name },
 												{ name: 'Message', value: content }
-											),
-									],
+											)
+									]
 								})
 							);
 						return;
@@ -98,9 +127,9 @@ export const InteractionHandlers = {
 								.setTimestamp()
 								.setFooter({
 									text: `Sent by ${interaction.user.tag}`,
-									iconURL: interaction.user.displayAvatarURL(),
-								}),
-						],
+									iconURL: interaction.user.displayAvatarURL()
+								})
+						]
 					});
 				});
 				interaction.editReply(
@@ -144,6 +173,6 @@ export const InteractionHandlers = {
 			default:
 				break;
 		}
-	},
+	}
 };
 export default InteractionHandlers;

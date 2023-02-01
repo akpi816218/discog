@@ -2,7 +2,7 @@ import {
 	EmbedBuilder,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
-	userMention,
+	userMention
 } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -39,22 +39,22 @@ export const execute = async (interaction) => {
 					{ name: 'Server Name:', value: admin.guild.name },
 					{
 						name: 'Sent by:',
-						value: `${admin.user.tag} (${userMention(admin.user.id)})`,
+						value: `${admin.user.tag} (${userMention(admin.user.id)})`
 					},
 					{
 						name: 'Message',
-						value: interaction.options.getString('message'),
+						value: interaction.options.getString('message')
 					}
 				)
 				.setFooter({
 					text: 'Powered by DisCog',
-					iconURL: interaction.client.user.displayAvatarURL(),
-				}),
-		],
+					iconURL: interaction.client.user.displayAvatarURL()
+				})
+		]
 	});
 	await interaction.reply({ content: 'Done.', ephemeral: true });
 };
 export default {
 	data,
-	execute,
+	execute
 };

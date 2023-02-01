@@ -4,10 +4,10 @@ import {
 	ModalBuilder,
 	SlashCommandBuilder,
 	TextInputBuilder,
-	TextInputStyle,
+	TextInputStyle
 } from 'discord.js';
 import { devIds } from '../config.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('global')
 	.setDescription('Dev-only command')
@@ -37,5 +37,5 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };

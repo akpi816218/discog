@@ -2,9 +2,9 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	spoiler,
-	userMention,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('shove')
 	.setDescription('Shove someone')
@@ -17,7 +17,7 @@ export const data = new SlashCommandBuilder()
 	});
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	let user = interaction.options.getUser('user');
+	const user = interaction.options.getUser('user');
 	if (!user) throw new Error();
 	const a = userMention(interaction.user.id),
 		b = userMention(user.id);
@@ -35,11 +35,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		`${a} shoved ${b} into ${spoiler('UR MOM')}`,
 		`${a} shoved ${b} into ${spoiler('DEEZ NUTZ')}`,
 		`${a} shoved ${b} into ${spoiler('themselves')}`,
-		`${a} shoved ${b} so far into a certain viola that it had to be taken to Clock Tower Music to get fixed`,
+		`${a} shoved ${b} so far into a certain viola that it had to be taken to Clock Tower Music to get fixed`
 	];
 	await interaction.reply(r[Math.floor(Math.random() * r.length)]);
 };
 export default {
 	data,
-	execute,
+	execute
 };

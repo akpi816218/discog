@@ -14,12 +14,12 @@ export const execute = async (guild) => {
 							'/coghelp'
 						)} or view my profile to find out what I can do!`
 					)
-					.setTimestamp(),
-			],
+					.setTimestamp()
+			]
 		});
 };
 export default {
 	name,
 	once,
-	execute,
+	execute
 };

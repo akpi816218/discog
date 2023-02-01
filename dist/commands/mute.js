@@ -2,7 +2,7 @@ import {
 	EmbedBuilder,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
-	userMention,
+	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
@@ -32,13 +32,13 @@ export const execute = async (interaction) => {
 	if (!member.manageable) {
 		await interaction.reply({
 			content: "I can't manage that user.",
-			ephemeral: true,
+			ephemeral: true
 		});
 		return;
 	} else if (user.roles.highest.position <= member.roles.highest.position) {
 		await interaction.reply({
 			content: "You can't manage that user",
-			ephemeral: true,
+			ephemeral: true
 		});
 		return;
 	} else {
@@ -58,10 +58,10 @@ export const execute = async (interaction) => {
 						)
 						.setFooter({
 							text: 'Powered by DisCog',
-							iconURL: interaction.client.user.displayAvatarURL(),
-						}),
+							iconURL: interaction.client.user.displayAvatarURL()
+						})
 				],
-				ephemeral: true,
+				ephemeral: true
 			});
 			return;
 		}
@@ -81,13 +81,13 @@ export const execute = async (interaction) => {
 					)
 					.setFooter({
 						text: 'Powered by DisCog',
-						iconURL: interaction.client.user.displayAvatarURL(),
-					}),
-			],
+						iconURL: interaction.client.user.displayAvatarURL()
+					})
+			]
 		});
 	}
 };
 export default {
 	data,
-	execute,
+	execute
 };

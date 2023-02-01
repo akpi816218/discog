@@ -3,7 +3,7 @@ import {
 	ModalBuilder,
 	SlashCommandBuilder,
 	TextInputBuilder,
-	TextInputStyle,
+	TextInputStyle
 } from 'discord.js';
 import { devIds } from '../config.js';
 ('use strict');
@@ -34,5 +34,5 @@ export const execute = async (interaction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };

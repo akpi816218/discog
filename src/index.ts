@@ -29,14 +29,14 @@ const client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildBans,
 		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildScheduledEvents,
-	],
+		GatewayIntentBits.GuildScheduledEvents
+	]
 });
 
 client.on('debug', console.log).on('warn', console.log);
 
 let g = {
-	commands: new Collection(),
+	commands: new Collection()
 };
 
 const commandsPath = path.join(__dirname, 'commands');
@@ -68,7 +68,7 @@ client
 	.on(Events.ClientReady, (readyClient) => {
 		logger.info('Client#ready');
 		readyClient.user.setPresence({
-			status: 'online',
+			status: 'online'
 		});
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
@@ -80,7 +80,7 @@ client
 				console.error(e);
 				await interaction.reply({
 					content: 'There was an error while running this command.',
-					ephemeral: true,
+					ephemeral: true
 				});
 			}
 		} else if (interaction.isModalSubmit())

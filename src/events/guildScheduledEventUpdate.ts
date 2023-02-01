@@ -1,5 +1,3 @@
-import * as discord from 'discord.js';
-('use strict');
 import { Events, GuildScheduledEvent } from 'discord.js';
 export const name = Events.GuildScheduledEventDelete;
 export const once = false;
@@ -12,7 +10,7 @@ export const execute = async (
 		await newevent.guild.systemChannel.send(`Updated Event: ${newevent.url}`);
 };
 export default {
-	name,
-	once,
 	execute,
+	name,
+	once
 };

@@ -5,9 +5,9 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 	User,
-	userMention,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('dm')
 	.setDescription('Send an official server message to a user via DMs')
@@ -30,7 +30,8 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();
-	let admin = interaction.member as GuildMember,
+	const admin = interaction.member as GuildMember,
+		// eslint-disable-next-line no-extra-parens
 		dm = await (interaction.options.getUser('user') as User).createDM();
 	await dm.send({
 		embeds: [
@@ -43,22 +44,22 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					{ name: 'Server Name:', value: admin.guild.name },
 					{
 						name: 'Sent by:',
-						value: `${admin.user.tag} (${userMention(admin.user.id)})`,
+						value: `${admin.user.tag} (${userMention(admin.user.id)})`
 					},
 					{
 						name: 'Message',
-						value: interaction.options.getString('message') as string,
+						value: interaction.options.getString('message') as string
 					}
 				)
 				.setFooter({
-					text: 'Powered by DisCog',
 					iconURL: interaction.client.user.displayAvatarURL(),
-				}),
-		],
+					text: 'Powered by DisCog'
+				})
+		]
 	});
 	await interaction.reply({ content: 'Done.', ephemeral: true });
 };
 export default {
 	data,
-	execute,
+	execute
 };

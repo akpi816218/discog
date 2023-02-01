@@ -2,7 +2,7 @@ import {
 	EmbedBuilder,
 	inlineCode,
 	SlashCommandBuilder,
-	userMention,
+	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
@@ -51,7 +51,7 @@ export const execute = async (interaction) => {
 			mcoins += add;
 			await db.set(interaction.user.id.toString(), {
 				coins: mcoins,
-				tag: interaction.user.tag,
+				tag: interaction.user.tag
 			});
 			await interaction.reply(
 				`${userMention(
@@ -95,7 +95,7 @@ export const execute = async (interaction) => {
 			arr.forEach((val) => {
 				fields.push({
 					name: val[1].tag.toString(),
-					value: val[1].coins.toString(),
+					value: val[1].coins.toString()
 				});
 			});
 			embed.addFields(...fields);
@@ -105,11 +105,11 @@ export const execute = async (interaction) => {
 		case null:
 			await interaction.reply({
 				content: 'That is not a valid command.',
-				ephemeral: true,
+				ephemeral: true
 			});
 	}
 };
 export default {
 	data,
-	execute,
+	execute
 };

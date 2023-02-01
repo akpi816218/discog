@@ -22,26 +22,26 @@ export const execute = async (interaction) => {
 					{ name: 'ID:', value: user.id },
 					{
 						name: 'Discord join date:',
-						value: time(user.createdAt),
+						value: time(user.createdAt)
 					},
 					{
 						name: 'Server join date',
 						value: time(
 							(await interaction.guild.members.fetch(user)).joinedAt ||
 								undefined
-						),
+						)
 					},
 					{ name: 'Is bot?', value: user.bot.toString() }
 				)
 				.setTimestamp()
 				.setFooter({
 					text: 'Powered by DisCog',
-					iconURL: interaction.client.user.displayAvatarURL(),
-				}),
-		],
+					iconURL: interaction.client.user.displayAvatarURL()
+				})
+		]
 	});
 };
 export default {
 	data,
-	execute,
+	execute
 };

@@ -1,11 +1,4 @@
-('use strict');
-import {
-	EmbedBuilder,
-	Events,
-	userMention,
-	GuildBan,
-	inlineCode,
-} from 'discord.js';
+import { Events, GuildBan, inlineCode, userMention } from 'discord.js';
 export const name = Events.GuildBanRemove;
 export const once = false;
 
@@ -16,7 +9,7 @@ export const execute = async (ban: GuildBan) => {
 		);
 };
 export default {
-	name,
-	once,
 	execute,
+	name,
+	once
 };

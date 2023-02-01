@@ -16,5 +16,5 @@ export async function execute(interaction) {
 }
 export default {
 	data,
-	execute,
+	execute
 };

@@ -6,13 +6,13 @@ import {
 	StringSelectMenuBuilder,
 	TextInputBuilder,
 	TextInputStyle,
-	userMention,
+	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
 import {
 	DefaultPronouns,
 	Pronoun,
-	isPronounObject,
+	isPronounObject
 } from '../struct/Pronouns.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -53,25 +53,25 @@ export const execute = async (interaction) => {
 							.setOptions(
 								{
 									label: DefaultPronouns.theyThem.toString(),
-									value: DefaultPronouns.theyThem.code.toString(),
+									value: DefaultPronouns.theyThem.code.toString()
 								},
 								{
 									label: DefaultPronouns.heHim.toString(),
-									value: DefaultPronouns.heHim.code.toString(),
+									value: DefaultPronouns.heHim.code.toString()
 								},
 								{
 									label: DefaultPronouns.sheHer.toString(),
-									value: DefaultPronouns.sheHer.code.toString(),
+									value: DefaultPronouns.sheHer.code.toString()
 								},
 								{
 									label: DefaultPronouns.other.toString(),
-									value: DefaultPronouns.other.code.toString(),
+									value: DefaultPronouns.other.code.toString()
 								}
 							)
-					),
+					)
 				],
 				content: 'Select your pronouns below',
-				ephemeral: true,
+				ephemeral: true
 			});
 		} else {
 			await interaction.showModal(
@@ -106,18 +106,18 @@ export const execute = async (interaction) => {
 						{ name: 'User', value: `${userMention(user.id)} (${user.tag})` },
 						{
 							name: 'Pronouns',
-							value: pn.toString(),
+							value: pn.toString()
 						}
 					)
 					.setFooter({
 						text: 'Powered by DisCog',
-						iconURL: interaction.client.user.displayAvatarURL(),
-					}),
-			],
+						iconURL: interaction.client.user.displayAvatarURL()
+					})
+			]
 		});
 	}
 };
 export default {
 	data,
-	execute,
+	execute
 };

@@ -29,11 +29,11 @@ export const execute = async (interaction) => {
 		`${a} shoved ${b} into ${spoiler('UR MOM')}`,
 		`${a} shoved ${b} into ${spoiler('DEEZ NUTZ')}`,
 		`${a} shoved ${b} into ${spoiler('themselves')}`,
-		`${a} shoved ${b} so far into a certain viola that it had to be taken to Clock Tower Music to get fixed`,
+		`${a} shoved ${b} so far into a certain viola that it had to be taken to Clock Tower Music to get fixed`
 	];
 	await interaction.reply(r[Math.floor(Math.random() * r.length)]);
 };
 export default {
 	data,
-	execute,
+	execute
 };

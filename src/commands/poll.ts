@@ -1,16 +1,17 @@
+/* eslint-disable indent */
 import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
 	TextChannel,
-	userMention,
+	userMention
 } from 'discord.js';
-('use strict');
+
 export const data = new SlashCommandBuilder()
 	.setName('poll')
 	.setDescription('Create a poll')
 	.setDMPermission(false)
-	//#region data
+	// #region data
 	.addStringOption((option) => {
 		return option
 			.setName('question')
@@ -83,84 +84,78 @@ export const data = new SlashCommandBuilder()
 			.setDescription('An answer')
 			.setRequired(false);
 	});
-//#endregion data
+// #endregion data
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	//#region execute
-	let options = [];
-	// create array of options
+	// #region execute
+	const options = [];
+	// Create array of options
 	for (let i = 1; i <= 9; i++) {
 		if (i <= 2) options.push(interaction.options.getString(`option${i}`, true));
 		else if (interaction.options.getString(`option${i}`, false))
 			options.push(interaction.options.getString(`option${i}`, false));
 	}
-	console.log(options);
-	// create embed
-	let embed = new EmbedBuilder()
+	// Create embed
+	const embed = new EmbedBuilder()
 		.setColor(0x00ff00)
 		.setTimestamp()
 		.setTitle(interaction.options.getString('question'))
 		.setFooter({
-			text: 'Poll powered by DisCog',
 			iconURL: interaction.client.user.displayAvatarURL(),
+			text: 'Poll powered by DisCog'
 		});
-	// populate embed with options
+	// Populate embed with options
 	options.forEach((value, index) => {
+		// eslint-disable-next-line no-param-reassign
+		if (!value) value = '';
 		switch (index) {
 			case 0:
-				// @ts-expect-error
-				embed.addFields({ name: ':one:', value: value, inline: false });
+				embed.addFields({ name: ':one:', value: value });
 				break;
 			case 1:
-				// @ts-expect-error
-				embed.addFields({ name: ':two:', value: value, inline: false });
+				embed.addFields({ name: ':two:', value: value });
 				break;
 			case 2:
-				// @ts-expect-error
-				embed.addFields({ name: ':three:', value: value, inline: false });
+				embed.addFields({ name: ':three:', value: value });
 				break;
 			case 3:
-				// @ts-expect-error
-				embed.addFields({ name: ':four:', value: value, inline: false });
+				embed.addFields({ name: ':four:', value: value });
 				break;
 			case 4:
-				// @ts-expect-error
-				embed.addFields({ name: ':five:', value: value, inline: false });
+				embed.addFields({ name: ':five:', value: value });
 				break;
 			case 5:
-				// @ts-expect-error
-				embed.addFields({ name: ':six:', value: value, inline: false });
+				embed.addFields({ name: ':six:', value: value });
 				break;
 			case 6:
-				// @ts-expect-error
-				embed.addFields({ name: ':seven:', value: value, inline: false });
+				embed.addFields({ name: ':seven:', value: value });
 				break;
 			case 7:
-				// @ts-expect-error
-				embed.addFields({ name: ':eight:', value: value, inline: false });
+				embed.addFields({ name: ':eight:', value: value });
 				break;
 			case 8:
-				// @ts-expect-error
-				embed.addFields({ name: ':nine:', value: value, inline: false });
+				embed.addFields({ name: ':nine:', value: value });
 				break;
 		}
 	});
-	// object to pass to .send()
+	// Object to pass to .send()
+	// eslint-disable-next-line prefer-const
 	let msgobj = {
 		content: '',
-		embeds: [embed],
+		embeds: [embed]
 	};
-	// mention everyone?
+	// Mention everyone?
 	if (interaction.options.getBoolean('pingeveryone'))
 		msgobj.content = `@everyone new poll by ${userMention(
 			interaction.user.id
 		)}`;
 	else msgobj.content = `New poll by ${userMention(interaction.user.id)}`;
-	// send
-	let channel: unknown = interaction.options.getChannel('channel');
+	// Send
+	const channel = interaction.options.getChannel('channel');
 	if (!channel) throw new Error();
-	let msg = await (channel as TextChannel).send(msgobj);
-	// react
+	// eslint-disable-next-line no-extra-parens
+	const msg = await (channel as TextChannel).send(msgobj);
+	// React
 	options.forEach(async (_value, index) => {
 		switch (index) {
 			case 0:
@@ -193,9 +188,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		}
 	});
 	interaction.reply('Done.');
-	//#endregion execute
+	// #endregion execute
 };
 export default {
 	data,
-	execute,
+	execute
 };
