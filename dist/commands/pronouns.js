@@ -8,13 +8,12 @@ import {
 	TextInputStyle,
 	userMention
 } from 'discord.js';
-import Jsoning from 'jsoning';
 import {
 	DefaultPronouns,
 	Pronoun,
 	isPronounObject
 } from '../struct/Pronouns.js';
-('use strict');
+import Jsoning from 'jsoning';
 export const data = new SlashCommandBuilder()
 	.setName('pronouns')
 	.setDescription('Pronoun viewing and management')
@@ -30,12 +29,15 @@ export const data = new SlashCommandBuilder()
 			});
 	})
 	.addSubcommand((subcommand) => {
-		return subcommand
-			.setName('view')
-			.setDescription("View a user's pronouns")
-			.addUserOption((option) => {
-				return option.setName('user').setDescription('The target user');
-			});
+		return (
+			subcommand
+				.setName('view')
+				// eslint-disable-next-line quotes
+				.setDescription("View a user's pronouns")
+				.addUserOption((option) => {
+					return option.setName('user').setDescription('The target user');
+				})
+		);
 	})
 	.setDMPermission(false);
 export const execute = async (interaction) => {
@@ -110,8 +112,8 @@ export const execute = async (interaction) => {
 						}
 					)
 					.setFooter({
-						text: 'Powered by DisCog',
-						iconURL: interaction.client.user.displayAvatarURL()
+						iconURL: interaction.client.user.displayAvatarURL(),
+						text: 'Powered by DisCog'
 					})
 			]
 		});

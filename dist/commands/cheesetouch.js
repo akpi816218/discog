@@ -1,6 +1,5 @@
-import { SlashCommandBuilder, userMention, bold } from 'discord.js';
+import { SlashCommandBuilder, bold, userMention } from 'discord.js';
 import Jsoning from 'jsoning';
-('use strict');
 const db = new Jsoning('botfiles/main.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('cheesetouch')
@@ -13,13 +12,16 @@ export const data = new SlashCommandBuilder()
 			.setRequired(true);
 	})
 	.addBooleanOption((option) => {
-		return option
-			.setName('force')
-			.setDescription("This won't work unless you own the bot")
-			.setRequired(false);
+		return (
+			option
+				.setName('force')
+				// eslint-disable-next-line quotes
+				.setDescription("This won't work unless you own the bot")
+				.setRequired(false)
+		);
 	});
 export const execute = async (interaction) => {
-	let user = interaction.options.getUser('user');
+	const user = interaction.options.getUser('user');
 	if (!user) return;
 	if (!interaction.options.getBoolean('force', false)) {
 		if (interaction.user.id == db.get('cheesetouch')) {
@@ -36,8 +38,8 @@ export const execute = async (interaction) => {
 		}
 	} else if (
 		[
-			'1006248060629811301' /* akpi */,
-			'817214551740776479' /* akhilzebra */
+			'1006248060629811301' /* Akpi */,
+			'817214551740776479' /* Akhilzebra */
 		].includes(interaction.user.id)
 	) {
 		await db.set('cheesetouch', user.id);

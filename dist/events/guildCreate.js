@@ -1,5 +1,4 @@
 import { EmbedBuilder, Events, inlineCode } from 'discord.js';
-('use strict');
 export const name = Events.GuildCreate;
 export const once = false;
 export const execute = async (guild) => {
@@ -19,7 +18,7 @@ export const execute = async (guild) => {
 		});
 };
 export default {
+	execute,
 	name,
-	once,
-	execute
+	once
 };

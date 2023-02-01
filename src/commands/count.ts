@@ -12,7 +12,7 @@ export const data = new SlashCommandBuilder()
 	.setDescription('Increase the count!')
 	.setDMPermission(true);
 
-export async function execute (interaction: ChatInputCommandInteraction) {
+export async function execute(interaction: ChatInputCommandInteraction) {
 	let count = parseInt(db.get('count'));
 	count++;
 	db.set('count', count);

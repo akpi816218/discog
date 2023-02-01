@@ -18,9 +18,10 @@
 	},
 	"scripts": {
 		"build": "node dist/buildCommands.js",
+		"sanity-check": "bash sanityCheck.sh",
 		"compile": "rm -drf dist ; tsc ; prettier -w . ;",
 		"format": "prettier -w . ;",
-		"lint": "eslint src/**/* --fix > lint.tmp.txt ;",
+		"lint": "eslint . > eslint.txt ;",
 		"start": "node dist/index.js ;",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},

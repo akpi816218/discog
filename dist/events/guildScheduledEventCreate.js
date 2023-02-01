@@ -1,5 +1,4 @@
 import { Events } from 'discord.js';
-('use strict');
 export const name = Events.GuildScheduledEventCreate;
 export const once = false;
 export const execute = async (event) => {
@@ -7,7 +6,7 @@ export const execute = async (event) => {
 		await event.guild.systemChannel.send(`New Event: ${event.url}`);
 };
 export default {
+	execute,
 	name,
-	once,
-	execute
+	once
 };

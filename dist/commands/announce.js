@@ -1,10 +1,9 @@
 import {
-	TextChannel,
-	SlashCommandBuilder,
+	ChannelType,
 	PermissionFlagsBits,
-	ChannelType
+	SlashCommandBuilder,
+	TextChannel
 } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('announce')
 	.setDescription('Creates an announcement in the specified channel')
@@ -36,7 +35,7 @@ export const data = new SlashCommandBuilder()
 			PermissionFlagsBits.ModerateMembers
 	);
 export const execute = async (interaction) => {
-	let channel = interaction.options.getChannel('channel'),
+	const channel = interaction.options.getChannel('channel'),
 		message = interaction.options.getString('message'),
 		msgContent = interaction.options.getString('mentions');
 	if (!channel || !(channel instanceof TextChannel) || !message) {
@@ -48,12 +47,13 @@ export const execute = async (interaction) => {
 		embeds: [
 			{
 				color: 0x00ff00,
-				title: `Announcement by @${interaction.user.tag}:`,
 				description: message,
 				footer: {
-					text: 'Powered by DisCog',
-					icon_url: interaction.client.user.displayAvatarURL()
-				}
+					// eslint-disable-next-line camelcase
+					icon_url: interaction.client.user.displayAvatarURL(),
+					text: 'Powered by DisCog'
+				},
+				title: `Announcement by @${interaction.user.tag}:`
 			}
 		]
 	});

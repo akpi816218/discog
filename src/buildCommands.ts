@@ -1,14 +1,15 @@
-import { Routes } from 'discord.js';
-import { REST } from '@discordjs/rest';
-import { clientId } from './config.js';
-import TOKEN from './TOKEN.js';
 import 'node:process';
-let args = process.argv;
+import { dirname, default as path } from 'path';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord.js';
+import { TOKEN } from './TOKEN.js';
+import { clientId } from './config.js';
+import { fileURLToPath } from 'url';
+const args = process.argv;
 args.shift();
 args.shift();
 import fs from 'node:fs';
-import { dirname, default as path } from 'path';
-import { fileURLToPath } from 'url';
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
@@ -30,4 +31,5 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(TOKEN as string);
 await rest.put(Routes.applicationCommands(clientId), { body: [] });
 await rest.put(Routes.applicationCommands(clientId), { body: commands });
+// eslint-disable-next-line no-console
 console.log(await rest.get(Routes.applicationCommands(clientId)));

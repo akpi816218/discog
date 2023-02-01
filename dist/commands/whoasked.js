@@ -1,11 +1,10 @@
 import {
+	SlashCommandBuilder,
 	bold,
 	italic,
-	SlashCommandBuilder,
 	spoiler,
 	userMention
 } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('whoasked')
 	.setDescription('Who? ...ASKED')
@@ -17,7 +16,7 @@ export const data = new SlashCommandBuilder()
 			.setRequired(true);
 	});
 export const execute = async (interaction) => {
-	let user = interaction.options.getUser('user');
+	const user = interaction.options.getUser('user');
 	if (!user) throw new Error();
 	const a = userMention(interaction.user.id),
 		b = userMention(user.id);

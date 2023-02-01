@@ -4,7 +4,6 @@ import {
 	SlashCommandBuilder,
 	userMention
 } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('dm')
 	.setDescription('Send an official server message to a user via DMs')
@@ -26,7 +25,8 @@ export const data = new SlashCommandBuilder()
 	);
 export const execute = async (interaction) => {
 	await interaction.deferReply();
-	let admin = interaction.member,
+	const admin = interaction.member,
+		// eslint-disable-next-line no-extra-parens
 		dm = await interaction.options.getUser('user').createDM();
 	await dm.send({
 		embeds: [
@@ -47,8 +47,8 @@ export const execute = async (interaction) => {
 					}
 				)
 				.setFooter({
-					text: 'Powered by DisCog',
-					iconURL: interaction.client.user.displayAvatarURL()
+					iconURL: interaction.client.user.displayAvatarURL(),
+					text: 'Powered by DisCog'
 				})
 		]
 	});

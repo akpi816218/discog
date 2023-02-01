@@ -1,4 +1,3 @@
-('use strict');
 import { Events, userMention } from 'discord.js';
 export const name = Events.GuildMemberAdd;
 export const once = false;
@@ -11,7 +10,7 @@ export const execute = async (member) => {
 		);
 };
 export default {
+	execute,
 	name,
-	once,
-	execute
+	once
 };

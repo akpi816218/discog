@@ -1,5 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder, time } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('whois')
 	.setDescription('Who are they?')
@@ -35,8 +34,8 @@ export const execute = async (interaction) => {
 				)
 				.setTimestamp()
 				.setFooter({
-					text: 'Powered by DisCog',
-					iconURL: interaction.client.user.displayAvatarURL()
+					iconURL: interaction.client.user.displayAvatarURL(),
+					text: 'Powered by DisCog'
 				})
 		]
 	});
