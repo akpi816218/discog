@@ -2,7 +2,7 @@ import {
 	TextChannel,
 	SlashCommandBuilder,
 	PermissionFlagsBits,
-	ChannelType,
+	ChannelType
 } from 'discord.js';
 ('use strict');
 export const data = new SlashCommandBuilder()
@@ -52,17 +52,17 @@ export const execute = async (interaction) => {
 				description: message,
 				footer: {
 					text: 'Powered by DisCog',
-					icon_url: interaction.client.user.displayAvatarURL(),
-				},
-			},
-		],
+					icon_url: interaction.client.user.displayAvatarURL()
+				}
+			}
+		]
 	});
 	await interaction.reply({
 		content: 'Done.',
-		ephemeral: true,
+		ephemeral: true
 	});
 };
 export default {
 	data,
-	execute,
+	execute
 };

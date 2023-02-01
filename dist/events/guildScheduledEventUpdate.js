@@ -9,5 +9,5 @@ export const execute = async (_oldevent, newevent) => {
 export default {
 	name,
 	once,
-	execute,
+	execute
 };

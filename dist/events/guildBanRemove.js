@@ -11,5 +11,5 @@ export const execute = async (ban) => {
 export default {
 	name,
 	once,
-	execute,
+	execute
 };

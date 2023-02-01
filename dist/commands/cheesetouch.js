@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, userMention, bold } from 'discord.js';
 import Jsoning from 'jsoning';
 ('use strict');
-const db = new Jsoning('main.db.json');
+const db = new Jsoning('botfiles/main.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('cheesetouch')
 	.setDescription('Transfer the cheesetouch')
@@ -37,7 +37,7 @@ export const execute = async (interaction) => {
 	} else if (
 		[
 			'1006248060629811301' /* akpi */,
-			'817214551740776479' /* akhilzebra */,
+			'817214551740776479' /* akhilzebra */
 		].includes(interaction.user.id)
 	) {
 		await db.set('cheesetouch', user.id);
@@ -54,5 +54,5 @@ export const execute = async (interaction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };

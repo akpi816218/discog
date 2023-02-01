@@ -95,7 +95,7 @@ export const execute = async (interaction) => {
 		.setTitle(interaction.options.getString('question'))
 		.setFooter({
 			text: 'Poll powered by DisCog',
-			iconURL: interaction.client.user.displayAvatarURL(),
+			iconURL: interaction.client.user.displayAvatarURL()
 		});
 	// populate embed with options
 	options.forEach((value, index) => {
@@ -141,7 +141,7 @@ export const execute = async (interaction) => {
 	// object to pass to .send()
 	let msgobj = {
 		content: '',
-		embeds: [embed],
+		embeds: [embed]
 	};
 	// mention everyone?
 	if (interaction.options.getBoolean('pingeveryone'))
@@ -190,5 +190,5 @@ export const execute = async (interaction) => {
 };
 export default {
 	data,
-	execute,
+	execute
 };
