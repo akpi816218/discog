@@ -6,7 +6,6 @@ import {
 	TextInputStyle
 } from 'discord.js';
 import { devIds } from '../config.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('global')
 	.setDescription('Dev-only command')

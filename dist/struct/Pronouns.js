@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 export var PronounCodes;
 (function (PronounCodes) {
-	PronounCodes['theyThem'] = 'They/Them';
 	PronounCodes['heHim'] = 'He/Him';
-	PronounCodes['sheHer'] = 'She/Her';
 	PronounCodes['other'] = 'Other';
+	PronounCodes['sheHer'] = 'She/Her';
+	PronounCodes['theyThem'] = 'They/Them';
 })(PronounCodes || (PronounCodes = {}));
 export function isPronounValue(s) {
 	return s in PronounCodes;
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isPronounObject(o) {
 	return 'prnnbjct' in o;
 }
@@ -38,9 +40,9 @@ export class Pronoun {
 	}
 }
 export const DefaultPronouns = {
-	theyThem: new Pronoun(PronounCodes.theyThem),
 	heHim: new Pronoun(PronounCodes.theyThem),
+	other: new Pronoun(PronounCodes.other),
 	sheHer: new Pronoun(PronounCodes.sheHer),
-	other: new Pronoun(PronounCodes.other)
+	theyThem: new Pronoun(PronounCodes.theyThem)
 };
 export default DefaultPronouns;

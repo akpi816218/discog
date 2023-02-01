@@ -1,5 +1,4 @@
-('use strict');
-import { Events, userMention, inlineCode } from 'discord.js';
+import { Events, inlineCode, userMention } from 'discord.js';
 export const name = Events.GuildBanRemove;
 export const once = false;
 export const execute = async (ban) => {
@@ -9,7 +8,7 @@ export const execute = async (ban) => {
 		);
 };
 export default {
+	execute,
 	name,
-	once,
-	execute
+	once
 };

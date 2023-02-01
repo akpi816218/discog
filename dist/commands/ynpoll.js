@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, userMention, EmbedBuilder } from 'discord.js';
-('use strict');
+import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 export const data = new SlashCommandBuilder()
 	.setName('ynpoll')
 	.setDescription('Create a yes/no poll')
@@ -23,7 +22,7 @@ export const data = new SlashCommandBuilder()
 			.setRequired(false);
 	});
 export const execute = async (interaction) => {
-	let msgObj = {
+	const msgObj = {
 		content: '',
 		embeds: [
 			new EmbedBuilder()
@@ -31,8 +30,8 @@ export const execute = async (interaction) => {
 				.setTimestamp()
 				.setTitle(interaction.options.getString('question'))
 				.setFooter({
-					text: 'Powered by DisCog',
-					iconURL: interaction.client.user.displayAvatarURL()
+					iconURL: interaction.client.user.displayAvatarURL(),
+					text: 'Powered by DisCog'
 				})
 		]
 	};
@@ -41,12 +40,13 @@ export const execute = async (interaction) => {
 			interaction.user.id
 		)}`;
 	else msgObj.content = `New poll by ${userMention(interaction.user.id)}`;
-	let channel = interaction.options.getChannel('channel');
+	const channel = interaction.options.getChannel('channel', true);
 	if (!channel) throw new Error();
-	let msg = await channel.send(msgObj);
+	// eslint-disable-next-line no-extra-parens
+	const msg = await channel.send(msgObj);
 	await msg.react('👍');
 	await msg.react('👎');
-	await msg.react('🧐'); // face_with_monocle
+	await msg.react('🧐'); // Face_with_monocle
 	await interaction.reply('Done.');
 };
 export default {

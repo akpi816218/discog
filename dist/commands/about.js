@@ -1,5 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('about')
 	.setDescription('About DisCog');
@@ -10,17 +9,17 @@ export const execute = async (interaction) => {
 				.setColor(0x00ff00)
 				.setThumbnail(interaction.client.user.displayAvatarURL())
 				.setAuthor({
-					name: 'DisCog',
-					iconURL: interaction.client.user.displayAvatarURL()
+					iconURL: interaction.client.user.displayAvatarURL(),
+					name: 'DisCog'
 				})
 				.setTimestamp()
 				.setFooter({
-					text: 'About DisCog',
-					iconURL: interaction.client.user.displayAvatarURL()
+					iconURL: interaction.client.user.displayAvatarURL(),
+					text: 'About DisCog'
 				})
 				.setTitle('About DisCog')
 				.setDescription(
-					`DisCog is a versatile general purpose Discord bot. DisCog features utility commands as well as some games and fun commands.`
+					'DisCog is a versatile general purpose Discord bot. DisCog features utility commands as well as some games and fun commands.'
 				)
 		]
 	});

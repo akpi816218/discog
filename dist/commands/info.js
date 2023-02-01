@@ -1,13 +1,13 @@
+/* eslint-disable indent */
 import {
-	channelMention,
 	ChannelType,
 	EmbedBuilder,
-	inlineCode,
 	SlashCommandBuilder,
+	channelMention,
+	inlineCode,
 	time,
 	userMention
 } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('guildinfo')
 	.setDescription('Get some guild info')
@@ -102,8 +102,8 @@ export const execute = async (interaction) => {
 						)
 						.setThumbnail(guild.iconURL())
 						.setFooter({
-							text: 'Powered by DisCog',
-							iconURL: interaction.client.user.displayAvatarURL()
+							iconURL: interaction.client.user.displayAvatarURL(),
+							text: 'Powered by DisCog'
 						})
 				]
 			});

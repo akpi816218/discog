@@ -5,7 +5,6 @@ import {
 	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
-('use strict');
 const db = new Jsoning('botfiles/mute.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('mute')
@@ -24,25 +23,35 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(false);
 export const execute = async (interaction) => {
 	await interaction.deferReply();
-	let user = await interaction.member.fetch(true),
-		member = await interaction.guild.members.fetch(
+	if (!interaction.guild) return;
+	const member = await interaction.guild.members.fetch(
+			// eslint-disable-next-line no-extra-parens
 			interaction.options.getUser('user').id
-		);
+		),
+		// eslint-disable-next-line no-extra-parens
+		user = await interaction.member.fetch(true);
 	await interaction.guild.fetch();
 	if (!member.manageable) {
 		await interaction.reply({
+			// eslint-disable-next-line quotes
 			content: "I can't manage that user.",
 			ephemeral: true
 		});
 		return;
-	} else if (user.roles.highest.position <= member.roles.highest.position) {
+	} else if (
+		// eslint-disable-next-line no-extra-parens
+		user.roles.highest.position <=
+		// eslint-disable-next-line no-extra-parens
+		member.roles.highest.position
+	) {
 		await interaction.reply({
+			// eslint-disable-next-line quotes
 			content: "You can't manage that user",
 			ephemeral: true
 		});
 		return;
 	} else {
-		let guildObj = db.get(member.guild.id),
+		const guildObj = db.get(member.guild.id),
 			roles = guildObj[member.id];
 		if (Object.keys(roles).length != 0) {
 			await member.roles.set(guildObj[member.id]);
@@ -57,15 +66,15 @@ export const execute = async (interaction) => {
 							{ name: 'Unmuted User:', value: userMention(member.id) }
 						)
 						.setFooter({
-							text: 'Powered by DisCog',
-							iconURL: interaction.client.user.displayAvatarURL()
+							iconURL: interaction.client.user.displayAvatarURL(),
+							text: 'Powered by DisCog'
 						})
 				],
 				ephemeral: true
 			});
 			return;
 		}
-		let currentRoles = [];
+		const currentRoles = [];
 		member.roles.cache.forEach((role) => currentRoles.push(role.id));
 		Object.defineProperty(guildObj, member.id, currentRoles);
 		await member.roles.set([]);
@@ -80,8 +89,8 @@ export const execute = async (interaction) => {
 						{ name: 'Muted User:', value: userMention(member.id) }
 					)
 					.setFooter({
-						text: 'Powered by DisCog',
-						iconURL: interaction.client.user.displayAvatarURL()
+						iconURL: interaction.client.user.displayAvatarURL(),
+						text: 'Powered by DisCog'
 					})
 			]
 		});

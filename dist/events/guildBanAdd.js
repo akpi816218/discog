@@ -1,5 +1,4 @@
-('use strict');
-import { EmbedBuilder, Events, userMention, inlineCode } from 'discord.js';
+import { EmbedBuilder, Events, inlineCode, userMention } from 'discord.js';
 export const name = Events.GuildBanAdd;
 export const once = false;
 export const execute = async (ban) => {
@@ -20,7 +19,7 @@ export const execute = async (ban) => {
 		});
 };
 export default {
+	execute,
 	name,
-	once,
-	execute
+	once
 };

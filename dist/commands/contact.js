@@ -5,7 +5,6 @@ import {
 	TextInputBuilder,
 	TextInputStyle
 } from 'discord.js';
-('use strict');
 export const data = new SlashCommandBuilder()
 	.setName('contact')
 	.setDescription('Send an email to the developers');

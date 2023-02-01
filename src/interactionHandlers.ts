@@ -1,8 +1,7 @@
+/* eslint-disable indent */
 import {
 	APIEmbedField,
 	ButtonInteraction,
-	ColorResolvable,
-	CommandInteraction,
 	EmbedBuilder,
 	GuildMember,
 	MessageContextMenuCommandInteraction,
@@ -13,13 +12,14 @@ import {
 	inlineCode,
 	time
 } from 'discord.js';
-import { format } from 'prettier';
-import { createTransport } from 'nodemailer';
-import logger from './logger.js';
-import Jsoning from 'jsoning';
 import { Pronoun, PronounCodes, isPronounValue } from './struct/Pronouns.js';
+import Jsoning from 'jsoning';
+import { createTransport } from 'nodemailer';
+import { format } from 'prettier';
+import logger from './logger.js';
 
 export const InteractionHandlers = {
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 	async Button(interaction: ButtonInteraction) {},
 	ContextMenu: {
 		async Message(interaction: MessageContextMenuCommandInteraction) {
@@ -41,11 +41,12 @@ export const InteractionHandlers = {
 			switch (interaction.commandName) {
 				case 'User Info':
 					const infouser = await interaction.targetUser.fetch(true);
-					let mutfields: APIEmbedField[] = [];
+					const mutfields: APIEmbedField[] = [];
 					if (interaction.guild && interaction.targetMember) {
 						mutfields.push({
 							name: 'Server join date',
 							value: time(
+								// eslint-disable-next-line no-extra-parens
 								(interaction.targetMember as GuildMember).joinedAt || undefined
 							)
 						});
@@ -53,7 +54,7 @@ export const InteractionHandlers = {
 					await interaction.reply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor((infouser.hexAccentColor as ColorResolvable) || null)
+								.setColor(infouser.hexAccentColor || null)
 								.setTitle(`Who is ${infouser.tag}?`)
 								.setThumbnail(infouser.displayAvatarURL())
 								.addFields(
@@ -66,8 +67,8 @@ export const InteractionHandlers = {
 								)
 								.setTimestamp()
 								.setFooter({
-									text: 'Powered by DisCog',
-									iconURL: interaction.client.user.displayAvatarURL()
+									iconURL: interaction.client.user.displayAvatarURL(),
+									text: 'Powered by DisCog'
 								})
 								.addFields(mutfields)
 						]
@@ -89,19 +90,19 @@ export const InteractionHandlers = {
 	async ModalSubmit(interaction: ModalSubmitInteraction) {
 		switch (interaction.customId) {
 			case '/contact':
-				let transport = createTransport({
+				const transport = createTransport({
 					name: 'example.com',
-					sendmail: true,
-					path: '/usr/sbin/sendmail'
+					path: '/usr/sbin/sendmail',
+					sendmail: true
 				});
 				transport
 					.sendMail({
 						from: ``,
+						subject: `DisCog Developer Contact Form ${interaction.user.tag} (${interaction.user.id})`,
+						text: interaction.fields.getTextInputValue('/contact.text'),
 						to: [
 							'Akhil Pillai <akhilzebra@gmail.com>, Akhil Pillai <816218@seq.org>'
-						],
-						subject: `DisCog Developer Contact Form ${interaction.user.tag} (${interaction.user.id})`,
-						text: interaction.fields.getTextInputValue('/contact.text')
+						]
 					})
 					.then((v) => logger.info(v));
 				interaction.reply('Email sent.');
@@ -109,7 +110,7 @@ export const InteractionHandlers = {
 			case '/global':
 				interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
-				let badGuilds: string[] = [];
+				const badGuilds: string[] = [];
 				interaction.client.guilds.cache.forEach((guild) => {
 					if (!guild.systemChannel) {
 						badGuilds.push(guild.name);
@@ -143,8 +144,8 @@ export const InteractionHandlers = {
 								.setDescription(content)
 								.setTimestamp()
 								.setFooter({
-									text: `Sent by ${interaction.user.tag}`,
-									iconURL: interaction.user.displayAvatarURL()
+									iconURL: interaction.user.displayAvatarURL(),
+									text: `Sent by ${interaction.user.tag}`
 								})
 						]
 					});

@@ -1,25 +1,32 @@
-('use strict');
-
+import {
+	ChatInputCommandInteraction,
+	Client,
+	Collection,
+	Events,
+	GatewayIntentBits
+} from 'discord.js';
+import { InteractionHandlers } from './interactionHandlers.js';
+import TOKEN from './TOKEN.js';
+import { dirname } from 'path';
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { inviteLink } from './config.js';
 import logger from './logger.js';
+import path from 'node:path';
+import { readdirSync } from 'node:fs';
 
+// eslint-disable-next-line no-console
 console.log('RunID: %d', Math.floor(Math.random() * 100));
 
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import './interactionHandlers.js';
-import { readdirSync } from 'node:fs';
-import path from 'node:path';
-import { inviteLink } from './config.js';
-import TOKEN from './TOKEN.js';
-import express from 'express';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import InteractionHandlers from './interactionHandlers.js';
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/', (_req: any, res: any) => {
 	res.status(200).end();
 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/invite', (_req: any, res: any) => {
 	res.redirect(inviteLink);
 });
@@ -33,9 +40,10 @@ const client = new Client({
 	]
 });
 
-client.on('debug', console.log).on('warn', console.log);
+// eslint-disable-next-line no-console
+client.on('debug', console.log).on('warn', console.warn);
 
-let g = {
+const g = {
 	commands: new Collection()
 };
 
@@ -73,10 +81,15 @@ client
 	})
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (interaction.isChatInputCommand()) {
-			const command: any = g.commands.get(interaction.commandName);
+			interface Command {
+				// eslint-disable-next-line no-unused-vars
+				execute: (interaction: ChatInputCommandInteraction) => unknown;
+			}
+			const command = g.commands.get(interaction.commandName) as Command;
 			try {
 				await command.execute(interaction);
 			} catch (e) {
+				// eslint-disable-next-line no-console
 				console.error(e);
 				await interaction.reply({
 					content: 'There was an error while running this command.',
@@ -101,6 +114,7 @@ await client.login(TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
+	// eslint-disable-next-line no-console
 	console.log('Destroyed Client.');
 	process.exit(0);
 });

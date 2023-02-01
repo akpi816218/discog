@@ -1,21 +1,23 @@
-('use strict');
-import logger from './logger.js';
-console.log('RunID: %d', Math.floor(Math.random() * 100));
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import './interactionHandlers.js';
-import { readdirSync } from 'node:fs';
-import path from 'node:path';
-import { inviteLink } from './config.js';
+import { InteractionHandlers } from './interactionHandlers.js';
 import TOKEN from './TOKEN.js';
-import express from 'express';
 import { dirname } from 'path';
+import express from 'express';
 import { fileURLToPath } from 'url';
-import InteractionHandlers from './interactionHandlers.js';
+import { inviteLink } from './config.js';
+import logger from './logger.js';
+import path from 'node:path';
+import { readdirSync } from 'node:fs';
+// eslint-disable-next-line no-console
+console.log('RunID: %d', Math.floor(Math.random() * 100));
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/', (_req, res) => {
 	res.status(200).end();
 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/invite', (_req, res) => {
 	res.redirect(inviteLink);
 });
@@ -27,8 +29,9 @@ const client = new Client({
 		GatewayIntentBits.GuildScheduledEvents
 	]
 });
-client.on('debug', console.log).on('warn', console.log);
-let g = {
+// eslint-disable-next-line no-console
+client.on('debug', console.log).on('warn', console.warn);
+const g = {
 	commands: new Collection()
 };
 const commandsPath = path.join(__dirname, 'commands');
@@ -67,6 +70,7 @@ client
 			try {
 				await command.execute(interaction);
 			} catch (e) {
+				// eslint-disable-next-line no-console
 				console.error(e);
 				await interaction.reply({
 					content: 'There was an error while running this command.',
@@ -89,6 +93,7 @@ client
 await client.login(TOKEN);
 process.on('SIGINT', () => {
 	client.destroy();
+	// eslint-disable-next-line no-console
 	console.log('Destroyed Client.');
 	process.exit(0);
 });
