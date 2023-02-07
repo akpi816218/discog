@@ -1,33 +1,36 @@
 import {
+	ActivityType,
 	ChatInputCommandInteraction,
 	Client,
 	Collection,
 	Events,
-	GatewayIntentBits
+	GatewayIntentBits,
+	PresenceUpdateStatus,
+	SlashCommandBuilder,
+	inlineCode
 } from 'discord.js';
+import { Request, Response } from 'express';
 import { InteractionHandlers } from './interactionHandlers.js';
-import TOKEN from './TOKEN.js';
-import { dirname } from 'path';
+import { TOKEN } from './TOKEN.js';
+// eslint-disable-next-line no-duplicate-imports
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { inviteLink } from './config.js';
-import logger from './logger.js';
-import path from 'node:path';
-import { readdirSync } from 'node:fs';
+import { logger } from './logger.js';
+import path from 'path';
+import { readdirSync } from 'fs';
 
-// eslint-disable-next-line no-console
-console.log('RunID: %d', Math.floor(Math.random() * 100));
+logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
-// eslint-disable-next-line no-underscore-dangle
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const thisdirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-app.get('/', (_req: any, res: any) => {
+app.get('/', (_req: Request, res: Response) => {
 	res.status(200).end();
 });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-app.get('/invite', (_req: any, res: any) => {
+app.get('/invite', (_req: Request, res: Response) => {
 	res.redirect(inviteLink);
 });
 
@@ -37,17 +40,28 @@ const client = new Client({
 		GatewayIntentBits.GuildBans,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildScheduledEvents
-	]
+	],
+	presence: {
+		activities: [
+			{ name: inlineCode('/gpt'), type: ActivityType.Listening },
+			{
+				name: 'equus quagga',
+				type: ActivityType.Streaming,
+				url: 'https://youtube.com/@equus_quagga'
+			}
+		],
+		afk: false,
+		status: PresenceUpdateStatus.Online
+	}
 });
 
-// eslint-disable-next-line no-console
-client.on('debug', console.log).on('warn', console.warn);
+client.on('debug', logger.debug).on('warn', logger.warn);
 
 const g = {
 	commands: new Collection()
 };
 
-const commandsPath = path.join(__dirname, 'commands');
+const commandsPath = path.join(thisdirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
 	file.endsWith('.js')
 );
@@ -57,7 +71,7 @@ for (const file of commandFiles) {
 	g.commands.set(command.data.name, command);
 }
 
-const eventsPath = path.join(__dirname, 'events');
+const eventsPath = path.join(thisdirname, 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
 	file.endsWith('.js')
 );
@@ -73,15 +87,11 @@ for (const file of eventFiles) {
 
 // Keep in index
 client
-	.on(Events.ClientReady, (readyClient) => {
-		logger.info('Client#ready');
-		readyClient.user.setPresence({
-			status: 'online'
-		});
-	})
+	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (interaction.isChatInputCommand()) {
 			interface Command {
+				data: SlashCommandBuilder;
 				// eslint-disable-next-line no-unused-vars
 				execute: (interaction: ChatInputCommandInteraction) => unknown;
 			}
@@ -89,8 +99,7 @@ client
 			try {
 				await command.execute(interaction);
 			} catch (e) {
-				// eslint-disable-next-line no-console
-				console.error(e);
+				logger.error(e);
 				await interaction.reply({
 					content: 'There was an error while running this command.',
 					ephemeral: true
@@ -114,8 +123,7 @@ await client.login(TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
-	// eslint-disable-next-line no-console
-	console.log('Destroyed Client.');
+	logger.info('Destroyed Client.');
 	process.exit(0);
 });
 

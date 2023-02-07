@@ -7,22 +7,20 @@
 	"dependencies": {
 		"@discordjs/rest": "^1.2.0",
 		"@types/express": "^4.17.15",
-		"colors": "^1.4.0",
+		"chatgpt": "^4.1.3",
 		"discord-api-types": "^0.37.19",
 		"discord.js": "^14.6.0",
 		"express": "^4.18.2",
 		"jsoning": "^0.13.23",
 		"keyv": "^4.5.0",
-		"nodemailer": "^6.9.0",
 		"pino": "^8.8.0"
 	},
 	"scripts": {
-		"build": "node dist/buildCommands.js",
+		"build": "npx tsx src/buildCommands.ts",
 		"sanity-check": "bash sanityCheck.sh",
-		"compile": "rm -drf dist ; tsc ; prettier -w . ;",
-		"format": "prettier -w . ;",
-		"lint": "eslint . > eslint.txt ;",
-		"start": "node dist/index.js ;",
+		"format": "prettier -w .",
+		"lint": "eslint . > eslint.txt",
+		"start": "npx tsx src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],

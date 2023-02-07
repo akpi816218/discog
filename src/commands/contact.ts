@@ -1,10 +1,7 @@
 import {
-	ActionRowBuilder,
 	ChatInputCommandInteraction,
-	ModalBuilder,
 	SlashCommandBuilder,
-	TextInputBuilder,
-	TextInputStyle
+	inlineCode
 } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -12,20 +9,7 @@ export const data = new SlashCommandBuilder()
 	.setDescription('Send an email to the developers');
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.showModal(
-		new ModalBuilder()
-			.setTitle('DisCog Developer Contact Form')
-			.setCustomId('/contact')
-			.setComponents(
-				new ActionRowBuilder<TextInputBuilder>().setComponents(
-					new TextInputBuilder()
-						.setCustomId('/contact.text')
-						.setLabel('Message')
-						.setPlaceholder('The message to send')
-						.setStyle(TextInputStyle.Paragraph)
-				)
-			)
-	);
+	await interaction.reply(`Send a DM to ${inlineCode('@equus quagga#4492')}!`);
 };
 export default {
 	data,
