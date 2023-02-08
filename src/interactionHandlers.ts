@@ -151,7 +151,10 @@ export const InteractionHandlers = {
 				const pn = new Pronoun(PronounCodes.other, choice);
 				const db = new Jsoning('botfiles/pronouns.db.json');
 				await db.set(interaction.user.id, pn.toJSON());
-				await interaction.reply(`User pronouns set: ${pn.value}`);
+				await interaction.reply({
+					content: `User pronouns set: ${pn.value}`,
+					ephemeral: true
+				});
 				break;
 		}
 	},
@@ -166,7 +169,10 @@ export const InteractionHandlers = {
 				const pn = new Pronoun(choice);
 				const db = new Jsoning('botfiles/pronouns.db.json');
 				await db.set(interaction.user.id, pn.toJSON());
-				await interaction.reply(`User pronouns set: ${pn.value}`);
+				await interaction.reply({
+					content: `User pronouns set: ${pn.value}`,
+					ephemeral: true
+				});
 				break;
 		}
 	}
