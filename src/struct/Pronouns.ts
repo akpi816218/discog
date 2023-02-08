@@ -9,7 +9,10 @@ export enum PronounCodes {
 export type PronounValue = PronounCodes | `CustomPronoun:${string}/${string}`;
 
 export function isPronounValue(s: string): s is PronounCodes {
-	return s in PronounCodes;
+	return (
+		['He/Him', 'Other', 'She/Her', 'They/Them'].includes(s) ||
+		/^CustomPronoun\:[A-Z][a-z]+\/[A-Z][a-z]+$/.test(s)
+	);
 }
 
 export interface PronounObject {
@@ -39,9 +42,10 @@ export class Pronoun {
 			return new Pronoun(json.code);
 		} else return new Pronoun(json.code, json.value);
 	}
-	toJSON() {
+	toJSON(): PronounObject {
 		return {
 			code: this.code,
+			prnnbjct: 'PronounObject',
 			value: this.value
 		};
 	}
@@ -51,7 +55,7 @@ export class Pronoun {
 }
 
 export const DefaultPronouns = {
-	heHim: new Pronoun(PronounCodes.theyThem),
+	heHim: new Pronoun(PronounCodes.heHim),
 	other: new Pronoun(PronounCodes.other),
 	sheHer: new Pronoun(PronounCodes.sheHer),
 	theyThem: new Pronoun(PronounCodes.theyThem)

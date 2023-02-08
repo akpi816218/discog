@@ -6,7 +6,7 @@ import {
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
-	StringSelectMenuInteraction,
+	SelectMenuInteraction,
 	UserContextMenuCommandInteraction,
 	codeBlock,
 	inlineCode,
@@ -14,13 +14,11 @@ import {
 } from 'discord.js';
 import { Pronoun, PronounCodes, isPronounValue } from './struct/Pronouns.js';
 import Jsoning from 'jsoning';
-import { createTransport } from 'nodemailer';
 import { format } from 'prettier';
-import logger from './logger.js';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-	async Button(interaction: ButtonInteraction) {},
+	async Button(_interaction: ButtonInteraction) {},
 	ContextMenu: {
 		async Message(interaction: MessageContextMenuCommandInteraction) {
 			switch (interaction.commandName) {
@@ -89,24 +87,6 @@ export const InteractionHandlers = {
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction) {
 		switch (interaction.customId) {
-			case '/contact':
-				const transport = createTransport({
-					name: 'example.com',
-					path: '/usr/sbin/sendmail',
-					sendmail: true
-				});
-				transport
-					.sendMail({
-						from: ``,
-						subject: `DisCog Developer Contact Form ${interaction.user.tag} (${interaction.user.id})`,
-						text: interaction.fields.getTextInputValue('/contact.text'),
-						to: [
-							'Akhil Pillai <akhilzebra@gmail.com>, Akhil Pillai <816218@seq.org>'
-						]
-					})
-					.then((v) => logger.info(v));
-				interaction.reply('Email sent.');
-				break;
 			case '/global':
 				interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
@@ -161,21 +141,21 @@ export const InteractionHandlers = {
 				);
 				break;
 			case '/pronouns_modal':
-				const choice = interaction.fields.getTextInputValue(
+				const choice = `CustomPronoun:${interaction.fields.getTextInputValue(
 					'/pronouns_modal_text'
-				);
+				)}`;
 				if (!isPronounValue(choice)) {
 					await interaction.reply('Error: Invalid formatting');
 					return;
 				}
 				const pn = new Pronoun(PronounCodes.other, choice);
-				const db = new Jsoning('pronouns.db.json');
+				const db = new Jsoning('botfiles/pronouns.db.json');
 				await db.set(interaction.user.id, pn.toJSON());
 				await interaction.reply(`User pronouns set: ${pn.value}`);
 				break;
 		}
 	},
-	async StringSelectMenu(interaction: StringSelectMenuInteraction) {
+	async StringSelectMenu(interaction: SelectMenuInteraction) {
 		switch (interaction.customId) {
 			case '/pronouns_select':
 				const choice = interaction.values[0];
@@ -184,12 +164,9 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(choice);
-				const db = new Jsoning('pronouns.db.json');
+				const db = new Jsoning('botfiles/pronouns.db.json');
 				await db.set(interaction.user.id, pn.toJSON());
 				await interaction.reply(`User pronouns set: ${pn.value}`);
-				break;
-
-			default:
 				break;
 		}
 	}

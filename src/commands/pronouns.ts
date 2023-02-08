@@ -7,6 +7,7 @@ import {
 	StringSelectMenuBuilder,
 	TextInputBuilder,
 	TextInputStyle,
+	inlineCode,
 	userMention
 } from 'discord.js';
 import {
@@ -58,19 +59,19 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							.setOptions(
 								{
 									label: DefaultPronouns.theyThem.toString(),
-									value: DefaultPronouns.theyThem.code.toString()
+									value: DefaultPronouns.theyThem.toString()
 								},
 								{
 									label: DefaultPronouns.heHim.toString(),
-									value: DefaultPronouns.heHim.code.toString()
+									value: DefaultPronouns.heHim.toString()
 								},
 								{
 									label: DefaultPronouns.sheHer.toString(),
-									value: DefaultPronouns.sheHer.code.toString()
+									value: DefaultPronouns.sheHer.toString()
 								},
 								{
 									label: DefaultPronouns.other.toString(),
-									value: DefaultPronouns.other.code.toString()
+									value: DefaultPronouns.other.toString()
 								}
 							)
 					)
@@ -89,19 +90,35 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								.setCustomId('/pronouns_modal_text')
 								.setLabel('Custom Pronouns')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder(
-									'Your custom pronouns. Format them properly (i.e. "They/Them")'
-								)
+								.setPlaceholder('It/It')
 								.setRequired(true)
 						)
 					)
 			);
 		}
 	} else if (subcommand == 'view') {
-		const user = interaction.options.getUser('user');
-		if (!user) throw new Error('No user specified');
-		const data = db.get(user.id);
-		if (!isPronounObject(data)) throw new Error('User data is corrupted');
+		const user = interaction.options.getUser('user') || interaction.user;
+		const data = db.get(user.id) || {};
+		if (!data || !isPronounObject(data)) {
+			await interaction.reply({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('User Pronouns')
+						.setDescription(
+							`${userMention(user.id)} (${
+								user.tag
+							}) has not set their pronouns, or their data has become corrupted. Ask them to use ${inlineCode(
+								'/pronouns set'
+							)} to set their pronouns.`
+						)
+						.setFooter({
+							iconURL: interaction.client.user.displayAvatarURL(),
+							text: 'Powered by DisCog'
+						})
+				]
+			});
+			return;
+		}
 		const pn = Pronoun.fromJSON(data);
 		await interaction.reply({
 			embeds: [

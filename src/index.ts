@@ -6,8 +6,7 @@ import {
 	Events,
 	GatewayIntentBits,
 	PresenceUpdateStatus,
-	SlashCommandBuilder,
-	inlineCode
+	SlashCommandBuilder
 } from 'discord.js';
 import { Request, Response } from 'express';
 import { InteractionHandlers } from './interactionHandlers.js';
@@ -37,13 +36,11 @@ app.get('/invite', (_req: Request, res: Response) => {
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildBans,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildScheduledEvents
 	],
 	presence: {
 		activities: [
-			{ name: inlineCode('/gpt'), type: ActivityType.Listening },
 			{
 				name: 'equus quagga',
 				type: ActivityType.Streaming,
@@ -55,25 +52,28 @@ const client = new Client({
 	}
 });
 
-client.on('debug', logger.debug).on('warn', logger.warn);
-
+interface Command {
+	data: SlashCommandBuilder;
+	// eslint-disable-next-line no-unused-vars
+	execute: (interaction: ChatInputCommandInteraction) => unknown;
+}
 const g = {
-	commands: new Collection()
+	commands: new Collection<string, Command>()
 };
 
 const commandsPath = path.join(thisdirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
-	file.endsWith('.js')
+	file.endsWith('.ts')
 );
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
-	const command = await import(filePath);
+	const command: Command = await import(filePath);
 	g.commands.set(command.data.name, command);
 }
 
 const eventsPath = path.join(thisdirname, 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
-	file.endsWith('.js')
+	file.endsWith('.ts')
 );
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
@@ -90,16 +90,16 @@ client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (interaction.isChatInputCommand()) {
-			interface Command {
-				data: SlashCommandBuilder;
-				// eslint-disable-next-line no-unused-vars
-				execute: (interaction: ChatInputCommandInteraction) => unknown;
+			const command = g.commands.get(interaction.commandName);
+			if (!command) {
+				await interaction.reply('Internal error: Command not found');
+				return;
 			}
-			const command = g.commands.get(interaction.commandName) as Command;
 			try {
 				await command.execute(interaction);
 			} catch (e) {
-				logger.error(e);
+				// eslint-disable-next-line no-console
+				console.error(e);
 				await interaction.reply({
 					content: 'There was an error while running this command.',
 					ephemeral: true
