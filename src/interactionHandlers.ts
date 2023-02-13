@@ -117,7 +117,9 @@ export const InteractionHandlers = {
 						return;
 					}
 					guild.systemChannel.send({
-						content: '@everyone',
+						// Remove @everyone ping: does content need to have a value?
+						// eslint-disable-next-line capitalized-comments
+						// content: '',
 						embeds: [
 							new EmbedBuilder()
 								.setTitle('DisCog Global System Announcement')

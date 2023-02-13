@@ -45,7 +45,7 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(false);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const db = new Jsoning('pronouns.db.json');
+	const db = new Jsoning('botfiles/pronouns.db.json');
 	const subcommand = interaction.options.getSubcommand();
 	if (subcommand == 'set') {
 		if (!interaction.options.getBoolean('custom')) {
@@ -90,7 +90,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								.setCustomId('/pronouns_modal_text')
 								.setLabel('Custom Pronouns')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder('It/It')
+								.setPlaceholder('Ex: It/It/Zir or It/It')
 								.setRequired(true)
 						)
 					)
@@ -103,6 +103,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			await interaction.reply({
 				embeds: [
 					new EmbedBuilder()
+						.setColor('Random')
 						.setTitle('User Pronouns')
 						.setDescription(
 							`${userMention(user.id)} (${
@@ -123,6 +124,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		await interaction.reply({
 			embeds: [
 				new EmbedBuilder()
+					.setColor('Random')
 					.setTitle('User Pronouns')
 					.addFields(
 						{ name: 'User', value: `${userMention(user.id)} (${user.tag})` },

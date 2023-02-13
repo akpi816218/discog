@@ -1,4 +1,7 @@
 import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder
@@ -10,6 +13,18 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({
+		components: [
+			new ActionRowBuilder<ButtonBuilder>().setComponents(
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Link)
+					.setURL('https://github.com/akpi816218/discog/commits/')
+					.setLabel('Changelog'),
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Link)
+					.setURL('https://discord.gg/7A7QwXVpsJ')
+					.setLabel('Discord Server')
+			)
+		],
 		embeds: [
 			new EmbedBuilder()
 				.setColor(0x00ff00)

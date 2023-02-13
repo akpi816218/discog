@@ -14,7 +14,7 @@ export const data = new SlashCommandBuilder()
 	.addUserOption((option) => {
 		return option
 			.setName('user')
-			.setDescription('DM an official server message to a user')
+			.setDescription('The target user')
 			.setRequired(true);
 	})
 	.addStringOption((option) => {

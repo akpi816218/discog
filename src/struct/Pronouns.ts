@@ -11,7 +11,7 @@ export type PronounValue = PronounCodes | `CustomPronoun:${string}/${string}`;
 export function isPronounValue(s: string): s is PronounCodes {
 	return (
 		['He/Him', 'Other', 'She/Her', 'They/Them'].includes(s) ||
-		/^CustomPronoun\:[A-Z][a-z]+\/[A-Z][a-z]+$/.test(s)
+		/^CustomPronoun\:[A-Z][a-z]+(\/[A-Z][a-z]+)+$/.test(s)
 	);
 }
 

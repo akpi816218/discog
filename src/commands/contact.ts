@@ -1,4 +1,7 @@
 import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	inlineCode
@@ -6,10 +9,20 @@ import {
 
 export const data = new SlashCommandBuilder()
 	.setName('contact')
-	.setDescription('Send an email to the developers');
+	.setDescription('Send a report to the developers');
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.reply(`Send a DM to ${inlineCode('@equus quagga#4492')}!`);
+	await interaction.reply({
+		components: [
+			new ActionRowBuilder<ButtonBuilder>().setComponents(
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Link)
+					.setURL('https://discord.gg/7A7QwXVpsJ')
+					.setLabel('Discord Server')
+			)
+		],
+		content: `Send a DM to ${inlineCode('@equus quagga#4492')}!`
+	});
 };
 export default {
 	data,

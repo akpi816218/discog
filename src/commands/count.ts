@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import Jsoning from 'jsoning';
 
-const db = new Jsoning('main.db.json');
+const db = new Jsoning('botfiles/main.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('count')
 	.setDescription('Increase the count!')

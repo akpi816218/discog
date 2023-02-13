@@ -18,7 +18,7 @@
 		"sanity-check": "bash sanityCheck.sh",
 		"format": "prettier -w .",
 		"lint": "eslint . > eslint.txt",
-		"start": "npx tsx src/index.ts",
+		"start": "npx tsx src/index.ts | npx pino-pretty",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -32,7 +32,9 @@
 		"@typescript-eslint/eslint-plugin": "^5.50.0",
 		"@typescript-eslint/parser": "^5.50.0",
 		"eslint": "^8.33.0",
+		"pino-pretty": "^9.1.1",
 		"prettier": "^2.8.1",
+		"tsx": "^3.12.3",
 		"typescript": "^4.9.5"
 	}
 }

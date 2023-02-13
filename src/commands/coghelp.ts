@@ -18,16 +18,6 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/announce <channel: channel> <message: string> [mentionEveryone: boolean, default=false]'
 		)}`
 	},
-	cheesetouch: {
-		name: inlineCode('/cheesetouch'),
-		value: `Transfers the cheese touch to someone else\n${inlineCode(
-			'/cheesetouch <user: user> [force: boolean, default=false]'
-		)}\nNote that the ${inlineCode(
-			'force'
-		)} option won't work when set to ${inlineCode(
-			'true'
-		)} unless you own the bot.`
-	},
 	coghelp: {
 		name: inlineCode('/coghelp'),
 		value: `Shows general help or help for a specific command\n${inlineCode(
@@ -44,11 +34,7 @@ const fields: { [key: string]: APIEmbedField } = {
 	},
 	contact: {
 		name: inlineCode('/contact'),
-		value: `Send an email to the developers\n${inlineCode('/contact')}`
-	},
-	count: {
-		name: inlineCode('/count'),
-		value: `Progress the count!\n${inlineCode('/count')}`
+		value: `Send a report to the developers\n${inlineCode('/contact')}`
 	},
 	dm: {
 		name: inlineCode('/dm'),
@@ -56,7 +42,7 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/dm <user: user> <message: string>'
 		)}`
 	},
-	info: {
+	guildinfo: {
 		name: inlineCode('/guildinfo'),
 		value: `Get some info\n${inlineCode('/info channel')}, ${inlineCode(
 			'/info guild'
@@ -65,6 +51,10 @@ const fields: { [key: string]: APIEmbedField } = {
 	mute: {
 		name: inlineCode('/mute'),
 		value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`
+	},
+	ping: {
+		name: inlineCode('/ping'),
+		value: `Checks the bot's ping\n${inlineCode('/ping')}`
 	},
 	poll: {
 		name: inlineCode('/poll'),
@@ -75,26 +65,8 @@ const fields: { [key: string]: APIEmbedField } = {
 	pronouns: {
 		name: inlineCode('/pronouns'),
 		value: `Views or sets user pronouns\n${inlineCode(
-			'/pronouns set'
-		)}, ${inlineCode('/pronouns view <user: user>')}`
-	},
-	shove: {
-		name: inlineCode('/shove'),
-		value: `Shoves someone\n${inlineCode('/shove <user: user>')}`
-	},
-	whoasked: {
-		name: inlineCode('/whoasked'),
-		value: `Who? ...Asked\n${inlineCode('/whoasked <user: user>')}`
-	},
-	whois: {
-		name: inlineCode('/whois'),
-		value: `Info about a user\n${inlineCode('/whois <user: user>')}`
-	},
-	ynpoll: {
-		name: inlineCode('/ynpoll'),
-		value: `Creates a yes/no poll\n${inlineCode(
-			'/ynpoll <question: string> <channel: channel>'
-		)}`
+			'/pronouns set [custom:boolean]'
+		)}, ${inlineCode('/pronouns view [user: user]')}`
 	}
 };
 
