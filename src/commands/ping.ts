@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const reply = await interaction.reply({
-		content: '',
+		content: 'Pinging...',
 		fetchReply: true
 	});
 	reply.edit({

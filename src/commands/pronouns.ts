@@ -58,6 +58,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							.setCustomId('/pronouns_select')
 							.setOptions(
 								{
+									label: DefaultPronouns.any.toString(),
+									value: DefaultPronouns.any.toString()
+								},
+								{
 									label: DefaultPronouns.theyThem.toString(),
 									value: DefaultPronouns.theyThem.toString()
 								},
@@ -90,7 +94,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								.setCustomId('/pronouns_modal_text')
 								.setLabel('Custom Pronouns')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder('Ex: It/It/Zir or It/It')
+								.setPlaceholder('Ex: It/It/Zir or Any')
 								.setRequired(true)
 						)
 					)

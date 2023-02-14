@@ -154,7 +154,7 @@ export const InteractionHandlers = {
 				const db = new Jsoning('botfiles/pronouns.db.json');
 				await db.set(interaction.user.id, pn.toJSON());
 				await interaction.reply({
-					content: `User pronouns set: ${pn.value}`,
+					content: `User pronouns set: ${pn.toString()}`,
 					ephemeral: true
 				});
 				break;
@@ -165,7 +165,10 @@ export const InteractionHandlers = {
 			case '/pronouns_select':
 				const choice = interaction.values[0];
 				if (!isPronounValue(choice)) {
-					await interaction.reply('Error: Invalid formatting');
+					await interaction.reply({
+						content: 'Error: Invalid formatting',
+						ephemeral: true
+					});
 					return;
 				}
 				const pn = new Pronoun(choice);

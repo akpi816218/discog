@@ -11,6 +11,7 @@ import {
 import { Request, Response } from 'express';
 import { InteractionHandlers } from './interactionHandlers.js';
 import { TOKEN } from './TOKEN.js';
+import { argv } from 'process';
 // eslint-disable-next-line no-duplicate-imports
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -18,6 +19,10 @@ import { inviteLink } from './config.js';
 import { logger } from './logger.js';
 import path from 'path';
 import { readdirSync } from 'fs';
+
+argv.shift();
+argv.shift();
+if (argv.includes('-d')) logger.level = 'debug';
 
 logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
@@ -42,9 +47,8 @@ const client = new Client({
 	presence: {
 		activities: [
 			{
-				name: 'equus quagga',
-				type: ActivityType.Streaming,
-				url: 'https://youtube.com/@equus_quagga'
+				name: '/pronouns',
+				type: ActivityType.Playing
 			}
 		],
 		afk: false,

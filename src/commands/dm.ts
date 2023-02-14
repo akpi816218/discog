@@ -29,7 +29,7 @@ export const data = new SlashCommandBuilder()
 	);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply();
+	await interaction.reply({ content: 'Working...', ephemeral: true });
 	const admin = interaction.member as GuildMember,
 		// eslint-disable-next-line no-extra-parens
 		dm = await (interaction.options.getUser('user') as User).createDM();
@@ -57,7 +57,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				})
 		]
 	});
-	await interaction.reply({ content: 'Done.', ephemeral: true });
+	await interaction.editReply('Done.');
 };
 export default {
 	data,
