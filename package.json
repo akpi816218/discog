@@ -11,7 +11,8 @@
 		"express": "^4.18.2",
 		"jsoning": "^0.13.23",
 		"keyv": "^4.5.0",
-		"pino": "^8.8.0"
+		"pino": "^8.8.0",
+		"pronouns.js": "github:akpi816218/pronouns.js"
 	},
 	"scripts": {
 		"build": "npx tsx src/buildCommands.ts",

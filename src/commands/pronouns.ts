@@ -10,11 +10,7 @@ import {
 	inlineCode,
 	userMention
 } from 'discord.js';
-import {
-	DefaultPronouns,
-	Pronoun,
-	isPronounObject
-} from '../struct/Pronouns.js';
+import { DefaultPronouns, Pronoun, isPronounObject } from 'pronouns.js';
 import Jsoning from 'jsoning';
 
 export const data = new SlashCommandBuilder()

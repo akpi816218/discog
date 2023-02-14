@@ -12,7 +12,7 @@ import {
 	inlineCode,
 	time
 } from 'discord.js';
-import { Pronoun, PronounCodes, isPronounValue } from './struct/Pronouns.js';
+import { Pronoun, PronounCodes, isPronounValue } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
 
