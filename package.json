@@ -1,6 +1,6 @@
 {
 	"name": "discog",
-	"version": "1.0.0",
+	"version": "0.0.0",
 	"description": "",
 	"main": "src/index.ts",
 	"type": "module",
@@ -10,9 +10,8 @@
 		"discord.js": "^14.6.0",
 		"express": "^4.18.2",
 		"jsoning": "^0.13.23",
-		"keyv": "^4.5.0",
 		"pino": "^8.8.0",
-		"pronouns.js": "github:akpi816218/pronouns.js"
+		"pronouns.js": "^2.0.0"
 	},
 	"scripts": {
 		"build": "npx tsx src/buildCommands.ts",

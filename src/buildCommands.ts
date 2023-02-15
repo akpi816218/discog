@@ -27,7 +27,7 @@ for (const file of commandFiles) {
 	const command = await import(filePath);
 	commands.push(command.data.toJSON());
 }
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+const rest = new REST({ timeout: 10_000, version: '10' }).setToken(TOKEN);
 await rest.put(Routes.applicationCommands(clientId), { body: [] });
 await rest.put(Routes.applicationCommands(clientId), { body: commands });
 // eslint-disable-next-line no-console

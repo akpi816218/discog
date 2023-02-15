@@ -11,10 +11,13 @@ import {
 } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
-	.setName('guildinfo')
-	.setDescription('Get some guild info')
+	.setName('info')
+	.setDescription('Get some info')
 	.addSubcommand((subcommand) => {
 		return subcommand.setName('guild').setDescription('Guild info');
+	})
+	.addSubcommand((subcommand) => {
+		return subcommand.setName('channel').setDescription('Channel info');
 	})
 	.setDMPermission(false);
 

@@ -1,3 +1,8 @@
-**TOKEN**
-**node_modules**
-**.env
+*TOKEN*
+node_modules
+package-lock.json
+._*
+.DS_Store
+.Trashes
+*.env*
+*.env.*
