@@ -15,7 +15,7 @@ const fields: { [key: string]: APIEmbedField } = {
 	announce: {
 		name: inlineCode('/announce'),
 		value: `Creates and announcement in the specified channel\n${inlineCode(
-			'/announce <channel: channel> <message: string> [mentionEveryone: boolean, default=false]'
+			'/announce <channel: channel> <message: string> [mentionEveryone: boolean || false]'
 		)}`
 	},
 	coghelp: {
@@ -34,17 +34,29 @@ const fields: { [key: string]: APIEmbedField } = {
 	},
 	contact: {
 		name: inlineCode('/contact'),
-		value: `Send a report to the developers\n${inlineCode('/contact')}`
+		value: `Sends a report to the developers\n${inlineCode('/contact')}`
+	},
+	dev: {
+		name: inlineCode('/dev'),
+		value: `Developer-only command\n${inlineCode(
+			'/dev'
+		)}\nYou need to be a developer to use this command. If you don't believe me, try it. You'll see.`
 	},
 	dm: {
 		name: inlineCode('/dm'),
-		value: `Send an official server message to a user via DMs\n${inlineCode(
+		value: `Sends an official server message to a user via DMs\n${inlineCode(
 			'/dm <user: user> <message: string>'
-		)}`
+		)}\nUnless a server admin configured this command differently, this should not be available to most users.`
 	},
-	guildinfo: {
-		name: inlineCode('/guildinfo'),
-		value: `Get some info\n${inlineCode('/info channel')}, ${inlineCode(
+	donate: {
+		name: inlineCode('/donate'),
+		value: `Support bot development! Please? Thank you!\n${inlineCode(
+			'/donate'
+		)}\nPLEASE DONATE!`
+	},
+	info: {
+		name: inlineCode('/info'),
+		value: `Gets some info\n${inlineCode('/info channel')}, ${inlineCode(
 			'/info guild'
 		)}`
 	},
@@ -65,8 +77,8 @@ const fields: { [key: string]: APIEmbedField } = {
 	pronouns: {
 		name: inlineCode('/pronouns'),
 		value: `Views or sets user pronouns\n${inlineCode(
-			'/pronouns set [custom:boolean]'
-		)}, ${inlineCode('/pronouns view [user: user]')}`
+			'/pronouns set [custom: boolean || false]'
+		)}, ${inlineCode('/pronouns view [user: user || @self]')}`
 	}
 };
 
@@ -86,7 +98,7 @@ export const data = new SlashCommandBuilder()
 	.addStringOption((option) => {
 		return option
 			.setName('command')
-			.setDescription('The command to show the help for')
+			.setDescription('The command to show help for')
 			.setChoices(...choices)
 			.setRequired(false);
 	});
@@ -99,7 +111,13 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				'[argument: type]'
 			)} represents an optional argument. ${inlineCode(
 				'<argument: type>'
-			)} represents a required argument.`
+			)} represents a required argument.\n${inlineCode(
+				'@self'
+			)} represents the user who ran the command.\n${inlineCode(
+				'type || default'
+			)} means an option of type ${inlineCode(
+				'type'
+			)} with a default value of ${inlineCode('default')}.`
 		)
 		.setTimestamp()
 		.setFooter({
@@ -110,11 +128,13 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const command = interaction.options.getString('command');
 	if (!command) embed.addFields(Object.values(fields));
 	else if (fields[command]) embed.addFields(fields[command]);
-	else embed.setDescription(`The command ${command} was not found.`);
+	else
+		embed.setDescription(`The command ${inlineCode(command)} was not found.`);
 	await interaction.reply({
 		embeds: [embed]
 	});
 };
+
 export default {
 	data,
 	execute

@@ -5,13 +5,12 @@ import { TOKEN } from './TOKEN.js';
 import { argv } from 'process';
 import { clientId } from './config.js';
 import { fileURLToPath } from 'url';
-argv.shift();
-argv.shift();
 import fs from 'fs';
-// eslint-disable-next-line no-underscore-dangle
-const __dirname = dirname(fileURLToPath(import.meta.url));
+argv.shift();
+argv.shift();
+const thisdirname = dirname(fileURLToPath(import.meta.url));
 const commands = [];
-const commandsPath = path.join(__dirname, 'commands');
+const commandsPath = path.join(thisdirname, 'commands');
 let commandFiles;
 if (argv.length == 0) {
 	commandFiles = fs
@@ -27,7 +26,7 @@ for (const file of commandFiles) {
 	const command = await import(filePath);
 	commands.push(command.data.toJSON());
 }
-const rest = new REST({ timeout: 10_000, version: '10' }).setToken(TOKEN);
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 await rest.put(Routes.applicationCommands(clientId), { body: [] });
 await rest.put(Routes.applicationCommands(clientId), { body: commands });
 // eslint-disable-next-line no-console

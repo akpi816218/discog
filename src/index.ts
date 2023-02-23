@@ -10,6 +10,7 @@ import {
 } from 'discord.js';
 import { Request, Response } from 'express';
 import { InteractionHandlers } from './interactionHandlers.js';
+import Jsoning from 'jsoning';
 import { TOKEN } from './TOKEN.js';
 import { argv } from 'process';
 // eslint-disable-next-line no-duplicate-imports
@@ -25,6 +26,8 @@ argv.shift();
 if (argv.includes('-d')) logger.level = 'debug';
 
 logger.info('RunID: %d', Math.floor(Math.random() * 100));
+
+const devdb = new Jsoning('botfiles/dev.db.json');
 
 const thisdirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -61,9 +64,7 @@ interface Command {
 	// eslint-disable-next-line no-unused-vars
 	execute: (interaction: ChatInputCommandInteraction) => unknown;
 }
-const g = {
-	commands: new Collection<string, Command>()
-};
+const commandCollection = new Collection<string, Command>();
 
 const commandsPath = path.join(thisdirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
@@ -72,7 +73,7 @@ const commandFiles = readdirSync(commandsPath).filter((file) =>
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
 	const command: Command = await import(filePath);
-	g.commands.set(command.data.name, command);
+	commandCollection.set(command.data.name, command);
 }
 
 const eventsPath = path.join(thisdirname, 'events');
@@ -93,8 +94,19 @@ for (const file of eventFiles) {
 client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async (interaction) => {
+		if (interaction.user.bot) return;
+		if (
+			devdb.get('blacklist').includes(interaction.user.id) &&
+			interaction.isCommand()
+		) {
+			await interaction.reply({
+				content: 'You are blacklisted from using this bot.',
+				ephemeral: true
+			});
+			return;
+		}
 		if (interaction.isChatInputCommand()) {
-			const command = g.commands.get(interaction.commandName);
+			const command = commandCollection.get(interaction.commandName);
 			if (!command) {
 				await interaction.reply('Internal error: Command not found');
 				return;
@@ -102,12 +114,17 @@ client
 			try {
 				await command.execute(interaction);
 			} catch (e) {
-				// eslint-disable-next-line no-console
-				console.error(e);
-				await interaction.reply({
-					content: 'There was an error while running this command.',
-					ephemeral: true
-				});
+				logger.error(e);
+				if (interaction.replied) {
+					await interaction.editReply(
+						'There was an error while running this command.'
+					);
+				} else {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				}
 			}
 		} else if (interaction.isModalSubmit())
 			InteractionHandlers.ModalSubmit(interaction);

@@ -4,7 +4,6 @@ import {
 	GuildMember,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
-	User,
 	userMention
 } from 'discord.js';
 
@@ -31,8 +30,7 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({ content: 'Working...', ephemeral: true });
 	const admin = interaction.member as GuildMember,
-		// eslint-disable-next-line no-extra-parens
-		dm = await (interaction.options.getUser('user') as User).createDM();
+		dm = await interaction.options.getUser('user', true).createDM();
 	await dm.send({
 		embeds: [
 			new EmbedBuilder()

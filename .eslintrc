@@ -29,6 +29,7 @@
 		"no-eq-null": "error",
 		"no-eval": "error",
 		"no-extra-parens": "warn",
+		"no-fallthrough": "error",
 		"no-implied-eval": "error",
 		"no-invalid-regexp": "error",
 		"no-invalid-this": "error",

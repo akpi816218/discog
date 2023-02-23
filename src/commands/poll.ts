@@ -87,9 +87,7 @@ export const data = new SlashCommandBuilder()
 // #endregion data
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	// #region execute
 	const options = [];
-	// Create array of options
 	for (let i = 1; i <= 9; i++) {
 		if (i <= 2) options.push(interaction.options.getString(`option${i}`, true));
 		else if (interaction.options.getString(`option${i}`, false))
@@ -104,91 +102,25 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			iconURL: interaction.client.user.displayAvatarURL(),
 			text: 'Poll powered by DisCog'
 		});
+	const NumberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 	// Populate embed with options
 	options.forEach((value, index) => {
 		// eslint-disable-next-line no-param-reassign
 		if (!value) value = '';
-		switch (index) {
-			case 0:
-				embed.addFields({ name: ':one:', value: value });
-				break;
-			case 1:
-				embed.addFields({ name: ':two:', value: value });
-				break;
-			case 2:
-				embed.addFields({ name: ':three:', value: value });
-				break;
-			case 3:
-				embed.addFields({ name: ':four:', value: value });
-				break;
-			case 4:
-				embed.addFields({ name: ':five:', value: value });
-				break;
-			case 5:
-				embed.addFields({ name: ':six:', value: value });
-				break;
-			case 6:
-				embed.addFields({ name: ':seven:', value: value });
-				break;
-			case 7:
-				embed.addFields({ name: ':eight:', value: value });
-				break;
-			case 8:
-				embed.addFields({ name: ':nine:', value: value });
-				break;
-		}
+		embed.addFields({ name: NumberEmojis[index], value });
 	});
-	// Object to pass to .send()
-	// eslint-disable-next-line prefer-const
-	let msgobj = {
-		content: '',
-		embeds: [embed]
-	};
-	// Mention everyone?
-	if (interaction.options.getBoolean('pingeveryone'))
-		msgobj.content = `@everyone new poll by ${userMention(
-			interaction.user.id
-		)}`;
-	else msgobj.content = `New poll by ${userMention(interaction.user.id)}`;
-	// Send
-	const channel = interaction.options.getChannel('channel');
+	const channel = interaction.options.getChannel('channel', true);
 	if (!channel) throw new Error();
-	// eslint-disable-next-line no-extra-parens
-	const msg = await (channel as TextChannel).send(msgobj);
-	// React
-	options.forEach(async (_value, index) => {
-		switch (index) {
-			case 0:
-				await msg.react('1️⃣');
-				break;
-			case 1:
-				await msg.react('2️⃣');
-				break;
-			case 2:
-				await msg.react('3️⃣');
-				break;
-			case 3:
-				await msg.react('4️⃣');
-				break;
-			case 4:
-				await msg.react('5️⃣');
-				break;
-			case 5:
-				await msg.react('6️⃣');
-				break;
-			case 6:
-				await msg.react('7️⃣');
-				break;
-			case 7:
-				await msg.react('8️⃣');
-				break;
-			case 8:
-				await msg.react('9️⃣');
-				break;
-		}
+	if (!(channel instanceof TextChannel))
+		throw new Error('/poll: Channel is not TextChannel');
+	const msg = await channel.send({
+		content: `${
+			interaction.options.getBoolean('pingeveryone', true) ? '@everyone ' : ''
+		} New poll by ${userMention(interaction.user.id)}`,
+		embeds: [embed]
 	});
-	interaction.reply('Done.');
-	// #endregion execute
+	for (let i = 0; i < options.length; i++) await msg.react(NumberEmojis[i]);
+	await interaction.reply('Done.');
 };
 export default {
 	data,

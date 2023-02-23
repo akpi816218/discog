@@ -6,7 +6,6 @@ import {
 	PermissionFlagsBits,
 	Role,
 	SlashCommandBuilder,
-	User,
 	userMention
 } from 'discord.js';
 import Jsoning from 'jsoning';
@@ -32,7 +31,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	if (!interaction.guild) return;
 	const member = await interaction.guild.members.fetch(
 			// eslint-disable-next-line no-extra-parens
-			(interaction.options.getUser('user') as User).id
+			interaction.options.getUser('user', true).id
 		),
 		// eslint-disable-next-line no-extra-parens
 		user = await (interaction.member as GuildMember).fetch(true);

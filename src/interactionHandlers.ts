@@ -15,6 +15,7 @@ import {
 import { Pronoun, PronounCodes, isPronounValue } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
+import logger from './logger';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -88,7 +89,7 @@ export const InteractionHandlers = {
 	async ModalSubmit(interaction: ModalSubmitInteraction) {
 		switch (interaction.customId) {
 			case '/global':
-				interaction.reply('Working...');
+				await interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
 				const badGuilds: string[] = [];
 				interaction.client.guilds.cache.forEach((guild) => {
@@ -116,23 +117,48 @@ export const InteractionHandlers = {
 							);
 						return;
 					}
-					guild.systemChannel.send({
-						// Remove @everyone ping: does content need to have a value?
-						// eslint-disable-next-line capitalized-comments
-						// content: '',
-						embeds: [
-							new EmbedBuilder()
-								.setTitle('DisCog Global System Announcement')
-								.setDescription(content)
-								.setTimestamp()
-								.setFooter({
-									iconURL: interaction.user.displayAvatarURL(),
-									text: `Sent by ${interaction.user.tag}`
+					try {
+						guild.systemChannel.send({
+							// Remove @everyone ping: does content need to have a value?
+							// eslint-disable-next-line capitalized-comments
+							// content: '',
+							embeds: [
+								new EmbedBuilder()
+									.setTitle('DisCog Global System Announcement')
+									.setDescription(content)
+									.setTimestamp()
+									.setFooter({
+										iconURL: interaction.user.displayAvatarURL(),
+										text: `Sent by ${interaction.user.tag}`
+									})
+							]
+						});
+					} catch (e) {
+						badGuilds.push(guild.name);
+						guild
+							.fetchOwner()
+							.then((member) => member.createDM())
+							.then((dm) =>
+								dm.send({
+									embeds: [
+										new EmbedBuilder()
+											.setTitle('DisCog Global System Announcement')
+											.setDescription(
+												`You are receiving this message because you are the owner of a guild which I am part of, and I have an important system message to deliver to your guild. However, your guild does not have a system channel, so I could not post the announcement. You can set a system channel by going to Server Settings > Overview > System Messages Channel. In the meantime, please use my ${inlineCode(
+													'/announce'
+												)} command to deliver the following message to your guild.`
+											)
+											.setFields(
+												{ name: 'Guild Name', value: guild.name },
+												{ name: 'Message', value: content }
+											)
+									]
 								})
-						]
-					});
+							);
+						logger.error(e);
+					}
 				});
-				interaction.editReply(
+				await interaction.editReply(
 					`Done. ${
 						badGuilds.length > 0
 							? `The following guilds did not receive the announcement: ${badGuilds.join(
