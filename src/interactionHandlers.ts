@@ -6,7 +6,7 @@ import {
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
-	SelectMenuInteraction,
+	StringSelectMenuInteraction,
 	UserContextMenuCommandInteraction,
 	codeBlock,
 	inlineCode,
@@ -87,6 +87,7 @@ export const InteractionHandlers = {
 		}
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction) {
+		const db = new Jsoning('botfiles/identity.db.json');
 		switch (interaction.customId) {
 			case '/global':
 				await interaction.reply('Working...');
@@ -168,7 +169,7 @@ export const InteractionHandlers = {
 					}`
 				);
 				break;
-			case '/pronouns_modal':
+			case '/identity_pronouns_set_custom':
 				const choice = `CustomPronoun:${interaction.fields.getTextInputValue(
 					'/pronouns_modal_text'
 				)}`;
@@ -177,18 +178,27 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(PronounCodes.other, choice);
-				const db = new Jsoning('botfiles/pronouns.db.json');
-				await db.set(interaction.user.id, pn.toJSON());
+				const currentpn = db.get(interaction.user.id);
+				currentpn.pronouns = pn.toJSON();
+				await db.set(interaction.user.id, currentpn);
 				await interaction.reply({
 					content: `User pronouns set: ${pn.toString()}`,
 					ephemeral: true
 				});
 				break;
+			case '/identity_bio_set':
+				const bio = interaction.fields.getTextInputValue(
+					'/identity_bio_set_text'
+				);
+				const currentbio = db.get(interaction.user.id);
+				currentbio.bio = bio;
+				await db.set(interaction.user.id, currentbio);
+				await interaction.reply({ content: 'Bio set', ephemeral: true });
 		}
 	},
-	async StringSelectMenu(interaction: SelectMenuInteraction) {
+	async StringSelectMenu(interaction: StringSelectMenuInteraction) {
 		switch (interaction.customId) {
-			case '/pronouns_select':
+			case '/identity_pronouns_set_select':
 				const choice = interaction.values[0];
 				if (!isPronounValue(choice)) {
 					await interaction.reply({
@@ -198,12 +208,15 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(choice);
-				const db = new Jsoning('botfiles/pronouns.db.json');
-				await db.set(interaction.user.id, pn.toJSON());
-				await interaction.reply({
+				const db = new Jsoning('botfiles/identity.db.json');
+				const currentpn = db.get(interaction.user.id);
+				currentpn.pronouns = pn.toJSON();
+				await db.set(interaction.user.id, currentpn);
+				const doneMsg = await interaction.reply({
 					content: `User pronouns set: ${pn.value}`,
-					ephemeral: true
+					fetchReply: true
 				});
+				setTimeout(() => doneMsg.delete(), 5_000);
 				break;
 		}
 	}

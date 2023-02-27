@@ -24,14 +24,6 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/coghelp [command: string]'
 		)}`
 	},
-	coin: {
-		name: inlineCode('/coin'),
-		value: `Mine for gold, peek at people's bank accounts, and see who's on top!\n${inlineCode(
-			'/coin mine'
-		)}, ${inlineCode('/coin show [user: user]')}, ${inlineCode(
-			'/coin leaderboard'
-		)}`
-	},
 	contact: {
 		name: inlineCode('/contact'),
 		value: `Sends a report to the developers\n${inlineCode('/contact')}`
@@ -54,6 +46,24 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/donate'
 		)}\nPLEASE DONATE!`
 	},
+	identity: {
+		name: inlineCode('/identity'),
+		value: `Create an identity profile or view one\n${inlineCode(
+			'/identity view [user: user || @self]'
+		)}${inlineCode(
+			'/identity pronouns set [custom: boolean || false]'
+		)}, ${inlineCode(
+			'/identity pronouns view [user: user || @self]'
+		)}, ${inlineCode('/identity name set <name: string>')}, ${inlineCode(
+			'/identity name view [user: user || @self]'
+		)}, ${inlineCode('/identity bio set')}, ${inlineCode(
+			'/identity bio view [user: user || @self]'
+		)}, ${inlineCode('/identity gender set <color: string>')}, ${inlineCode(
+			'/identity gender view [user: user || @self]'
+		)}, ${inlineCode(
+			'/identity orientation set <avatar: string>'
+		)}, ${inlineCode('/identity orientation view [user: user || @self]')}`
+	},
 	info: {
 		name: inlineCode('/info'),
 		value: `Gets some info\n${inlineCode('/info channel')}, ${inlineCode(
@@ -73,12 +83,6 @@ const fields: { [key: string]: APIEmbedField } = {
 		value: `Creates a poll\n${inlineCode(
 			'/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
 		)}`
-	},
-	pronouns: {
-		name: inlineCode('/pronouns'),
-		value: `Views or sets user pronouns\n${inlineCode(
-			'/pronouns set [custom: boolean || false]'
-		)}, ${inlineCode('/pronouns view [user: user || @self]')}`
 	}
 };
 
