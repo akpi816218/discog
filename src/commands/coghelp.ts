@@ -58,21 +58,15 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/identity name view [user: user || @self]'
 		)}, ${inlineCode('/identity bio set')}, ${inlineCode(
 			'/identity bio view [user: user || @self]'
-		)}, ${inlineCode('/identity gender set <color: string>')}, ${inlineCode(
+		)}, ${inlineCode('/identity gender set')}, ${inlineCode(
 			'/identity gender view [user: user || @self]'
-		)}, ${inlineCode(
-			'/identity orientation set <avatar: string>'
-		)}, ${inlineCode('/identity orientation view [user: user || @self]')}`
+		)}`
 	},
 	info: {
 		name: inlineCode('/info'),
 		value: `Gets some info\n${inlineCode('/info channel')}, ${inlineCode(
 			'/info guild'
 		)}`
-	},
-	mute: {
-		name: inlineCode('/mute'),
-		value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`
 	},
 	ping: {
 		name: inlineCode('/ping'),
@@ -81,7 +75,7 @@ const fields: { [key: string]: APIEmbedField } = {
 	poll: {
 		name: inlineCode('/poll'),
 		value: `Creates a poll\n${inlineCode(
-			'/poll <question: string> <channel: channel> <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
+			'/poll <question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
 		)}`
 	}
 };
