@@ -6,13 +6,22 @@ import {
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
+	StageChannel,
 	StringSelectMenuInteraction,
 	UserContextMenuCommandInteraction,
 	codeBlock,
 	inlineCode,
 	time
 } from 'discord.js';
-import { Pronoun, PronounCodes, isPronounValue } from 'pronouns.js';
+import {
+	Gender,
+	Pronoun,
+	PronounCodes,
+	areGenderCodes,
+	isPronounCode,
+	isPronounValue,
+	isValidGenderBitField
+} from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
 import logger from './logger';
@@ -21,22 +30,37 @@ export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 	async Button(_interaction: ButtonInteraction) {},
 	ContextMenu: {
-		async Message(interaction: MessageContextMenuCommandInteraction) {
+		async Message(
+			interaction: MessageContextMenuCommandInteraction
+		): Promise<void> {
 			switch (interaction.commandName) {
 				case 'JSON':
-					await interaction.reply(
-						codeBlock(
-							format(JSON.stringify(interaction.targetMessage.toJSON()), {
-								parser: 'json5',
-								tabWidth: 2,
-								useTabs: false
-							})
-						)
+					const json = format(
+						JSON.stringify(interaction.targetMessage.toJSON()),
+						{
+							parser: 'json5',
+							tabWidth: 2,
+							useTabs: false
+						}
 					);
+					if (json.length > 1990) {
+						if (
+							!interaction.channel?.isTextBased() ||
+							interaction.channel instanceof StageChannel
+						)
+							return;
+						await interaction.reply(
+							'JSON is too long, sending in multiple messages...'
+						);
+						const jsons = json.match(/[\s\S]{1,1990}/g) || [];
+						for (const json of jsons) {
+							await interaction.channel.send(codeBlock(json));
+						}
+					} else await interaction.reply(json);
 					break;
 			}
 		},
-		async User(interaction: UserContextMenuCommandInteraction) {
+		async User(interaction: UserContextMenuCommandInteraction): Promise<void> {
 			switch (interaction.commandName) {
 				case 'User Info':
 					const infouser = await interaction.targetUser.fetch(true);
@@ -86,7 +110,7 @@ export const InteractionHandlers = {
 			}
 		}
 	},
-	async ModalSubmit(interaction: ModalSubmitInteraction) {
+	async ModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
 		const db = new Jsoning('botfiles/identity.db.json');
 		switch (interaction.customId) {
 			case '/global':
@@ -196,11 +220,14 @@ export const InteractionHandlers = {
 				await interaction.reply({ content: 'Bio set', ephemeral: true });
 		}
 	},
-	async StringSelectMenu(interaction: StringSelectMenuInteraction) {
+	async StringSelectMenu(
+		interaction: StringSelectMenuInteraction
+	): Promise<void> {
+		const db = new Jsoning('botfiles/identity.db.json');
 		switch (interaction.customId) {
 			case '/identity_pronouns_set_select':
 				const choice = interaction.values[0];
-				if (!isPronounValue(choice)) {
+				if (!isPronounCode(choice)) {
 					await interaction.reply({
 						content: 'Error: Invalid formatting',
 						ephemeral: true
@@ -208,7 +235,6 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(choice);
-				const db = new Jsoning('botfiles/identity.db.json');
 				const currentpn = db.get(interaction.user.id);
 				currentpn.pronouns = pn.toJSON();
 				await db.set(interaction.user.id, currentpn);
@@ -217,6 +243,26 @@ export const InteractionHandlers = {
 					fetchReply: true
 				});
 				setTimeout(() => doneMsg.delete(), 5_000);
+				break;
+			case '/identity_gender_set_select':
+				const selected = interaction.values;
+				if (!areGenderCodes(selected)) throw new Error('Invalid Gender Codes');
+				if (!isValidGenderBitField(selected)) {
+					await interaction.reply({
+						content: 'Error: Invalid choices',
+						ephemeral: true
+					});
+					return;
+				}
+				const igssdata = db.get(interaction.user.id);
+				igssdata.gender = Gender.fromJSON({
+					bits: selected
+				}).toJSON();
+				await db.set(interaction.user.id, igssdata);
+				await interaction.reply({
+					content: 'Done.',
+					ephemeral: true
+				});
 				break;
 		}
 	}

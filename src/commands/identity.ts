@@ -10,7 +10,14 @@ import {
 	TextInputStyle,
 	userMention
 } from 'discord.js';
-import { DefaultPronouns, Pronoun, isPronounObject } from 'pronouns.js';
+import {
+	DefaultPronouns,
+	Gender,
+	GenderCodes,
+	Pronoun,
+	isGenderObject,
+	isPronounObject
+} from 'pronouns.js';
 import Jsoning from 'jsoning';
 
 export const data = new SlashCommandBuilder()
@@ -90,6 +97,25 @@ export const data = new SlashCommandBuilder()
 					});
 			});
 	})
+	.addSubcommandGroup((group) => {
+		return group
+			.setName('gender')
+			.setDescription('Set or view gender')
+			.addSubcommand((subcommand) => {
+				return subcommand.setName('set').setDescription('Set your gender');
+			})
+			.addSubcommand((subcommand) => {
+				return subcommand
+					.setName('view')
+					.setDescription("View someone's gender")
+					.addUserOption((option) => {
+						return option
+							.setName('user')
+							.setDescription('The target user')
+							.setRequired(false);
+					});
+			});
+	})
 	.addSubcommand((subcommand) => {
 		return subcommand
 			.setName('view')
@@ -142,6 +168,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			embed.addFields({
 				name: 'Pronouns',
 				value: Pronoun.fromJSON(data.pronouns).toString()
+			});
+		if (isGenderObject(data.gender))
+			embed.addFields({
+				name: 'Gender',
+				value: Gender.fromJSON(data.gender).bits.join(', ')
 			});
 		if (data.orientation)
 			embed.addFields({ name: 'Orientation', value: data.orientation });
@@ -340,6 +371,155 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								value: pn.toString()
 							}
 						)
+					]
+				});
+			}
+			break;
+		case 'gender':
+			if (interaction.options.getSubcommand() == 'set')
+				await interaction.reply({
+					components: [
+						new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
+							new StringSelectMenuBuilder()
+								.setMaxValues(5)
+								.setMinValues(2)
+								.setCustomId('/identity_gender_set_select')
+								.setOptions(
+									{
+										label: 'AMAB',
+										value: GenderCodes.amab
+									},
+									{
+										label: 'AFAB',
+										value: GenderCodes.afab
+									},
+									{
+										label: 'Male',
+										value: GenderCodes.male
+									},
+									{
+										label: 'Female',
+										value: GenderCodes.female
+									},
+									{
+										label: 'Nonbinary',
+										value: GenderCodes.nonbinary
+									},
+									{
+										label: 'Agender',
+										value: GenderCodes.agender
+									},
+									{
+										label: 'Demigender',
+										value: GenderCodes.demigender
+									},
+									{
+										label: 'Genderfluid',
+										value: GenderCodes.genderfluid
+									},
+									{
+										label: 'Polygender',
+										value: GenderCodes.polygender
+									},
+									{
+										label: 'Cisgender',
+										value: GenderCodes.cisgender
+									},
+									{
+										label: 'Transgender',
+										value: GenderCodes.transgender
+									},
+									{
+										label: 'Genderqueer',
+										value: GenderCodes.queer
+									},
+									{
+										label: 'Other',
+										value: GenderCodes.other
+									}
+								)
+						)
+					],
+					content: 'Select your gender(s) below',
+					ephemeral: true
+				});
+			else if (interaction.options.getSubcommand() == 'view') {
+				const user = interaction.options.getUser('user') || interaction.user;
+				const data = db.get(user.id);
+				if (!data.gender) {
+					await interaction.reply(
+						`${userMention(user.id)} (${
+							user.tag
+						}) has not set their gender yet.`
+					);
+					return;
+				}
+				const genderdata = data.gender;
+				if (!isGenderObject(genderdata)) {
+					await interaction.reply(
+						`${userMention} (${user.tag})'s data has become corrupted. Please have them reset it.`
+					);
+					return;
+				}
+				const gender = Gender.fromJSON(genderdata);
+				await interaction.reply({
+					embeds: [
+						baseEmbed
+							.setTitle('Identity | Gender')
+							.setThumbnail(user.displayAvatarURL())
+							.setColor('Random')
+							.addFields(
+								{
+									name: 'User',
+									value: `${userMention(interaction.user.id)} (${
+										interaction.user.tag
+									})`
+								},
+								{
+									name: 'Gender assigned at birth',
+									value: gender.atBirth
+								},
+								{
+									name: 'Male',
+									value: gender.male.toString()
+								},
+								{
+									name: 'Female',
+									value: gender.female.toString()
+								},
+								{
+									name: 'Cisgender',
+									value: gender.cisgender.toString()
+								},
+								{
+									name: 'Transgender',
+									value: gender.transgender.toString()
+								},
+								{
+									name: 'Agender',
+									value: gender.agender.toString()
+								},
+								{
+									name: 'Demigender',
+									value: gender.demigender.toString()
+								},
+								{
+									name: 'Nonbinary',
+									value: gender.nonbinary.toString()
+								},
+								{
+									name: 'Genderfluid',
+									value: gender.genderfluid.toString()
+								},
+								{
+									name: 'Polygender',
+									value: gender.polygender.toString()
+								},
+								{
+									name: 'Genderqueer',
+									value: gender.queer.toString()
+								}
+							)
 					]
 				});
 			}

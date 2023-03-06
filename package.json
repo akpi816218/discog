@@ -12,7 +12,7 @@
 		"jsoning": "^0.13.23",
 		"pino": "^8.8.0",
 		"pino-pretty": "^9.1.1",
-		"pronouns.js": "^3.0.0-beta.0"
+		"pronouns.js": "^3.0.0"
 	},
 	"scripts": {
 		"build": "npx tsx src/buildCommands.ts",

@@ -70,10 +70,6 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/info guild'
 		)}`
 	},
-	mute: {
-		name: inlineCode('/mute'),
-		value: `Mutes/unmutes a user\n${inlineCode('/mute <user: user>')}`
-	},
 	ping: {
 		name: inlineCode('/ping'),
 		value: `Checks the bot's ping\n${inlineCode('/ping')}`
