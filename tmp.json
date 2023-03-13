@@ -1,0 +1,74 @@
+{
+	"1": {
+		"type": "DiscordAPIError",
+		"message": "Unknown interaction",
+		"rawError": {
+			"type": "Object",
+			"message": "Unknown interaction",
+			"code": 10062
+		},
+		"code": 10062,
+		"status": 404,
+		"method": "POST",
+		"url": "https://discord.com/api/v10/interactions/1084600038501654719/aW50ZXJhY3Rpb246MTA4NDYwMDAzODUwMTY1NDcxOTpLWjBIZGRhek1VeWhMOWpRbEp0cFo4Sk1FdnVLTzJYbkRralltVjdyZkxTZENaZHFlaVNvNGt3SlF6dldhWHJBY0dLUGNzQkNITG5DZUdxMnNPUm93RnR3TzZ4S3R1ZEVMZHBQeW94ZG9SbnlqTGV2ZkhXY2Q4NGhlY1h5VExKWg/callback",
+		"requestBody": {
+			"files": [
+				{
+					"data": {
+						"type": "Buffer",
+						"data": []
+					},
+					"name": "akpi816218_TETRIO_stats.png"
+				}
+			],
+			"json": {
+				"type": 4,
+				"data": {
+					"tts": false,
+					"embeds": [
+						{
+							"title": "akpi816218's stats on TETR.IO",
+							"description": "Note: We are not affiliated in any way with TETR.IO.",
+							"image": {
+								"url": "attachment://akpi816218_TETRIO_stats.png"
+							},
+							"footer": {
+								"text": "Powered by DisCog",
+								"icon_url": "https://cdn.discordapp.com/embed/avatars/2.png"
+							}
+						}
+					],
+					"attachments": [
+						{
+							"id": "0"
+						}
+					]
+				}
+			}
+		}
+	},
+	"2": {
+		"type": "DiscordAPIError",
+		"message": "Unknown interaction",
+		"rawError": {
+			"type": "Object",
+			"message": "Unknown interaction",
+			"code": 10062
+		},
+		"code": 10062,
+		"status": 404,
+		"method": "POST",
+		"url": "https://discord.com/api/v10/interactions/1084600038501654719/aW50ZXJhY3Rpb246MTA4NDYwMDAzODUwMTY1NDcxOTpLWjBIZGRhek1VeWhMOWpRbEp0cFo4Sk1FdnVLTzJYbkRralltVjdyZkxTZENaZHFlaVNvNGt3SlF6dldhWHJBY0dLUGNzQkNITG5DZUdxMnNPUm93RnR3TzZ4S3R1ZEVMZHBQeW94ZG9SbnlqTGV2ZkhXY2Q4NGhlY1h5VExKWg/callback",
+		"requestBody": {
+			"files": [],
+			"json": {
+				"type": 4,
+				"data": {
+					"content": "There was an error while running this command.",
+					"tts": false,
+					"flags": 64
+				}
+			}
+		}
+	}
+}
