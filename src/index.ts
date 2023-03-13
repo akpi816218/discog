@@ -50,7 +50,7 @@ const client = new Client({
 	presence: {
 		activities: [
 			{
-				name: '/identity',
+				name: '/tetrio',
 				type: ActivityType.Playing
 			}
 		],

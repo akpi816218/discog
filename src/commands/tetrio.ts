@@ -27,7 +27,9 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction) {
 	const base = 'https://ch.tetr.io/api';
 	const res = await fetch(
-		`${base}/users/${interaction.options.getString('username', true)}`,
+		`${base}/users/${interaction.options
+			.getString('username', true)
+			.toLowerCase()}`,
 		{
 			headers: {
 				'X-Session-ID': 'e74c982e-2445-5042-89c7-198355c9720f'
@@ -35,7 +37,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 		}
 	);
 	const json = await res.json();
-	if (!isUserData(json)) throw new Error('Invalid data');
+	if (!isUserData(json)) {
+		await interaction.reply({
+			content: 'Internal error: Invalid data received from TETR.IO',
+			ephemeral: true
+		});
+		return;
+	}
 	if (!json.success || !json.data) {
 		await interaction.reply({
 			content: `There was an error fetching data for that user: ${inlineCode(
@@ -46,6 +54,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 		return;
 	}
 	const { data } = json;
+	const { user } = data;
+	const { gamesplayed, gameswon, league, username } = user;
+	const { rank, rating } = league;
 	const canvas = new Canvas(1920, 1080);
 	const ctx = canvas.getContext('2d');
 	const background = new Image();
@@ -59,35 +70,31 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 	ctx.fillStyle = 'white';
 	ctx.font = '200px Ubuntu Mono';
 	ctx.lineWidth = 10;
-	ctx.fillText(data.user.username, canvas.width / 2 - 650, 250);
+	ctx.fillText(username, canvas.width / 2 - 650, 250);
 	ctx.font = '100px Ubuntu Mono';
-	ctx.fillText(`Rank: ${data.user.league.rank.toUpperCase()}`, 100, 500);
-	ctx.fillText(`TR: ${data.user.league.rating.toFixed(2)}`, 100, 650);
-	ctx.fillText(`Games Played: ${data.user.gamesplayed}`, 100, 800);
-	ctx.fillText(`Games Won: ${data.user.gameswon}`, 100, 950);
-	await promises.writeFile(
-		`botfiles/${interaction.createdTimestamp}-${
-			interaction.user.id
-		}-${Math.random().toFixed(5)}.png`,
-		await canvas.encode('png')
+	ctx.fillText(
+		`Rank: ${rank == 'z' ? 'Unranked' : rank.toUpperCase()}`,
+		100,
+		500
 	);
+	ctx.fillText(`TR: ${rating == -1 ? 'Unrated' : rating.toFixed(2)}`, 100, 650);
+	ctx.fillText(`Games Played: ${gamesplayed}`, 100, 800);
+	ctx.fillText(`Games Won: ${gameswon}`, 100, 950);
 	await interaction.reply({
 		embeds: [
 			new EmbedBuilder()
-				.setTitle(`${data.user.username}'s stats on TETR.IO`)
-				.setImage(`attachment://${data.user.username}_TETRIO_stats.png`)
+				.setTitle(`${username}'s stats on TETR.IO`)
+				.setDescription('Note: We are not affiliated in any way with TETR.IO.')
+				.setImage(`attachment://${username}_TETRIO_stats.png`)
 				.setFooter({
 					iconURL: interaction.client.user.displayAvatarURL(),
 					text: 'Powered by DisCog'
 				})
 		],
 		files: [
-			new AttachmentBuilder(
-				`botfiles/${interaction.createdTimestamp}-${
-					interaction.user.id
-				}-${Math.random().toFixed(5)}.png`,
-				{ name: `${data.user.username}_TETRIO_stats.png` }
-			)
+			new AttachmentBuilder(await canvas.encode('png'), {
+				name: `${username}_TETRIO_stats.png`
+			})
 		]
 	});
 }
