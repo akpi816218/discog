@@ -34,7 +34,7 @@ export const InteractionHandlers = {
 			interaction: MessageContextMenuCommandInteraction
 		): Promise<void> {
 			switch (interaction.commandName) {
-				case 'JSON':
+				case 'Message JSON':
 					const json = format(
 						JSON.stringify(interaction.targetMessage.toJSON()),
 						{
@@ -97,7 +97,7 @@ export const InteractionHandlers = {
 						]
 					});
 					break;
-				case 'JSON':
+				case 'User JSON':
 					await interaction.reply(
 						codeBlock(
 							format(JSON.stringify(interaction.targetUser.toJSON()), {

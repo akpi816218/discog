@@ -446,7 +446,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			else if (interaction.options.getSubcommand() == 'view') {
 				const user = interaction.options.getUser('user') || interaction.user;
 				const data = db.get(user.id);
-				if (!data.gender) {
+				const genderdata = data.gender;
+				if (!genderdata) {
 					await interaction.reply(
 						`${userMention(user.id)} (${
 							user.tag
@@ -454,7 +455,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					);
 					return;
 				}
-				const genderdata = data.gender;
 				if (!isGenderObject(genderdata)) {
 					await interaction.reply(
 						`${userMention} (${user.tag})'s data has become corrupted. Please have them reset it.`
