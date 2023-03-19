@@ -8,6 +8,7 @@ import {
 	StringSelectMenuBuilder,
 	TextInputBuilder,
 	TextInputStyle,
+	bold,
 	userMention
 } from 'discord.js';
 import {
@@ -381,8 +382,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					components: [
 						new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
 							new StringSelectMenuBuilder()
-								.setMaxValues(5)
-								.setMinValues(2)
 								.setCustomId('/identity_gender_set_select')
 								.setOptions(
 									{
@@ -440,7 +439,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								)
 						)
 					],
-					content: 'Select your gender(s) below',
+					content: `Select your gender(s) below\n${bold(
+						'Must include either AMAB or AFAB'
+					)}`,
 					ephemeral: true
 				});
 			else if (interaction.options.getSubcommand() == 'view') {

@@ -46,10 +46,19 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					`DisCog is a versatile general purpose Discord bot. DisCog features utility commands as well as other useful commands. For a full list of commands, use the ${inlineCode(
 						'/coghelp'
 					)} command.\n\nThe main feature of this bot is the ${inlineCode(
-						'/pronouns'
+						'/identity'
 					)} command, which even supports ${bold(
-						'custom pronouns'
-					)}! Check it out, it's really cool.\n\nDisCog is open source and can be found on ${hyperlink(
+						"custom pronouns, genders, and more. You can even set your preferred name and a bio (if you can't fit it in your Discord profile)!"
+					)}! Check it out, it's really cool.\n\nAnother recently added feature is the ${inlineCode(
+						'/tetrio'
+					)} command, which can be used to check a user's stats on ${hyperlink(
+						'TETR.IO',
+						'https://tetr.io/about/'
+					)}. Find users via username using ${inlineCode(
+						'/tetrio view'
+					)}, or use${inlineCode(
+						'/tetrio discord'
+					)} to lookup a user using their Discord mention if they have integrated their account with TETR.IO.\n\nDisCog is open source and can be found on ${hyperlink(
 						'GitHub',
 						'https://github.com/akpi816218/discog'
 					)}.\n\nAdditionally, you can join the ${hyperlink(

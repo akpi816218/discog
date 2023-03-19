@@ -50,7 +50,7 @@ const client = new Client({
 	presence: {
 		activities: [
 			{
-				name: '/identity',
+				name: '/tetrio',
 				type: ActivityType.Playing
 			}
 		],
@@ -115,7 +115,7 @@ client
 				await command.execute(interaction);
 			} catch (e) {
 				logger.error(e);
-				if (interaction.replied) {
+				if (interaction.replied || interaction.deferred) {
 					await interaction.editReply(
 						'There was an error while running this command.'
 					);
