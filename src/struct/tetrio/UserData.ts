@@ -50,6 +50,7 @@ export interface UserData {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isUserData(o: any): o is UserData {
+	if (!o) return false;
 	return (
 		(o.success &&
 			o.data.user &&

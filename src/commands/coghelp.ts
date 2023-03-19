@@ -77,6 +77,12 @@ const fields: { [key: string]: APIEmbedField } = {
 		value: `Creates a poll\n${inlineCode(
 			'/poll <question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
 		)}`
+	},
+	tetrio: {
+		name: inlineCode('/tetrio'),
+		value: `Get a user's stats on TETR.IO\n${inlineCode(
+			'/tetrio view <username: string>'
+		)}, ${inlineCode('/tetrio discord <user: user>')}`
 	}
 };
 
