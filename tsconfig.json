@@ -3,12 +3,17 @@
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "nodenext",
 		"outDir": "dist",
 		"strict": true,
 		"skipLibCheck": true,
-		"target": "esnext",
-		"lib": ["ESNext"],
+		"target": "ESNext",
+		"lib": [
+			"ESNext"
+		],
 		"noEmit": true
-	}
+	},
+	"include": [
+		"src/**/*"
+	]
 }
