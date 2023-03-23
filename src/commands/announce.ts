@@ -1,9 +1,9 @@
 import {
+	BaseGuildTextChannel,
 	ChannelType,
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
-	SlashCommandBuilder,
-	TextChannel
+	SlashCommandBuilder
 } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -38,13 +38,13 @@ export const data = new SlashCommandBuilder()
 	);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+	await interaction.deferReply();
 	const channel = interaction.options.getChannel('channel'),
 		message = interaction.options.getString('message'),
 		msgContent = interaction.options.getString('mentions');
-	if (!channel || !(channel instanceof TextChannel) || !message) {
+	if (!channel || !(channel instanceof BaseGuildTextChannel) || !message) {
 		throw new Error();
 	}
-	await interaction.deferReply();
 	await channel.send({
 		content: msgContent || undefined,
 		embeds: [
@@ -60,9 +60,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			}
 		]
 	});
-	await interaction.reply({
-		content: 'Done.',
-		ephemeral: true
+	await interaction.editReply({
+		content: 'Done.'
 	});
 };
 export default {

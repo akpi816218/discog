@@ -1,9 +1,9 @@
 /* eslint-disable indent */
 import {
+	BaseGuildTextChannel,
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
-	TextChannel,
 	userMention
 } from 'discord.js';
 
@@ -87,6 +87,7 @@ export const data = new SlashCommandBuilder()
 // #endregion data
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+	await interaction.deferReply();
 	const options = [];
 	for (let i = 1; i <= 9; i++) {
 		if (i <= 2) options.push(interaction.options.getString(`option${i}`, true));
@@ -111,8 +112,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	});
 	const channel = interaction.options.getChannel('channel', true);
 	if (!channel) throw new Error();
-	if (!(channel instanceof TextChannel))
-		throw new Error('/poll: Channel is not TextChannel');
+	if (!(channel instanceof BaseGuildTextChannel))
+		throw new Error('/poll: Channel is not BaseGuildTextChannel');
 	const msg = await channel.send({
 		content: `${
 			interaction.options.getBoolean('pingeveryone', true) ? '@everyone ' : ''
@@ -120,7 +121,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		embeds: [embed]
 	});
 	for (let i = 0; i < options.length; i++) await msg.react(NumberEmojis[i]);
-	await interaction.reply('Done.');
+	await interaction.editReply('Done.');
 };
 export default {
 	data,
