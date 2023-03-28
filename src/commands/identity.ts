@@ -436,6 +436,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 										value: GenderCodes.other
 									}
 								)
+								.setMaxValues(Object.entries(GenderCodes).length)
 						)
 					],
 					content: `Select your gender identities below`,
