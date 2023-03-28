@@ -14,7 +14,7 @@
 		"node-fetch": "^3.3.1",
 		"pino": "^8.8.0",
 		"pino-pretty": "^9.1.1",
-		"pronouns.js": "^3.0.0"
+		"pronouns.js": "^3.1.0"
 	},
 	"scripts": {
 		"build": "npx tsx src/buildCommands.ts",

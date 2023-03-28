@@ -24,7 +24,7 @@ import {
 } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
-import logger from './logger';
+import logger from './logger.js';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars

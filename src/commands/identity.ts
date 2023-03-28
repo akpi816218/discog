@@ -8,7 +8,6 @@ import {
 	StringSelectMenuBuilder,
 	TextInputBuilder,
 	TextInputStyle,
-	bold,
 	userMention
 } from 'discord.js';
 import {
@@ -439,9 +438,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								)
 						)
 					],
-					content: `Select your gender(s) below\n${bold(
-						'Must include either AMAB or AFAB'
-					)}`,
+					content: `Select your gender identities below`,
 					ephemeral: true
 				});
 			else if (interaction.options.getSubcommand() == 'view') {
@@ -477,8 +474,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 									})`
 								},
 								{
-									name: 'Gender assigned at birth',
-									value: gender.atBirth
+									name: 'AFAB',
+									value: gender.afab.toString()
+								},
+								{
+									name: 'AMAB',
+									value: gender.amab.toString()
 								},
 								{
 									name: 'Male',
