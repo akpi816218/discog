@@ -191,8 +191,13 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					});
 					return;
 				}
-				const ndata = db.get(interaction.user.id) || {};
-				ndata.name = name;
+				const ndata = db.get(interaction.user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
+				Object.defineProperty(ndata, 'name', name);
 				db.set(interaction.user.id, ndata);
 				await interaction.reply({
 					content: `Successfully set your name to ${name}.`,
@@ -201,7 +206,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				return;
 			} else if (subcommand == 'view') {
 				const user = interaction.options.getUser('user') || interaction.user;
-				const ndata = db.get(user.id) || {};
+				const ndata = db.get(user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
 				if (!ndata.name) {
 					await interaction.reply({
 						embeds: [
@@ -248,7 +258,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				return;
 			} else if (subcommand == 'view') {
 				const user = interaction.options.getUser('user') || interaction.user;
-				const biodata = db.get(user.id).bio || {};
+				const biodata = (
+					db.get(user.id) || {
+						bio: null,
+						gender: null,
+						name: null,
+						pronouns: null
+					}
+				).bio;
 				if (!biodata) {
 					await interaction.reply({
 						embeds: [
@@ -338,7 +355,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			} else if (subcommand == 'view') {
 				const user = interaction.options.getUser('user') || interaction.user;
 
-				const pndata = (db.get(user.id) || { pronouns: null }).pronouns;
+				const pndata = (
+					db.get(user.id) || {
+						bio: null,
+						gender: null,
+						name: null,
+						pronouns: null
+					}
+				).pronouns;
 				if (!pndata || !isPronounObject(pndata)) {
 					await interaction.reply({
 						embeds: [
@@ -444,7 +468,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				});
 			else if (interaction.options.getSubcommand() == 'view') {
 				const user = interaction.options.getUser('user') || interaction.user;
-				const data = db.get(user.id);
+				const data = db.get(user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
 				const genderdata = data.gender;
 				if (!genderdata) {
 					await interaction.reply(

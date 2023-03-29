@@ -202,8 +202,13 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(PronounCodes.other, choice);
-				const currentpn = db.get(interaction.user.id);
-				currentpn.pronouns = pn.toJSON();
+				const currentpn = db.get(interaction.user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
+				Object.defineProperty(currentpn, 'pronouns', pn.toJSON());
 				await db.set(interaction.user.id, currentpn);
 				await interaction.reply({
 					content: `User pronouns set: ${pn.toString()}`,
@@ -214,8 +219,13 @@ export const InteractionHandlers = {
 				const bio = interaction.fields.getTextInputValue(
 					'/identity_bio_set_text'
 				);
-				const currentbio = db.get(interaction.user.id);
-				currentbio.bio = bio;
+				const currentbio = db.get(interaction.user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
+				Object.defineProperty(currentbio, 'bio', bio);
 				await db.set(interaction.user.id, currentbio);
 				await interaction.reply({ content: 'Bio set', ephemeral: true });
 		}
@@ -235,8 +245,13 @@ export const InteractionHandlers = {
 					return;
 				}
 				const pn = new Pronoun(choice);
-				const currentpn = db.get(interaction.user.id);
-				currentpn.pronouns = pn.toJSON();
+				const currentpn = db.get(interaction.user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
+				Object.defineProperty(currentpn, 'pronouns', pn.toJSON());
 				await db.set(interaction.user.id, currentpn);
 				const doneMsg = await interaction.reply({
 					content: `User pronouns set: ${pn.value}`,
@@ -254,10 +269,17 @@ export const InteractionHandlers = {
 					});
 					return;
 				}
-				const igssdata = db.get(interaction.user.id);
-				igssdata.gender = Gender.fromJSON({
-					bits: selected
-				}).toJSON();
+				const igssdata = db.get(interaction.user.id) || {
+					bio: null,
+					gender: null,
+					name: null,
+					pronouns: null
+				};
+				Object.defineProperty(
+					igssdata,
+					'pronouns',
+					new Gender(...selected).toJSON()
+				);
 				await db.set(interaction.user.id, igssdata);
 				await interaction.reply({
 					content: 'Done.',
