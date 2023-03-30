@@ -9,15 +9,15 @@ import {
 	SlashCommandBuilder
 } from 'discord.js';
 import { Request, Response } from 'express';
-import { InteractionHandlers } from './interactionHandlers.js';
+import { InteractionHandlers } from './interactionHandlers';
 import Jsoning from 'jsoning';
-import { TOKEN } from './TOKEN.js';
+import { TOKEN } from './TOKEN';
 import { argv } from 'process';
 // eslint-disable-next-line no-duplicate-imports
 import express from 'express';
 import { fileURLToPath } from 'url';
-import { inviteLink } from './config.js';
-import { logger } from './logger.js';
+import { inviteLink } from './config';
+import { logger } from './logger';
 import path from 'path';
 import { readdirSync } from 'fs';
 

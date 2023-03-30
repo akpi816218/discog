@@ -14,7 +14,6 @@ import {
 	time
 } from 'discord.js';
 import {
-	Gender,
 	Pronoun,
 	PronounCodes,
 	areGenderCodes,
@@ -24,7 +23,7 @@ import {
 } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
-import logger from './logger.js';
+import logger from './logger';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -208,7 +207,7 @@ export const InteractionHandlers = {
 					name: null,
 					pronouns: null
 				};
-				Object.defineProperty(currentpn, 'pronouns', pn.toJSON());
+				currentpn.pronouns = pn;
 				await db.set(interaction.user.id, currentpn);
 				await interaction.reply({
 					content: `User pronouns set: ${pn.toString()}`,
@@ -220,12 +219,12 @@ export const InteractionHandlers = {
 					'/identity_bio_set_text'
 				);
 				const currentbio = db.get(interaction.user.id) || {
-					bio: null,
+					bio: '',
 					gender: null,
-					name: null,
+					name: '',
 					pronouns: null
 				};
-				Object.defineProperty(currentbio, 'bio', bio);
+				currentbio.bio = bio;
 				await db.set(interaction.user.id, currentbio);
 				await interaction.reply({ content: 'Bio set', ephemeral: true });
 		}
@@ -251,7 +250,7 @@ export const InteractionHandlers = {
 					name: null,
 					pronouns: null
 				};
-				Object.defineProperty(currentpn, 'pronouns', pn.toJSON());
+				currentpn.pronouns = pn.toJSON();
 				await db.set(interaction.user.id, currentpn);
 				const doneMsg = await interaction.reply({
 					content: `User pronouns set: ${pn.value}`,
@@ -275,11 +274,7 @@ export const InteractionHandlers = {
 					name: null,
 					pronouns: null
 				};
-				Object.defineProperty(
-					igssdata,
-					'pronouns',
-					new Gender(...selected).toJSON()
-				);
+				igssdata.gender = selected;
 				await db.set(interaction.user.id, igssdata);
 				await interaction.reply({
 					content: 'Done.',

@@ -197,7 +197,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					name: null,
 					pronouns: null
 				};
-				Object.defineProperty(ndata, 'name', name);
+				ndata.name = name;
 				db.set(interaction.user.id, ndata);
 				await interaction.reply({
 					content: `Successfully set your name to ${name}.`,

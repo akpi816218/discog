@@ -1,9 +1,9 @@
 import { dirname, default as path } from 'path';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord.js';
-import { TOKEN } from './TOKEN.js';
+import { TOKEN } from './TOKEN';
 import { argv } from 'process';
-import { clientId } from './config.js';
+import { clientId } from './config';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 argv.shift();
