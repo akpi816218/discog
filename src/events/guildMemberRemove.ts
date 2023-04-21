@@ -8,8 +8,3 @@ export const execute = async (member: GuildMember) => {
 			`${member.user.tag} (${userMention(member.id)}) just poofed.`
 		);
 };
-export default {
-	execute,
-	name,
-	once
-};

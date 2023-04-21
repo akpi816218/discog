@@ -23,7 +23,7 @@ import {
 } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
-import logger from './logger';
+import { logger } from './logger';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -116,7 +116,7 @@ export const InteractionHandlers = {
 				await interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
 				const badGuilds: string[] = [];
-				interaction.client.guilds.cache.forEach((guild) => {
+				for (const guild of interaction.client.guilds.cache.values()) {
 					if (!guild.systemChannel) {
 						badGuilds.push(guild.name);
 						guild
@@ -181,7 +181,7 @@ export const InteractionHandlers = {
 							);
 						logger.error(e);
 					}
-				});
+				}
 				await interaction.editReply(
 					`Done. ${
 						badGuilds.length > 0
@@ -284,4 +284,3 @@ export const InteractionHandlers = {
 		}
 	}
 };
-export default InteractionHandlers;

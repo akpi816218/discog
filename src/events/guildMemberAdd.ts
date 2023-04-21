@@ -10,8 +10,3 @@ export const execute = async (member: GuildMember) => {
 			)})! You are Member #${member.guild.memberCount}.`
 		);
 };
-export default {
-	execute,
-	name,
-	once
-};

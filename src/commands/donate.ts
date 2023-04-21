@@ -26,8 +26,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			'Please donate to support the development of this bot! Please? Please? Please? (Tysm if you alr did)'
 	});
 };
-
-export default {
-	data,
-	execute
-};

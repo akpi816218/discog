@@ -25,7 +25,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		ephemeral: true
 	});
 };
-export default {
-	data,
-	execute
-};

@@ -25,8 +25,3 @@ export const execute = async (ban: GuildBan) => {
 			]
 		});
 };
-export default {
-	execute,
-	name,
-	once
-};
