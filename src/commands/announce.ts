@@ -64,7 +64,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		content: 'Done.'
 	});
 };
-export default {
-	data,
-	execute
-};

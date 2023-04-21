@@ -1,1 +1,24 @@
-{"817214551740776479":{"bio":"hello have a nice day","pronouns":{"code":"They/Them","custom":false,"prnnbjct":"PronounObject","value":"They/Them"},"name":"Akhil","gender":{"bits":["queer","transgender","agender","nonbinary","amab"]}},"724496273654415401":{"name":"Nick","pronouns":{"code":"Other","custom":true,"value":"CustomPronoun:He/They"},"bio":"A brat with no drip"}}
+{
+	"817214551740776479": {
+		"bio": "hello have a nice day",
+		"pronouns": {
+			"code": "They/Them",
+			"custom": false,
+			"prnnbjct": "PronounObject",
+			"value": "They/Them"
+		},
+		"name": "Akhil",
+		"gender": {
+			"bits": ["queer", "transgender", "agender", "nonbinary", "amab"]
+		}
+	},
+	"724496273654415401": {
+		"name": "Nick",
+		"pronouns": {
+			"code": "Other",
+			"custom": true,
+			"value": "CustomPronoun:He/They"
+		},
+		"bio": "A brat with no drip"
+	}
+}

@@ -18,8 +18,3 @@ export const execute = async (guild: Guild) => {
 			]
 		});
 };
-export default {
-	execute,
-	name,
-	once
-};

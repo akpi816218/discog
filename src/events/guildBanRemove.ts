@@ -8,8 +8,3 @@ export const execute = async (ban: GuildBan) => {
 			`${inlineCode(ban.user.tag)} (${userMention(ban.user.id)}) was unbanned.`
 		);
 };
-export default {
-	execute,
-	name,
-	once
-};

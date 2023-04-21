@@ -138,8 +138,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		embeds: [embed]
 	});
 };
-
-export default {
-	data,
-	execute
-};

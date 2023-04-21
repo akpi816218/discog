@@ -1,14 +1,20 @@
 import {
 	ActivityType,
+	CategoryChannel,
+	ChannelType,
 	ChatInputCommandInteraction,
 	Client,
 	Collection,
 	Events,
+	ForumChannel,
 	GatewayIntentBits,
 	PresenceUpdateStatus,
-	SlashCommandBuilder
+	SlashCommandBuilder,
+	codeBlock,
+	userMention
 } from 'discord.js';
 import { Request, Response } from 'express';
+import { dirname, join } from 'path';
 import { InteractionHandlers } from './interactionHandlers';
 import Jsoning from 'jsoning';
 import { TOKEN } from './TOKEN';
@@ -18,7 +24,6 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { inviteLink } from './config';
 import { logger } from './logger';
-import path from 'path';
 import { readdirSync } from 'fs';
 
 argv.shift();
@@ -29,7 +34,7 @@ logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
 const devdb = new Jsoning('botfiles/dev.db.json');
 
-const thisdirname = path.dirname(fileURLToPath(import.meta.url));
+const thisdirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,26 +67,26 @@ const client = new Client({
 interface Command {
 	data: SlashCommandBuilder;
 	// eslint-disable-next-line no-unused-vars
-	execute: (interaction: ChatInputCommandInteraction) => unknown;
+	execute: (interaction: ChatInputCommandInteraction) => void;
 }
 const commandCollection = new Collection<string, Command>();
 
-const commandsPath = path.join(thisdirname, 'commands');
+const commandsPath = join(thisdirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
 	file.endsWith('.ts')
 );
 for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
+	const filePath = join(commandsPath, file);
 	const command: Command = await import(filePath);
 	commandCollection.set(command.data.name, command);
 }
 
-const eventsPath = path.join(thisdirname, 'events');
+const eventsPath = join(thisdirname, 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
 	file.endsWith('.ts')
 );
 for (const file of eventFiles) {
-	const filePath = path.join(eventsPath, file);
+	const filePath = join(eventsPath, file);
 	const event = await import(filePath);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
@@ -136,7 +141,7 @@ client
 		else if (interaction.isStringSelectMenu())
 			InteractionHandlers.StringSelectMenu(interaction);
 	})
-	.on(Events.Debug, (m) => logger.debug(m))
+	// .on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
@@ -149,3 +154,73 @@ process.on('SIGINT', () => {
 });
 
 app.listen(8000);
+
+async function bdayInterval(): Promise<void> {
+	logger.debug('Exec: bdayInterval()');
+	const db = new Jsoning('botfiles/bday.db.json');
+	const today = new Date();
+	const all: [string, Date][] = Object.entries(db.all());
+	logger.debug('all: %o', all);
+	// All the people who have bday today
+	const bdaytoday = all.filter(([, bday]) => {
+		const bdaydate = new Date(bday);
+		return (
+			bdaydate.getMonth() == today.getMonth() &&
+			bdaydate.getDate() == today.getDate()
+		);
+	});
+	logger.debug('bdaytoday: %o', bdaytoday);
+	// Loop through each user
+	for (const id of bdaytoday.map(([id]) => id)) {
+		const user = await client.users.fetch(id);
+		logger.debug('user: %s', user.tag);
+		// Loop through bot's guilds
+		for (let guild of client.guilds.cache.values()) {
+			guild = await guild.fetch();
+			logger.debug('guildidk: %s', guild.name);
+			// Check if guild is available and includes target user
+			// eslint-disable-next-line no-extra-parens
+			if (!(await guild.members.fetch(user.id))) continue;
+			logger.debug('guildyes: %s', guild.name);
+			// If so, select a channel
+			const bdaychannels = guild.channels.cache.filter((c) => {
+				return !!(
+					(c.type == ChannelType.GuildAnnouncement ||
+						c.type == ChannelType.GuildText) &&
+					(c.name.toLowerCase().includes('bday') ||
+						c.name.toLowerCase().includes('birthday') ||
+						c.name.toLowerCase().includes('b-day'))
+				);
+			});
+			logger.debug('bdaychannels: %o', bdaychannels);
+			const channel = bdaychannels.first() || guild.systemChannel || null;
+			logger.debug('selectedchannel: %s', channel?.name);
+			if (
+				!channel ||
+				channel instanceof CategoryChannel ||
+				channel instanceof ForumChannel
+			)
+				continue;
+
+			const replies = [
+				`Do you know what day it is? It's ${userMention(user.id)}'s birthday!`,
+				`It's ${userMention(user.id)}'s birthday!`,
+				`Time to celebrate ${userMention(user.id)}'s birthday!`,
+				`Everyone wish ${userMention(user.id)} a happy birthday!`,
+				`Happy birthday, ${userMention(user.id)}!`,
+				`🎉${userMention(user.id)}🎉\n${codeBlock(
+					`new Birthday({
+	user: '${userMention(user.id)}',
+	day: ${today.toLocaleDateString()}
+});`
+				)}`
+			];
+			await channel.send(replies[Math.floor(replies.length * Math.random())]);
+		}
+	}
+	setTimeout(bdayInterval, 86_400_000);
+}
+
+bdayInterval()
+	.then(() => logger.debug('Birthday interval complete'))
+	.catch((e) => logger.error(e));

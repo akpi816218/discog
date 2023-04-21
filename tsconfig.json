@@ -8,12 +8,8 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"target": "ESNext",
-		"lib": [
-			"ESNext"
-		],
+		"lib": ["ESNext"],
 		"noEmit": true
 	},
-	"include": [
-		"src/**/*"
-	]
+	"include": ["src/**/*"]
 }

@@ -9,8 +9,3 @@ export const execute = async (
 	if (newevent.guild?.systemChannel)
 		await newevent.guild.systemChannel.send(`Updated Event: ${newevent.url}`);
 };
-export default {
-	execute,
-	name,
-	once
-};

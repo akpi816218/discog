@@ -75,7 +75,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		]
 	});
 };
-export default {
-	data,
-	execute
-};

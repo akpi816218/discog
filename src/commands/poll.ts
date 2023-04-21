@@ -123,7 +123,3 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	for (let i = 0; i < options.length; i++) await msg.react(NumberEmojis[i]);
 	await interaction.editReply('Done.');
 };
-export default {
-	data,
-	execute
-};

@@ -7,8 +7,3 @@ export const execute =
 	async (/* Add args passed to event handler function */) => {
 		// ...
 	};
-export default {
-	execute,
-	name,
-	once
-};
