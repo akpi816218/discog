@@ -20,7 +20,7 @@
 		"build": "npx tsx src/buildCommands.ts",
 		"sanity-check": "bash sanityCheck.sh",
 		"format": "npx prettier -w .",
-		"lint": "npx eslint . > eslint.txt",
+		"lint": "npx tsx eslint.ts",
 		"start": "npx tsx src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},

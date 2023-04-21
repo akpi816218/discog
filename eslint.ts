@@ -7,12 +7,13 @@ const eslint = new ESLint({
 
 const results = await eslint.lintFiles('./src/**/*.ts');
 
-if (results.length > 0) {
+if (results.join() == '') {
 	await writeFile(
 		'./lint-results.txt',
 		await (await eslint.loadFormatter('stylish')).format(results)
 	);
-} else {
 	// eslint-disable-next-line no-console
-	console.log('No linting errors');
+	console.log('Linting errors were found; check the lint-results.txt file.');
 }
+// eslint-disable-next-line no-console
+else console.log('No linting errors were found.');
