@@ -188,7 +188,6 @@ async function bdayInterval(): Promise<void> {
 				channel instanceof ForumChannel
 			)
 				continue;
-
 			const replies = [
 				`Do you know what day it is? It's ${userMention(user.id)}'s birthday!`,
 				`It's ${userMention(user.id)}'s birthday!`,
