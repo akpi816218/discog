@@ -141,7 +141,7 @@ client
 		else if (interaction.isStringSelectMenu())
 			InteractionHandlers.StringSelectMenu(interaction);
 	})
-	// .on(Events.Debug, (m) => logger.debug(m))
+	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
@@ -156,11 +156,9 @@ process.on('SIGINT', () => {
 app.listen(8000);
 
 async function bdayInterval(): Promise<void> {
-	logger.debug('Exec: bdayInterval()');
 	const db = new Jsoning('botfiles/bday.db.json');
 	const today = new Date();
 	const all: [string, Date][] = Object.entries(db.all());
-	logger.debug('all: %o', all);
 	// All the people who have bday today
 	const bdaytoday = all.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
@@ -169,19 +167,15 @@ async function bdayInterval(): Promise<void> {
 			bdaydate.getDate() == today.getDate()
 		);
 	});
-	logger.debug('bdaytoday: %o', bdaytoday);
 	// Loop through each user
 	for (const id of bdaytoday.map(([id]) => id)) {
 		const user = await client.users.fetch(id);
-		logger.debug('user: %s', user.tag);
 		// Loop through bot's guilds
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
-			logger.debug('guildidk: %s', guild.name);
 			// Check if guild is available and includes target user
 			// eslint-disable-next-line no-extra-parens
 			if (!(await guild.members.fetch(user.id))) continue;
-			logger.debug('guildyes: %s', guild.name);
 			// If so, select a channel
 			const bdaychannels = guild.channels.cache.filter((c) => {
 				return !!(
@@ -192,9 +186,7 @@ async function bdayInterval(): Promise<void> {
 						c.name.toLowerCase().includes('b-day'))
 				);
 			});
-			logger.debug('bdaychannels: %o', bdaychannels);
 			const channel = bdaychannels.first() || guild.systemChannel || null;
-			logger.debug('selectedchannel: %s', channel?.name);
 			if (
 				!channel ||
 				channel instanceof CategoryChannel ||
@@ -221,6 +213,4 @@ async function bdayInterval(): Promise<void> {
 	setTimeout(bdayInterval, 86_400_000);
 }
 
-bdayInterval()
-	.then(() => logger.debug('Birthday interval complete'))
-	.catch((e) => logger.error(e));
+bdayInterval().catch((e) => logger.error(e));
