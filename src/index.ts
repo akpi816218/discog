@@ -159,7 +159,6 @@ async function bdayInterval(): Promise<void> {
 	const db = new Jsoning('botfiles/bday.db.json');
 	const today = new Date();
 	const all: [string, Date][] = Object.entries(db.all());
-	// All the people who have bday today
 	const bdaytoday = all.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
 		return (
@@ -167,16 +166,12 @@ async function bdayInterval(): Promise<void> {
 			bdaydate.getDate() == today.getDate()
 		);
 	});
-	// Loop through each user
 	for (const id of bdaytoday.map(([id]) => id)) {
 		const user = await client.users.fetch(id);
-		// Loop through bot's guilds
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
-			// Check if guild is available and includes target user
 			// eslint-disable-next-line no-extra-parens
 			if (!(await guild.members.fetch(user.id))) continue;
-			// If so, select a channel
 			const bdaychannels = guild.channels.cache.filter((c) => {
 				return !!(
 					(c.type == ChannelType.GuildAnnouncement ||
