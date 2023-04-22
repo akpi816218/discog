@@ -9,8 +9,8 @@ import {
 import Jsoning from 'jsoning';
 
 export const data = new SlashCommandBuilder()
-	.setName('birthday')
-	.setDescription("Register your birthdate or view another's")
+	.setName('bday')
+	.setDescription("Register your birthday or view another's")
 	.addSubcommand(
 		new SlashCommandSubcommandBuilder()
 			.setName('register')

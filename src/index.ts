@@ -55,7 +55,7 @@ const client = new Client({
 	presence: {
 		activities: [
 			{
-				name: '/tetrio',
+				name: '/bday register',
 				type: ActivityType.Playing
 			}
 		],
@@ -161,6 +161,7 @@ async function bdayInterval(): Promise<void> {
 	const all: [string, Date][] = Object.entries(db.all());
 	const bdaytoday = all.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
+		bdaydate.setDate(bdaydate.getDate() + 1);
 		return (
 			bdaydate.getMonth() == today.getMonth() &&
 			bdaydate.getDate() == today.getDate()
