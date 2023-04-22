@@ -37,11 +37,13 @@ const devdb = new Jsoning('botfiles/dev.db.json');
 const thisdirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/', (_req: Request, res: Response) => {
-	res.status(200).end();
+	res
+		.status(200)
+		.end(
+			startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+		);
 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/invite', (_req: Request, res: Response) => {
 	res.redirect(inviteLink);
 });
@@ -207,5 +209,7 @@ async function bdayInterval(): Promise<void> {
 	}
 	setTimeout(bdayInterval, 86_400_000);
 }
+
+const startDate = new Date();
 
 bdayInterval().catch((e) => logger.error(e));
