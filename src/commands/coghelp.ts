@@ -18,6 +18,12 @@ const fields: { [key: string]: APIEmbedField } = {
 			'/announce <channel: channel> <message: string> [mentionEveryone: boolean || false]'
 		)}`
 	},
+	bday: {
+		name: inlineCode('/bday'),
+		value: `Register your birthday or view another's\n${inlineCode(
+			'/bday register <month: number> <day: number> <year: number>'
+		)}, ${inlineCode('/bday view [user: user || @self]')}`
+	},
 	coghelp: {
 		name: inlineCode('/coghelp'),
 		value: `Shows general help or help for a specific command\n${inlineCode(

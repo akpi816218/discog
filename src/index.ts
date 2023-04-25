@@ -2,29 +2,28 @@ import {
 	ActivityType,
 	CategoryChannel,
 	ChannelType,
-	ChatInputCommandInteraction,
-	Client,
-	Collection,
 	Events,
 	ForumChannel,
 	GatewayIntentBits,
 	PresenceUpdateStatus,
-	SlashCommandBuilder,
 	codeBlock,
 	userMention
 } from 'discord.js';
+import { Command, CommandClient } from './struct/discord/Extend';
 import { Request, Response } from 'express';
-import { dirname, join } from 'path';
+import { argv, cwd } from 'process';
 import { InteractionHandlers } from './interactionHandlers';
 import Jsoning from 'jsoning';
 import { TOKEN } from './TOKEN';
-import { argv } from 'process';
 // eslint-disable-next-line no-duplicate-imports
 import express from 'express';
-import { fileURLToPath } from 'url';
 import { inviteLink } from './config';
+import { join } from 'path';
 import { logger } from './logger';
 import { readdirSync } from 'fs';
+import { scheduleJob } from 'node-schedule';
+
+const freeze = Object.freeze;
 
 argv.shift();
 argv.shift();
@@ -33,8 +32,6 @@ if (argv.includes('-d')) logger.level = 'debug';
 logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
 const devdb = new Jsoning('botfiles/dev.db.json');
-
-const thisdirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.get('/', (_req: Request, res: Response) => {
@@ -48,7 +45,7 @@ app.get('/invite', (_req: Request, res: Response) => {
 	res.redirect(inviteLink);
 });
 
-const client = new Client({
+const client = new CommandClient({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMembers,
@@ -66,35 +63,34 @@ const client = new Client({
 	}
 });
 
-interface Command {
-	data: SlashCommandBuilder;
-	// eslint-disable-next-line no-unused-vars
-	execute: (interaction: ChatInputCommandInteraction) => void;
-}
-const commandCollection = new Collection<string, Command>();
-
-const commandsPath = join(thisdirname, 'commands');
+const commandsPath = join(cwd(), 'src', 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
 	file.endsWith('.ts')
 );
 for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
 	const command: Command = await import(filePath);
-	commandCollection.set(command.data.name, command);
+	client.commands.set(command.data.name, command);
 }
+client.commands.freeze();
 
-const eventsPath = join(thisdirname, 'events');
+// eslint-disable-next-line no-unused-vars
+type EventExecuteHandler = (...args: unknown[]) => Promise<void>;
+interface Event {
+	name: string;
+	once: boolean;
+	execute: EventExecuteHandler;
+}
+const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
 	file.endsWith('.ts')
 );
 for (const file of eventFiles) {
 	const filePath = join(eventsPath, file);
-	const event = await import(filePath);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
-	}
+	const event: Event = await import(filePath);
+	if (event.once)
+		client.once(event.name, async (...args) => await event.execute(...args));
+	else client.on(event.name, async (...args) => await event.execute(...args));
 }
 
 // Keep in index
@@ -113,7 +109,7 @@ client
 			return;
 		}
 		if (interaction.isChatInputCommand()) {
-			const command = commandCollection.get(interaction.commandName);
+			const command = client.commands.get(interaction.commandName);
 			if (!command) {
 				await interaction.reply('Internal error: Command not found');
 				return;
@@ -207,9 +203,15 @@ async function bdayInterval(): Promise<void> {
 			await channel.send(replies[Math.floor(replies.length * Math.random())]);
 		}
 	}
-	setTimeout(bdayInterval, 86_400_000);
 }
 
 const startDate = new Date();
+freeze(startDate);
 
-bdayInterval().catch((e) => logger.error(e));
+// Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running on UTC
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const bdayJob = scheduleJob('0 8 * * *', () =>
+	bdayInterval().catch((e) => logger.error(e))
+);
+
+logger.info('Process setup complete.');
