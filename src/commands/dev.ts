@@ -86,8 +86,6 @@ export const data = new SlashCommandBuilder()
 	})
 	.setDMPermission(true);
 
-// ! Do NOT add command to `coghelp.ts`
-
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const whitelist: Snowflake[] = db.get('whitelist');
 	const blacklist: Snowflake[] = db.get('blacklist');

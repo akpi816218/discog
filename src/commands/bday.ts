@@ -52,8 +52,6 @@ export const data = new SlashCommandBuilder()
 			})
 	);
 
-// ! Make sure to add command to `coghelp.ts`
-
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const db = new Jsoning('botfiles/bday.db.json');
 	switch (interaction.options.getSubcommand()) {
