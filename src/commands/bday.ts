@@ -93,9 +93,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					embeds: [
 						new EmbedBuilder()
 							.setTitle('User Birthday')
-							.setDescription(
-								`${userMention(id)}'s birthday is on ${db.get(ubday)}.`
-							)
+							.setDescription(`${userMention(id)}'s birthday is on ${ubday}.`)
 							.setFooter({
 								iconURL: interaction.client.user.displayAvatarURL(),
 								text: 'Powered by DisCog'
