@@ -159,7 +159,6 @@ async function bdayInterval(): Promise<void> {
 	const all: [string, Date][] = Object.entries(db.all());
 	const bdaytoday = all.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
-		bdaydate.setDate(bdaydate.getDate() + 1);
 		return (
 			bdaydate.getMonth() == today.getMonth() &&
 			bdaydate.getDate() == today.getDate()
@@ -210,7 +209,7 @@ freeze(startDate);
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running on UTC
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-const bdayJob = scheduleJob('0 8 * * *', () =>
+const bdayJob = scheduleJob('0 7 * * *', () =>
 	bdayInterval().catch((e) => logger.error(e))
 );
 
