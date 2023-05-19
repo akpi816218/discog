@@ -23,8 +23,6 @@ import { logger } from './logger';
 import { readdirSync } from 'fs';
 import { scheduleJob } from 'node-schedule';
 
-const freeze = Object.freeze;
-
 argv.shift();
 argv.shift();
 if (argv.includes('-d')) logger.level = 'debug';
@@ -204,13 +202,10 @@ async function bdayInterval(): Promise<void> {
 	}
 }
 
-const startDate = new Date();
-freeze(startDate);
+const startDate = Object.freeze(new Date());
 
-// Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running on UTC
+// Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-const bdayJob = scheduleJob('0 7 * * *', () =>
-	bdayInterval().catch((e) => logger.error(e))
-);
+scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
 logger.info('Process setup complete.');
