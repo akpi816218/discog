@@ -10,13 +10,12 @@ import {
 	userMention
 } from 'discord.js';
 import { Command, CommandClient } from './struct/discord/Extend';
-import { Request, Response } from 'express';
+import { Method, createServer } from './server';
 import { argv, cwd } from 'process';
+import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
 import Jsoning from 'jsoning';
 import { TOKEN } from './TOKEN';
-// eslint-disable-next-line no-duplicate-imports
-import express from 'express';
 import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
@@ -31,17 +30,23 @@ logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
 const devdb = new Jsoning('botfiles/dev.db.json');
 
-const app = express();
-app.get('/', (_req: Request, res: Response) => {
-	res
-		.status(200)
-		.end(
-			startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-		);
-});
-app.get('/invite', (_req: Request, res: Response) => {
-	res.redirect(inviteLink);
-});
+const server = createServer(
+	{
+		handler: (_req, res) => res.redirect(inviteLink),
+		method: Method.GET,
+		route: '/invite'
+	},
+	{
+		handler: (_req, res) =>
+			res
+				.status(200)
+				.end(
+					startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+				),
+		method: Method.GET,
+		route: '/'
+	}
+);
 
 const client = new CommandClient({
 	intents: [
@@ -72,13 +77,6 @@ for (const file of commandFiles) {
 }
 client.commands.freeze();
 
-// eslint-disable-next-line no-unused-vars
-type EventExecuteHandler = (...args: unknown[]) => Promise<void>;
-interface Event {
-	name: string;
-	once: boolean;
-	execute: EventExecuteHandler;
-}
 const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
 	file.endsWith('.ts')
@@ -149,7 +147,15 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-app.listen(8000);
+server.listen(8000);
+
+const startDate = Object.freeze(new Date());
+
+// Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
+
+logger.info('Process setup complete.');
 
 async function bdayInterval(): Promise<void> {
 	const db = new Jsoning('botfiles/bday.db.json');
@@ -201,11 +207,3 @@ async function bdayInterval(): Promise<void> {
 		}
 	}
 }
-
-const startDate = Object.freeze(new Date());
-
-// Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
-
-logger.info('Process setup complete.');
