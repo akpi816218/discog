@@ -147,8 +147,6 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-server.listen(8000);
-
 const startDate = Object.freeze(new Date());
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
@@ -156,6 +154,8 @@ const startDate = Object.freeze(new Date());
 scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
 logger.info('Process setup complete.');
+
+server.listen(8000);
 
 async function bdayInterval(): Promise<void> {
 	const db = new Jsoning('botfiles/bday.db.json');
