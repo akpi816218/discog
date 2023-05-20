@@ -6,6 +6,7 @@ import {
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
+	PermissionFlagsBits,
 	StageChannel,
 	StringSelectMenuInteraction,
 	UserContextMenuCommandInteraction,
@@ -117,7 +118,16 @@ export const InteractionHandlers = {
 				const content = interaction.fields.getTextInputValue('/global.text');
 				const badGuilds: string[] = [];
 				for (const guild of interaction.client.guilds.cache.values()) {
-					if (!guild.systemChannel) {
+					if (
+						!guild.systemChannel ||
+						!guild.systemChannel
+							.permissionsFor(
+								guild.members.cache.get(
+									interaction.client.user.id
+								) as GuildMember
+							)
+							.has(PermissionFlagsBits.SendMessages)
+					) {
 						badGuilds.push(guild.name);
 						guild
 							.fetchOwner()
@@ -128,7 +138,7 @@ export const InteractionHandlers = {
 										new EmbedBuilder()
 											.setTitle('DisCog Global System Announcement')
 											.setDescription(
-												`You are receiving this message because you are the owner of a guild which I am part of, and I have an important system message to deliver to your guild. However, your guild does not have a system channel, so I could not post the announcement. You can set a system channel by going to Server Settings > Overview > System Messages Channel. In the meantime, please use my ${inlineCode(
+												`You are receiving this message because you are the owner of a guild which I am part of, and I have an important system message to deliver to your guild. However, your guild either does not have a system channel, or I do not have the necessary permissions to send the message. Because of this, I could not post the announcement. You can set a system channel by going to Server Settings > Overview > System Messages Channel and change channel permissions by right-clicking or long pressing (mobile) the system channel, selecting Edit Channel, and going to the Permissions category. In the meantime, please use my ${inlineCode(
 													'/announce'
 												)} command to deliver the following message to your guild.`
 											)
