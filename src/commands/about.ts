@@ -65,7 +65,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						'Discord development and support server',
 						'https://discord.gg/invite/7A7QwXVpsJ'
 					)} to get support and suggest features. If you have any questions, feel free to ask in the server.\n\nAll of the code for this bot is licensed under the ${hyperlink(
-						'GNU GPLv3.0',
+						'GNU GPL v3.0',
 						'https://www.gnu.org/licenses/gpl-3.0-standalone.html'
 					)}.\n\nAll features are free to use, but if you would like to support the development of this bot, you can donate ${hyperlink(
 						'here',
