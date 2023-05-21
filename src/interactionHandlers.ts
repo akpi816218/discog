@@ -237,6 +237,7 @@ export const InteractionHandlers = {
 				currentbio.bio = bio;
 				await db.set(interaction.user.id, currentbio);
 				await interaction.reply({ content: 'Bio set', ephemeral: true });
+				break;
 		}
 	},
 	async StringSelectMenu(

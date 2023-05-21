@@ -51,23 +51,22 @@ export interface UserData {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isUserData(o: any): o is UserData {
 	if (!o) return false;
-	return (
-		(o.success &&
-			o.data.user &&
-			// eslint-disable-next-line no-underscore-dangle
-			typeof o.data.user._id == 'string' &&
-			typeof o.data.user.username == 'string' &&
-			typeof o.data.user.role == 'string' &&
-			typeof o.data.user.xp == 'number' &&
-			typeof o.data.user.gamesplayed == 'number' &&
-			typeof o.data.user.gameswon == 'number' &&
-			typeof o.data.user.gametime == 'number' &&
-			typeof o.data.user.league.gamesplayed == 'number' &&
-			typeof o.data.user.league.gameswon == 'number' &&
-			typeof o.data.user.league.rating == 'number' &&
-			typeof o.data.user.league.rank == 'string' &&
-			typeof o.data.user.league.percentile == 'number' &&
-			typeof o.data.user.friend_count == 'number') ||
-		(!o.success && o.error)
-	);
+	if (!o.success) return false;
+	if (!o.data) return false;
+	if (!o.data.user) return false;
+	// eslint-disable-next-line no-underscore-dangle
+	if (typeof o.data.user._id != 'string') return false;
+	if (typeof o.data.user.username != 'string') return false;
+	if (typeof o.data.user.role != 'string') return false;
+	if (typeof o.data.user.xp != 'number') return false;
+	if (typeof o.data.user.gamesplayed != 'number') return false;
+	if (typeof o.data.user.gameswon != 'number') return false;
+	if (typeof o.data.user.gametime != 'number') return false;
+	if (typeof o.data.user.league.gamesplayed != 'number') return false;
+	if (typeof o.data.user.league.gameswon != 'number') return false;
+	if (typeof o.data.user.league.rating != 'number') return false;
+	if (typeof o.data.user.league.rank != 'string') return false;
+	if (typeof o.data.user.league.percentile != 'number') return false;
+	if (typeof o.data.user.friend_count != 'number') return false;
+	return true;
 }

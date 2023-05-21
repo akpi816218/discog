@@ -54,6 +54,8 @@ const client = new CommandClient({
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildScheduledEvents
 	],
+
+	// Set the bot's presence.
 	presence: {
 		activities: [
 			{
@@ -157,33 +159,31 @@ logger.info('Process setup complete.');
 
 server.listen(8000);
 
-async function bdayInterval(): Promise<void> {
+async function bdayInterval() {
 	const db = new Jsoning('botfiles/bday.db.json');
 	const today = new Date();
-	const all: [string, Date][] = Object.entries(db.all());
-	const bdaytoday = all.filter(([, bday]) => {
+	const allBirthdays: [string, Date][] = Object.entries(db.all());
+	const birthdaysToday = allBirthdays.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
 		return (
 			bdaydate.getMonth() == today.getMonth() &&
 			bdaydate.getDate() == today.getDate()
 		);
 	});
-	for (const id of bdaytoday.map(([id]) => id)) {
+	for (const [id] of birthdaysToday) {
 		const user = await client.users.fetch(id);
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
-			// eslint-disable-next-line no-extra-parens
-			if (!(await guild.members.fetch(user.id))) continue;
-			const bdaychannels = guild.channels.cache.filter((c) => {
+			const birthdayChannels = guild.channels.cache.filter((channel) => {
 				return !!(
-					(c.type == ChannelType.GuildAnnouncement ||
-						c.type == ChannelType.GuildText) &&
-					(c.name.toLowerCase().includes('bday') ||
-						c.name.toLowerCase().includes('birthday') ||
-						c.name.toLowerCase().includes('b-day'))
+					(channel.type == ChannelType.GuildAnnouncement ||
+						channel.type == ChannelType.GuildText) &&
+					(channel.name.toLowerCase().includes('bday') ||
+						channel.name.toLowerCase().includes('birthday') ||
+						channel.name.toLowerCase().includes('b-day'))
 				);
 			});
-			const channel = bdaychannels.first() || guild.systemChannel || null;
+			const channel = birthdayChannels.first() || guild.systemChannel || null;
 			if (
 				!channel ||
 				channel instanceof CategoryChannel ||
