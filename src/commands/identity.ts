@@ -11,11 +11,10 @@ import {
 	userMention
 } from 'discord.js';
 import {
-	DefaultPronouns,
 	Gender,
 	GenderCodes,
 	Pronoun,
-	isGenderObject,
+	PronounCodes,
 	isPronounObject
 } from 'pronouns.js';
 import Jsoning from 'jsoning';
@@ -169,11 +168,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				name: 'Pronouns',
 				value: Pronoun.fromJSON(data.pronouns).toString()
 			});
-		if (isGenderObject(data.gender))
-			embed.addFields({
-				name: 'Gender',
-				value: Gender.fromJSON(data.gender).bits.join(', ')
-			});
+		embed.addFields({
+			name: 'Gender',
+			value: Gender.fromJSON(data.gender).bits.join(', ')
+		});
 		if (data.orientation)
 			embed.addFields({ name: 'Orientation', value: data.orientation });
 		await interaction.reply({ embeds: [embed] });
@@ -310,24 +308,24 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 									.setCustomId('/identity_pronouns_set_select')
 									.setOptions(
 										{
-											label: DefaultPronouns.any.toString(),
-											value: DefaultPronouns.any.toString()
+											label: PronounCodes.any,
+											value: PronounCodes.any
 										},
 										{
-											label: DefaultPronouns.theyThem.toString(),
-											value: DefaultPronouns.theyThem.toString()
+											label: PronounCodes.theyThem,
+											value: PronounCodes.theyThem
 										},
 										{
-											label: DefaultPronouns.heHim.toString(),
-											value: DefaultPronouns.heHim.toString()
+											label: PronounCodes.heHim,
+											value: PronounCodes.heHim
 										},
 										{
-											label: DefaultPronouns.sheHer.toString(),
-											value: DefaultPronouns.sheHer.toString()
+											label: PronounCodes.sheHer,
+											value: PronounCodes.sheHer
 										},
 										{
-											label: DefaultPronouns.other.toString(),
-											value: DefaultPronouns.other.toString()
+											label: PronounCodes.other,
+											value: PronounCodes.other
 										}
 									)
 							)
@@ -480,12 +478,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						`${userMention(user.id)} (${
 							user.tag
 						}) has not set their gender yet.`
-					);
-					return;
-				}
-				if (!isGenderObject(genderdata)) {
-					await interaction.reply(
-						`${userMention} (${user.tag})'s data has become corrupted. Please have them reset it.`
 					);
 					return;
 				}

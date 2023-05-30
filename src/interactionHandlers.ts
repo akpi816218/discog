@@ -17,10 +17,8 @@ import {
 import {
 	Pronoun,
 	PronounCodes,
-	areGenderCodes,
 	isPronounCode,
-	isPronounValue,
-	isValidGenderBitField
+	isPronounValue
 } from 'pronouns.js';
 import Jsoning from 'jsoning';
 import { format } from 'prettier';
@@ -271,14 +269,6 @@ export const InteractionHandlers = {
 				break;
 			case '/identity_gender_set_select':
 				const selected = interaction.values;
-				if (!areGenderCodes(selected)) throw new Error('Invalid Gender Codes');
-				if (!isValidGenderBitField(selected)) {
-					await interaction.reply({
-						content: 'Error: Invalid choices',
-						ephemeral: true
-					});
-					return;
-				}
 				const igssdata = db.get(interaction.user.id) || {
 					bio: null,
 					gender: null,
