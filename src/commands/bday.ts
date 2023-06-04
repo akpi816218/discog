@@ -6,7 +6,7 @@ import {
 	SlashCommandSubcommandBuilder,
 	userMention
 } from 'discord.js';
-import Jsoning from 'jsoning';
+import { TypedJsoning } from 'typed-jsoning';
 
 export const data = new SlashCommandBuilder()
 	.setName('bday')
@@ -53,7 +53,7 @@ export const data = new SlashCommandBuilder()
 	);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const db = new Jsoning('botfiles/bday.db.json');
+	const db = new TypedJsoning<string>('botfiles/bday.db.json');
 	switch (interaction.options.getSubcommand()) {
 		case 'register':
 			await interaction.deferReply({
@@ -74,32 +74,21 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			await interaction.deferReply();
 			const id = interaction.options.getUser('user')?.id ?? interaction.user.id;
 			const ubday = db.get(id);
-			if (!ubday)
-				await interaction.editReply({
-					embeds: [
-						new EmbedBuilder()
-							.setTitle('User Birthday')
-							.setDescription(
-								`${userMention(id)} has not registered their birthday.`
-							)
-							.setFooter({
-								iconURL: interaction.client.user.displayAvatarURL(),
-								text: 'Powered by DisCog'
-							})
-					]
-				});
-			else
-				await interaction.editReply({
-					embeds: [
-						new EmbedBuilder()
-							.setTitle('User Birthday')
-							.setDescription(`${userMention(id)}'s birthday is on ${ubday}.`)
-							.setFooter({
-								iconURL: interaction.client.user.displayAvatarURL(),
-								text: 'Powered by DisCog'
-							})
-					]
-				});
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('User Birthday')
+						.setDescription(
+							!!ubday
+								? `${userMention(id)}'s birthday is on ${ubday}.`
+								: `${userMention(id)} has not registered their birthday.`
+						)
+						.setFooter({
+							iconURL: interaction.client.user.displayAvatarURL(),
+							text: 'Powered by DisCog'
+						})
+				]
+			});
 			break;
 	}
 };

@@ -6,6 +6,7 @@ import {
 	ForumChannel,
 	GatewayIntentBits,
 	PresenceUpdateStatus,
+	Snowflake,
 	codeBlock,
 	userMention
 } from 'discord.js';
@@ -14,8 +15,8 @@ import { Method, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-import Jsoning from 'jsoning';
 import { TOKEN } from './TOKEN';
+import TypedJsoning from 'typed-jsoning';
 import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
@@ -28,7 +29,7 @@ if (argv.includes('-d')) logger.level = 'debug';
 
 logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
-const devdb = new Jsoning('botfiles/dev.db.json');
+const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 
 const server = createServer(
 	{
@@ -97,7 +98,7 @@ client
 	.on(Events.InteractionCreate, async (interaction) => {
 		if (interaction.user.bot) return;
 		if (
-			devdb.get('blacklist').includes(interaction.user.id) &&
+			devdb.get('blacklist')?.includes(interaction.user.id) &&
 			interaction.isCommand()
 		) {
 			await interaction.reply({
@@ -160,9 +161,9 @@ logger.info('Process setup complete.');
 server.listen(8000);
 
 async function bdayInterval() {
-	const db = new Jsoning('botfiles/bday.db.json');
+	const db = new TypedJsoning<string>('botfiles/bday.db.json');
 	const today = new Date();
-	const allBirthdays: [string, Date][] = Object.entries(db.all());
+	const allBirthdays = Object.entries(db.all());
 	const birthdaysToday = allBirthdays.filter(([, bday]) => {
 		const bdaydate = new Date(bday);
 		return (

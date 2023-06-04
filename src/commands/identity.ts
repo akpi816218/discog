@@ -11,14 +11,14 @@ import {
 	userMention
 } from 'discord.js';
 import {
-	DefaultPronouns,
 	Gender,
 	GenderCodes,
 	Pronoun,
-	isGenderObject,
+	PronounCodes,
 	isPronounObject
 } from 'pronouns.js';
-import Jsoning from 'jsoning';
+import { IdentityEntry } from '../struct/database';
+import TypedJsoning from 'typed-jsoning';
 
 export const data = new SlashCommandBuilder()
 	.setName('identity')
@@ -137,7 +137,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			text: 'Powered by DisCog'
 		})
 		.setColor('Random');
-	const db = new Jsoning('botfiles/identity.db.json');
+	const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
 	const subcommandgroup = interaction.options.getSubcommandGroup();
 	if (!subcommandgroup && interaction.options.getSubcommand() == 'view') {
 		const user = interaction.options.getUser('user') || interaction.user;
@@ -162,6 +162,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				value: `${userMention(user.id)} ${user.tag}`
 			})
 			.setThumbnail(user.displayAvatarURL());
+		if (!data) {
+			embed.setDescription(
+				'This user has not created an identity profile yet.'
+			);
+			return;
+		}
 		if (data.name) embed.addFields({ name: 'Name', value: data.name });
 		if (data.bio) embed.addFields({ name: 'Bio', value: data.bio });
 		if (isPronounObject(data.pronouns))
@@ -169,7 +175,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				name: 'Pronouns',
 				value: Pronoun.fromJSON(data.pronouns).toString()
 			});
-		if (isGenderObject(data.gender))
+		if (data.gender)
 			embed.addFields({
 				name: 'Gender',
 				value: Gender.fromJSON(data.gender).bits.join(', ')
@@ -310,24 +316,24 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 									.setCustomId('/identity_pronouns_set_select')
 									.setOptions(
 										{
-											label: DefaultPronouns.any.toString(),
-											value: DefaultPronouns.any.toString()
+											label: PronounCodes.any,
+											value: PronounCodes.any
 										},
 										{
-											label: DefaultPronouns.theyThem.toString(),
-											value: DefaultPronouns.theyThem.toString()
+											label: PronounCodes.theyThem,
+											value: PronounCodes.theyThem
 										},
 										{
-											label: DefaultPronouns.heHim.toString(),
-											value: DefaultPronouns.heHim.toString()
+											label: PronounCodes.heHim,
+											value: PronounCodes.heHim
 										},
 										{
-											label: DefaultPronouns.sheHer.toString(),
-											value: DefaultPronouns.sheHer.toString()
+											label: PronounCodes.sheHer,
+											value: PronounCodes.sheHer
 										},
 										{
-											label: DefaultPronouns.other.toString(),
-											value: DefaultPronouns.other.toString()
+											label: PronounCodes.other,
+											value: PronounCodes.other
 										}
 									)
 							)
@@ -480,12 +486,6 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						`${userMention(user.id)} (${
 							user.tag
 						}) has not set their gender yet.`
-					);
-					return;
-				}
-				if (!isGenderObject(genderdata)) {
-					await interaction.reply(
-						`${userMention} (${user.tag})'s data has become corrupted. Please have them reset it.`
 					);
 					return;
 				}

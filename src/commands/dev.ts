@@ -8,9 +8,9 @@ import {
 	TextInputBuilder,
 	TextInputStyle
 } from 'discord.js';
-import Jsoning from 'jsoning';
+import TypedJsoning from 'typed-jsoning';
 
-const db = new Jsoning('botfiles/dev.db.json');
+const db = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 
 export const data = new SlashCommandBuilder()
 	.setName('dev')
@@ -87,8 +87,8 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const whitelist: Snowflake[] = db.get('whitelist');
-	const blacklist: Snowflake[] = db.get('blacklist');
+	const whitelist = db.get('whitelist') || [];
+	const blacklist = db.get('blacklist') || [];
 	if (!whitelist.includes(interaction.user.id)) {
 		await interaction.reply('Restricted Commmand');
 		return;

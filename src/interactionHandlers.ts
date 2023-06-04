@@ -15,14 +15,14 @@ import {
 	time
 } from 'discord.js';
 import {
+	GenderCodes,
 	Pronoun,
 	PronounCodes,
-	areGenderCodes,
 	isPronounCode,
-	isPronounValue,
-	isValidGenderBitField
+	isPronounValue
 } from 'pronouns.js';
-import Jsoning from 'jsoning';
+import { IdentityEntry } from './struct/database';
+import TypedJsoning from 'typed-jsoning';
 import { format } from 'prettier';
 import { logger } from './logger';
 
@@ -111,7 +111,7 @@ export const InteractionHandlers = {
 		}
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
-		const db = new Jsoning('botfiles/identity.db.json');
+		const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
 		switch (interaction.customId) {
 			case '/global':
 				await interaction.reply('Working...');
@@ -243,7 +243,7 @@ export const InteractionHandlers = {
 	async StringSelectMenu(
 		interaction: StringSelectMenuInteraction
 	): Promise<void> {
-		const db = new Jsoning('botfiles/identity.db.json');
+		const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
 		switch (interaction.customId) {
 			case '/identity_pronouns_set_select':
 				const choice = interaction.values[0];
@@ -270,22 +270,14 @@ export const InteractionHandlers = {
 				setTimeout(() => doneMsg.delete(), 5_000);
 				break;
 			case '/identity_gender_set_select':
-				const selected = interaction.values;
-				if (!areGenderCodes(selected)) throw new Error('Invalid Gender Codes');
-				if (!isValidGenderBitField(selected)) {
-					await interaction.reply({
-						content: 'Error: Invalid choices',
-						ephemeral: true
-					});
-					return;
-				}
+				const selected = interaction.values as GenderCodes[];
 				const igssdata = db.get(interaction.user.id) || {
 					bio: null,
 					gender: null,
 					name: null,
 					pronouns: null
 				};
-				igssdata.gender = selected;
+				igssdata.gender = { bits: selected };
 				await db.set(interaction.user.id, igssdata);
 				await interaction.reply({
 					content: 'Done.',
