@@ -175,11 +175,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				name: 'Pronouns',
 				value: Pronoun.fromJSON(data.pronouns).toString()
 			});
-		if (data.gender)
-			embed.addFields({
-				name: 'Gender',
-				value: Gender.fromJSON(data.gender).bits.join(', ')
-			});
+		embed.addFields({
+			name: 'Gender',
+			value: Gender.fromJSON(data.gender).bits.join(', ')
+		});
 		if (data.orientation)
 			embed.addFields({ name: 'Orientation', value: data.orientation });
 		await interaction.reply({ embeds: [embed] });
