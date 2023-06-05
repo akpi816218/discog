@@ -1,7 +1,8 @@
+/* eslint-disable capitalized-comments */
 import { dirname, default as path } from 'path';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord.js';
-import { TOKEN } from './TOKEN';
+// import { TOKEN } from './TOKEN';
 import { argv } from 'process';
 import { clientId } from './config';
 import { fileURLToPath } from 'url';
@@ -26,7 +27,8 @@ for (const file of commandFiles) {
 	const command = await import(filePath);
 	commands.push(command.data.toJSON());
 }
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+// const rest = new REST({ version: '10' }).setToken(TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
 await rest.put(Routes.applicationCommands(clientId), { body: [] });
 await rest.put(Routes.applicationCommands(clientId), { body: commands });
 // eslint-disable-next-line no-console

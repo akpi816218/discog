@@ -15,7 +15,8 @@ import { Method, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-import { TOKEN } from './TOKEN';
+// eslint-disable-next-line capitalized-comments
+// import { TOKEN } from './TOKEN';
 import TypedJsoning from 'typed-jsoning';
 import { inviteLink } from './config';
 import { join } from 'path';
@@ -142,7 +143,9 @@ client
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
-await client.login(TOKEN);
+// eslint-disable-next-line capitalized-comments
+// await client.login(TOKEN);
+await client.login(process.env.TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
