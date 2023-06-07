@@ -39,11 +39,7 @@ const server = createServer(
 	},
 	{
 		handler: (_req, res) =>
-			res
-				.status(200)
-				.end(
-					startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-				),
+			res.status(200).sendFile(join(cwd(), 'web', 'index.html')),
 		method: Methods.GET,
 		route: '/'
 	},
@@ -171,8 +167,6 @@ process.on('SIGINT', () => {
 	logger.info('Destroyed Client.');
 	process.exit(0);
 });
-
-const startDate = Object.freeze(new Date());
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
