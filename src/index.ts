@@ -1,4 +1,4 @@
-import 'dotenv/config';
+// import 'dotenv/config';
 import {
 	ActivityType,
 	CategoryChannel,
@@ -79,8 +79,6 @@ const client = new CommandClient({
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildScheduledEvents
 	],
-
-	// Set the bot's presence.
 	presence: {
 		activities: [
 			{
