@@ -15,7 +15,7 @@
 		"func-call-spacing": "error",
 		"getter-return": "error",
 		"indent": ["error", "tab"],
-		"jsx-quotes": "error",
+		"jsx-quotes": 0,
 		"new-parens": "error",
 		"no-alert": "error",
 		"no-console": "error",

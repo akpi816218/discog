@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-export enum Method {
+export enum Methods {
 	// eslint-disable-next-line no-unused-vars
 	DELETE = 'delete',
 	// eslint-disable-next-line no-unused-vars
@@ -11,14 +11,14 @@ export enum Method {
 	PUT = 'put'
 }
 
-export function createServer(
-	...routes: {
-		// eslint-disable-next-line no-unused-vars
-		handler: (req: Request, res: Response) => void;
-		method: Method;
-		route: string;
-	}[]
-) {
+export interface Route {
+	// eslint-disable-next-line no-unused-vars
+	handler: (req: Request, res: Response) => void;
+	method: Methods;
+	route: string;
+}
+
+export function createServer(...routes: Route[]) {
 	const app = express();
 	for (const { handler, method, route } of routes) {
 		app[method](route, handler);

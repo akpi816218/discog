@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
 	ActivityType,
 	CategoryChannel,
@@ -11,12 +12,10 @@ import {
 	userMention
 } from 'discord.js';
 import { Command, CommandClient } from './struct/discord/Extend';
-import { Method, createServer } from './server';
+import { Methods, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-// eslint-disable-next-line capitalized-comments
-// import { TOKEN } from './TOKEN';
 import TypedJsoning from 'typed-jsoning';
 import { inviteLink } from './config';
 import { join } from 'path';
@@ -35,7 +34,7 @@ const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 const server = createServer(
 	{
 		handler: (_req, res) => res.redirect(inviteLink),
-		method: Method.GET,
+		method: Methods.GET,
 		route: '/invite'
 	},
 	{
@@ -45,8 +44,32 @@ const server = createServer(
 				.end(
 					startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
 				),
-		method: Method.GET,
+		method: Methods.GET,
 		route: '/'
+	},
+	{
+		handler: (req, res) => {
+			if (
+				req.headers['content-type'] != 'application/json' &&
+				req.headers['content-type'] != undefined
+			)
+				res.status(415).end();
+			else
+				res
+					.status(200)
+					.contentType('application/json')
+					.send({
+						clientPing: client.ws.ping,
+						clientReady: client.isReady(),
+						guildCount: client.guilds.cache.size,
+						lastReady: client.readyAt?.valueOf(),
+						timestamp: Date.now(),
+						uptime: client.uptime
+					})
+					.end();
+		},
+		method: Methods.GET,
+		route: '/api'
 	}
 );
 
@@ -143,9 +166,7 @@ client
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
-// eslint-disable-next-line capitalized-comments
-// await client.login(TOKEN);
-await client.login(process.env.TOKEN);
+await client.login(process.env.DISCORD_TOKEN);
 
 process.on('SIGINT', () => {
 	client.destroy();
@@ -159,9 +180,9 @@ const startDate = Object.freeze(new Date());
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
-logger.info('Process setup complete.');
-
 server.listen(8000);
+
+logger.info('Process setup complete.');
 
 async function bdayInterval() {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');
