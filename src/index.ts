@@ -57,17 +57,26 @@ const server = createServer(
 					.send({
 						clientPing: client.ws.ping,
 						clientReady: client.isReady(),
+						commandCount: client.commands.size,
 						guildCount: client.guilds.cache.size,
 						lastReady: client.readyAt?.valueOf(),
 						timestamp: Date.now(),
-						uptime: client.uptime
+						uptime: client.uptime,
+						userCount: client.users.cache.size
 					})
 					.end();
 		},
 		method: Methods.GET,
 		route: '/api'
 	}
-);
+).use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept'
+	);
+	next();
+});
 
 const client = new CommandClient({
 	intents: [
