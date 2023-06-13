@@ -61,8 +61,7 @@ const server = createServer(
 						guildCount: client.guilds.cache.size,
 						lastReady: client.readyAt?.valueOf(),
 						timestamp: Date.now(),
-						uptime: client.uptime,
-						userCount: client.users.cache.size
+						uptime: client.uptime
 					})
 					.end();
 		},
@@ -80,8 +79,11 @@ const server = createServer(
 
 const client = new CommandClient({
 	intents: [
+		GatewayIntentBits.DirectMessages,
 		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildInvites,
 		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.GuildScheduledEvents
 	],
 	presence: {
@@ -216,7 +218,9 @@ client
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
-await client.login(process.env.DISCORD_TOKEN);
+await client
+	.login(process.env.DISCORD_TOKEN)
+	.then(() => logger.info('Logged in.'));
 
 process.on('SIGINT', () => {
 	client.destroy();
