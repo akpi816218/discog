@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Akhil Pillai">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- <meta name="keywords" content=""> -->
+		<!-- <meta name="description" content=""> -->
+		<title>DisCog</title>
+		<style>
+			body {
+				font-family: 'Ubuntu Mono', 'Roboto Mono', monospace;
+				font-size: 1.5rem;
+				background-color: #000;
+				color: #fff;
+				padding: 1rem;
+			}
+		</style>
+		<!-- <link rel="icon" href="files/favicon.png" type="image/png"> -->
+	</head>
+
+	<body> Fetching data from the server...
+		<!-- <header> </header> <main> </main> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <script src="js/script.js"></script> -->
+		<script> fetch('/api/', { method: 'GET', headers: { 'Content-Type': 'application/json' }, }).then(res => res.json()).then(data => { document.body.innerText = JSON.stringify(data, null, 2); }).catch(err => console.log(err)); </script>
+	</body>
+
+</html>
