@@ -146,15 +146,62 @@ client
 					});
 				}
 			}
-		} else if (interaction.isModalSubmit())
-			InteractionHandlers.ModalSubmit(interaction);
-		else if (interaction.isButton()) InteractionHandlers.Button(interaction);
-		else if (interaction.isUserContextMenuCommand())
-			InteractionHandlers.ContextMenu.User(interaction);
-		else if (interaction.isMessageContextMenuCommand())
-			InteractionHandlers.ContextMenu.Message(interaction);
-		else if (interaction.isStringSelectMenu())
-			InteractionHandlers.StringSelectMenu(interaction);
+		} else if (interaction.isModalSubmit()) {
+			try {
+				await InteractionHandlers.ModalSubmit(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isButton()) {
+			try {
+				await InteractionHandlers.Button(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isUserContextMenuCommand()) {
+			try {
+				await InteractionHandlers.ContextMenu.User(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isMessageContextMenuCommand()) {
+			try {
+				await InteractionHandlers.ContextMenu.Message(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isStringSelectMenu()) {
+			try {
+				await InteractionHandlers.StringSelectMenu(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		}
 	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
