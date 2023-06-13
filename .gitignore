@@ -1,3 +1,4 @@
+botfiles/*.db.json
 *TOKEN*
 node_modules
 package-lock.json
