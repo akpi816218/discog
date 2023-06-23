@@ -4,12 +4,15 @@
 		"forceConsistentCasingInFileNames": true,
 		"module": "ESNext",
 		"moduleResolution": "node",
-		"outDir": "dist",
 		"strict": true,
 		"skipLibCheck": true,
 		"target": "ESNext",
-		"lib": ["ESNext"],
-		"noEmit": true
+		"lib": ["ESNext", "ES2022"],
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"alwaysStrict": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*", ".next/types/**/*.ts"],
+	"exclude": ["node_modules"]
 }

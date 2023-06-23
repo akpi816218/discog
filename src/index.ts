@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
 	ActivityType,
 	CategoryChannel,
@@ -11,11 +12,10 @@ import {
 	userMention
 } from 'discord.js';
 import { Command, CommandClient } from './struct/discord/Extend';
-import { Method, createServer } from './server';
+import { Methods, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-import { TOKEN } from './TOKEN';
 import TypedJsoning from 'typed-jsoning';
 import { inviteLink } from './config';
 import { join } from 'path';
@@ -34,29 +34,58 @@ const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 const server = createServer(
 	{
 		handler: (_req, res) => res.redirect(inviteLink),
-		method: Method.GET,
+		method: Methods.GET,
 		route: '/invite'
 	},
 	{
 		handler: (_req, res) =>
-			res
-				.status(200)
-				.end(
-					startDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-				),
-		method: Method.GET,
+			res.status(200).sendFile(join(cwd(), 'web', 'index.html')),
+		method: Methods.GET,
 		route: '/'
+	},
+	{
+		handler: (req, res) => {
+			if (
+				req.headers['content-type'] != 'application/json' &&
+				req.headers['content-type'] != undefined
+			)
+				res.status(415).end();
+			else
+				res
+					.status(200)
+					.contentType('application/json')
+					.send({
+						clientPing: client.ws.ping,
+						clientReady: client.isReady(),
+						commandCount: client.commands.size,
+						guildCount: client.guilds.cache.size,
+						lastReady: client.readyAt?.valueOf(),
+						timestamp: Date.now(),
+						uptime: client.uptime
+					})
+					.end();
+		},
+		method: Methods.GET,
+		route: '/api'
 	}
-);
+).use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept'
+	);
+	next();
+});
 
 const client = new CommandClient({
 	intents: [
+		GatewayIntentBits.DirectMessages,
 		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildInvites,
 		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.GuildScheduledEvents
 	],
-
-	// Set the bot's presence.
 	presence: {
 		activities: [
 			{
@@ -128,21 +157,70 @@ client
 					});
 				}
 			}
-		} else if (interaction.isModalSubmit())
-			InteractionHandlers.ModalSubmit(interaction);
-		else if (interaction.isButton()) InteractionHandlers.Button(interaction);
-		else if (interaction.isUserContextMenuCommand())
-			InteractionHandlers.ContextMenu.User(interaction);
-		else if (interaction.isMessageContextMenuCommand())
-			InteractionHandlers.ContextMenu.Message(interaction);
-		else if (interaction.isStringSelectMenu())
-			InteractionHandlers.StringSelectMenu(interaction);
+		} else if (interaction.isModalSubmit()) {
+			try {
+				await InteractionHandlers.ModalSubmit(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isButton()) {
+			try {
+				await InteractionHandlers.Button(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isUserContextMenuCommand()) {
+			try {
+				await InteractionHandlers.ContextMenu.User(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isMessageContextMenuCommand()) {
+			try {
+				await InteractionHandlers.ContextMenu.Message(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		} else if (interaction.isStringSelectMenu()) {
+			try {
+				await InteractionHandlers.StringSelectMenu(interaction);
+			} catch {
+				try {
+					await interaction.reply({
+						content: 'There was an error while running this command.',
+						ephemeral: true
+					});
+				} catch {}
+			}
+		}
 	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
 
-await client.login(TOKEN);
+await client
+	.login(process.env.DISCORD_TOKEN)
+	.then(() => logger.info('Logged in.'));
 
 process.on('SIGINT', () => {
 	client.destroy();
@@ -150,15 +228,13 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
-const startDate = Object.freeze(new Date());
-
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
-logger.info('Process setup complete.');
-
 server.listen(8000);
+
+logger.info('Process setup complete.');
 
 async function bdayInterval() {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');

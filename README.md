@@ -12,5 +12,5 @@ Commits and PRs must be comprehensive and clearly describe their purpose and sum
 ### Pre-Commit Tasks
 
 - Test all features if committing to `gitmaster` branch.
-- Run `npm run sanity-check` to lint and compile code. Edit code if needed. Repeat until no errors are returned.
+- Lint and compile code. Edit code if needed. Repeat until no errors are returned.
 - Commit and push.
