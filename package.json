@@ -1,5 +1,5 @@
 {
-	"author": "Akhil Pilai",
+	"author": "Akhil Pillai",
 	"dependencies": {
 		"@discordjs/rest": "^1.7.1",
 		"@napi-rs/canvas": "^0.1.41",
@@ -11,6 +11,7 @@
 		"jsoning": "^0.13.23",
 		"node-fetch": "^3.3.1",
 		"node-schedule": "^2.1.1",
+		"octokit": "^2.0.22",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.0.0",
 		"pronouns.js": "^3.3.2",
