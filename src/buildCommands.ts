@@ -1,7 +1,11 @@
 import 'dotenv/config';
+import {
+	RESTPostAPIChatInputApplicationCommandsJSONBody,
+	Routes,
+	SlashCommandBuilder
+} from 'discord.js';
 import { dirname, default as path } from 'path';
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord.js';
 import { argv } from 'process';
 import { clientId } from './config';
 import { fileURLToPath } from 'url';
@@ -9,7 +13,7 @@ import fs from 'fs';
 argv.shift();
 argv.shift();
 const thisdirname = dirname(fileURLToPath(import.meta.url));
-const commands = [];
+const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandsPath = path.join(thisdirname, 'commands');
 let commandFiles;
 if (argv.length == 0) {
@@ -19,11 +23,20 @@ if (argv.length == 0) {
 } else {
 	commandFiles = fs
 		.readdirSync(commandsPath)
-		.filter((file) => file.endsWith('.ts') && argv.includes(file));
+		.filter((file) => argv.includes(file.replace('.ts', '')));
+}
+if (commandFiles.length == 0) {
+	// eslint-disable-next-line no-console
+	console.log('No commands found');
+	process.exit(1);
 }
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
-	const command = await import(filePath);
+	const command: {
+		data: SlashCommandBuilder;
+		// eslint-disable-next-line no-unused-vars
+		execute?: (interaction: unknown) => Promise<void>;
+	} = await import(filePath);
 	commands.push(command.data.toJSON());
 }
 const rest = new REST({ version: '10' }).setToken(
