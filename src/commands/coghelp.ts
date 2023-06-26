@@ -3,104 +3,86 @@ import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
-	inlineCode
+	inlineCode,
+	strikethrough
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 // ! New commands go here in the `fields` object
-const fields: { [key: string]: APIEmbedField } = {
-	about: {
-		name: inlineCode('/about'),
-		value: `About this bot\n${inlineCode('/about')}`
-	},
-	announce: {
-		name: inlineCode('/announce'),
-		value: `Creates and announcement in the specified channel\n${inlineCode(
-			'/announce <channel: channel> <message: string> [mentionEveryone: boolean || false]'
-		)}`
-	},
-	bday: {
-		name: inlineCode('/bday'),
-		value: `Register your birthday or view another's\n${inlineCode(
-			'/bday register <month: number> <day: number> <year: number>'
-		)}, ${inlineCode('/bday view [user: user || @self]')}`
-	},
-	coghelp: {
-		name: inlineCode('/coghelp'),
-		value: `Shows general help or help for a specific command\n${inlineCode(
-			'/coghelp [command: string]'
-		)}`
-	},
-	contact: {
-		name: inlineCode('/contact'),
-		value: `Sends a report to the developers\n${inlineCode('/contact')}`
-	},
-	dev: {
-		name: inlineCode('/dev'),
-		value: `Developer-only command\n${inlineCode(
-			'/dev'
-		)}\nYou need to be a developer to use this command. If you don't believe me, try it. You'll see.`
-	},
-	dm: {
-		name: inlineCode('/dm'),
-		value: `Sends an official server message to a user via DMs\n${inlineCode(
-			'/dm <user: user> <message: string>'
-		)}\nUnless a server admin configured this command differently, this should not be available to most users.`
-	},
-	donate: {
-		name: inlineCode('/donate'),
-		value: `Support bot development! Please? Thank you!\n${inlineCode(
-			'/donate'
-		)}\nPLEASE DONATE!`
-	},
-	identity: {
-		name: inlineCode('/identity'),
-		value: `Create an identity profile or view one\n${inlineCode(
-			'/identity view [user: user || @self]'
-		)}${inlineCode(
-			'/identity pronouns set [custom: boolean || false]'
-		)}, ${inlineCode(
-			'/identity pronouns view [user: user || @self]'
-		)}, ${inlineCode('/identity name set <name: string>')}, ${inlineCode(
-			'/identity name view [user: user || @self]'
-		)}, ${inlineCode('/identity bio set')}, ${inlineCode(
-			'/identity bio view [user: user || @self]'
-		)}, ${inlineCode('/identity gender set')}, ${inlineCode(
-			'/identity gender view [user: user || @self]'
-		)}`
-	},
-	info: {
-		name: inlineCode('/info'),
-		value: `Gets some info\n${inlineCode('/info channel')}, ${inlineCode(
-			'/info guild'
-		)}`
-	},
-	ping: {
-		name: inlineCode('/ping'),
-		value: `Checks the bot's ping\n${inlineCode('/ping')}`
-	},
-	poll: {
-		name: inlineCode('/poll'),
-		value: `Creates a poll\n${inlineCode(
-			'/poll <question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
-		)}`
-	},
-	tetrio: {
-		name: inlineCode('/tetrio'),
-		value: `Get a user's stats on TETR.IO\n${inlineCode(
-			'/tetrio view <username: string>'
-		)}, ${inlineCode('/tetrio discord <user: user>')}`
-	}
+const entries: { [key: string]: CommandHelpEntry } = {
+	about: new CommandHelpEntry('about', 'Shows info about the bot'),
+	announce: new CommandHelpEntry(
+		'announce',
+		'Creates an announcement in the specified channel',
+		'<channel: channel> <message: string> [mentionEveryone: boolean || false]'
+	),
+	bday: new CommandHelpEntry(
+		'bday',
+		"Register your birthday or view another's",
+		[
+			'register <month: number> <day: number> <year: number>',
+			'view [user: user || @self]'
+		]
+	),
+	coghelp: new CommandHelpEntry(
+		'coghelp',
+		'Shows general help or help for a specific command',
+		'[command: string]'
+	),
+	contact: new CommandHelpEntry('contact', 'Contact the developers'),
+	dev: new CommandHelpEntry(
+		'dev',
+		'Developer-only command. Go ahead and try it, I dare you.'
+	),
+	dm: new CommandHelpEntry(
+		'dm',
+		'Sends an official server message to a user via DMs',
+		'<user: user> <message: string>'
+	),
+	donate: new CommandHelpEntry(
+		'donate',
+		'Support bot development! Please? Thank you!'
+	),
+	emojify: new CommandHelpEntry(
+		'emojify',
+		'Converts text to emojis',
+		'<text: string>'
+	),
+	identity: new CommandHelpEntry(
+		'identity',
+		`CRU${strikethrough('D')} an identity profile`,
+		[
+			'view [user: user || @self]',
+			'pronouns set [custom: boolean || false]',
+			'pronouns view [user: user || @self]',
+			'name set <name: string>',
+			'name view [user: user || @self]',
+			'bio set',
+			'bio view [user: user || @self]',
+			'gender set',
+			'gender view [user: user || @self]'
+		]
+	),
+	info: new CommandHelpEntry('info', 'Gets some info', ['channel', 'guild']),
+	ping: new CommandHelpEntry('ping', "Check the bot's ping"),
+	poll: new CommandHelpEntry('poll', 'Creates a poll', [
+		'<question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
+	]),
+	qr: new CommandHelpEntry(
+		'qr',
+		'Encodes some text or a link in a QR code',
+		'<text: string>'
+	),
+	tetrio: new CommandHelpEntry(
+		'tetrio',
+		"Get a user's stats on TETR.IO, either from their username or Discord account (if connected)",
+		['view <username: string>', 'discord <user: user>']
+	)
 };
 
-interface CommandHelpEntry {
-	name: string;
-	value: string;
-}
-
-const choices: CommandHelpEntry[] = [];
-Object.keys(fields).forEach((val) => {
-	choices.push({ name: val, value: val });
-});
+const fields: APIEmbedField[] = [];
+for (const entry of Object.values(entries))
+	fields.push(entry.toDiscordAPIEmbedField());
 
 export const data = new SlashCommandBuilder()
 	.setName('coghelp')
@@ -109,7 +91,11 @@ export const data = new SlashCommandBuilder()
 		return option
 			.setName('command')
 			.setDescription('The command to show help for')
-			.setChoices(...choices)
+			.setChoices(
+				...Object.keys(entries).map((key) => {
+					return { name: key, value: key };
+				})
+			)
 			.setRequired(false);
 	});
 
@@ -137,7 +123,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		.setColor(0x00ff00);
 	const command = interaction.options.getString('command');
 	if (!command) embed.addFields(Object.values(fields));
-	else if (fields[command]) embed.addFields(fields[command]);
+	else if (entries[command])
+		embed.addFields(entries[command].toDiscordAPIEmbedField());
 	else
 		embed.setDescription(`The command ${inlineCode(command)} was not found.`);
 	await interaction.reply({

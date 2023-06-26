@@ -26,4 +26,4 @@ export const permissionsBits = new PermissionsBitField()
 		PermissionFlagsBits.ViewAuditLog,
 		PermissionFlagsBits.ViewChannel
 	)
-	.freeze().bitfield;
+  .bitfield;
