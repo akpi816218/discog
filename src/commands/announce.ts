@@ -29,13 +29,7 @@ export const data = new SlashCommandBuilder()
 			.setDescription('Add all roles you want to ping')
 			.setRequired(false);
 	})
-	.setDefaultMemberPermissions(
-		PermissionFlagsBits.ManageGuild |
-			PermissionFlagsBits.ManageMessages |
-			PermissionFlagsBits.ManageEvents |
-			PermissionFlagsBits.MentionEveryone |
-			PermissionFlagsBits.ModerateMembers
-	);
+	.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();

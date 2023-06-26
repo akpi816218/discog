@@ -24,6 +24,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		content: 'Converting...',
 		ephemeral: interaction.options.getBoolean('ephemeral') ?? false
 	});
-	await interaction.editReply({
-		content: translateToEmoji(interaction.options.getString('text') ?? '')
+	const text = interaction.options.getString('text') ?? '';
+	await interaction.editReply(
+		`Original: ${text}\nEmojified: ${translateToEmoji(text)}`
+	);
 };
