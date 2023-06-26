@@ -6,6 +6,7 @@ import {
 	Events,
 	ForumChannel,
 	GatewayIntentBits,
+	OAuth2Scopes,
 	PresenceUpdateStatus,
 	Snowflake,
 	codeBlock,
@@ -17,9 +18,9 @@ import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
 import TypedJsoning from 'typed-jsoning';
-import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
+import { permissionsBits } from './config';
 import { readdirSync } from 'fs';
 import { scheduleJob } from 'node-schedule';
 
@@ -31,9 +32,43 @@ logger.info('RunID: %d', Math.floor(Math.random() * 100));
 
 const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 
+const client = new CommandClient({
+	intents: [
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildInvites,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildScheduledEvents
+	],
+	presence: {
+		activities: [
+			{
+				name: '/bday register',
+				type: ActivityType.Playing
+			}
+		],
+		afk: false,
+		status: PresenceUpdateStatus.Online
+	}
+});
+
 const server = createServer(
 	{
-		handler: (_req, res) => res.redirect(inviteLink),
+		handler: (_req, res) =>
+			res.redirect(
+				client.generateInvite({
+					permissions: permissionsBits,
+					scopes: [
+						OAuth2Scopes.ApplicationsCommands,
+						OAuth2Scopes.ApplicationsCommandsUpdate,
+						OAuth2Scopes.ApplicationCommandsPermissionsUpdate,
+						OAuth2Scopes.Bot,
+						OAuth2Scopes.Guilds,
+						OAuth2Scopes.Identify
+					]
+				})
+			),
 		method: Methods.GET,
 		route: '/invite'
 	},
@@ -75,27 +110,6 @@ const server = createServer(
 		'Origin, X-Requested-With, Content-Type, Accept'
 	);
 	next();
-});
-
-const client = new CommandClient({
-	intents: [
-		GatewayIntentBits.DirectMessages,
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildInvites,
-		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildScheduledEvents
-	],
-	presence: {
-		activities: [
-			{
-				name: '/bday register',
-				type: ActivityType.Playing
-			}
-		],
-		afk: false,
-		status: PresenceUpdateStatus.Online
-	}
 });
 
 const commandsPath = join(cwd(), 'src', 'commands');
