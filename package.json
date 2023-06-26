@@ -33,8 +33,8 @@
 	"keywords": [],
 	"license": "ISC",
 	"main": "src/index.ts",
+	"type": "module",
 	"name": "discog",
-	"repository": "https://github.com/akpi816218/discog",
 	"scripts": {
 		"build": "npm run format && npm run lint && npm run compile",
 		"build-commands": "npx tsx src/buildCommands.ts",
