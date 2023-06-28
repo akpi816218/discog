@@ -18,7 +18,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({
 		components: [
 			new ActionRowBuilder<ButtonBuilder>().setComponents(
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setUrl('https://discog.localplayer.dev').setLabel('Website'),
+    new ButtonBuilder()
+      .setStyle(ButtonStyle.Link)
+      .setUrl('https://discog.localplayer.dev')
+      .setLabel('Website'),
 				new ButtonBuilder()
 					.setStyle(ButtonStyle.Link)
 					.setURL('https://github.com/akpi816218/discog/commits/')
