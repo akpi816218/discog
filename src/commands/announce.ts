@@ -50,7 +50,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					icon_url: interaction.client.user.displayAvatarURL(),
 					text: 'Powered by DisCog'
 				},
-				title: `Announcement by @${interaction.user.tag}:`
+				title: `Announcement by @${interaction.user.username}:`
 			}
 		]
 	});

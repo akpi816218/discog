@@ -5,6 +5,6 @@ export const once = false;
 export const execute = async (member: GuildMember) => {
 	if (member.guild.systemChannel)
 		await member.guild.systemChannel.send(
-			`${member.user.tag} (${userMention(member.id)}) just poofed.`
+			`${member.user.username} (${userMention(member.id)}) just poofed.`
 		);
 };

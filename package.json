@@ -13,6 +13,7 @@
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.0.0",
 		"pronouns.js": "^3.3.2",
+		"texsvg": "^2.0.2",
 		"translate-to-emoji": "^2.2.0",
 		"typed-jsoning": "^1.0.3"
 	},

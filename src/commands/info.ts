@@ -73,9 +73,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							{ name: 'Member Count', value: guild.memberCount.toString() },
 							{
 								name: 'Owner',
-								value: `${(await guild.fetchOwner()).user.tag} (${userMention(
-									guild.ownerId
-								)})`
+								value: `${
+									(
+										await guild.fetchOwner()
+									).user.username
+								} (${userMention(guild.ownerId)})`
 							},
 							{
 								name: 'Created At',

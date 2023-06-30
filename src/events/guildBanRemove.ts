@@ -5,6 +5,8 @@ export const once = false;
 export const execute = async (ban: GuildBan) => {
 	if (ban.guild.systemChannel)
 		await ban.guild.systemChannel.send(
-			`${inlineCode(ban.user.tag)} (${userMention(ban.user.id)}) was unbanned.`
+			`${inlineCode(ban.user.username)} (${userMention(
+				ban.user.id
+			)}) was unbanned.`
 		);
 };

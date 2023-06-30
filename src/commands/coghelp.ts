@@ -118,7 +118,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		.setTimestamp()
 		.setFooter({
 			iconURL: interaction.client.user.displayAvatarURL(),
-			text: `Requested by ${interaction.user.tag}`
+			text: `Requested by ${interaction.user.username}`
 		})
 		.setColor(0x00ff00);
 	const command = interaction.options.getString('command');

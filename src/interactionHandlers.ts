@@ -56,7 +56,7 @@ export const InteractionHandlers = {
 						for (const json of jsons) {
 							await interaction.channel.send(codeBlock(json));
 						}
-					} else await interaction.reply(json);
+					} else await interaction.reply(codeBlock(json));
 					break;
 			}
 		},
