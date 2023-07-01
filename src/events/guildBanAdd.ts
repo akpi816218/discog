@@ -15,7 +15,7 @@ export const execute = async (ban: GuildBan) => {
 				new EmbedBuilder().setTitle('Ban Created').setFields(
 					{
 						name: 'User:',
-						value: `${ban.user.tag} (${userMention(ban.user.id)})`
+						value: `${ban.user.username} (${userMention(ban.user.id)})`
 					},
 					{
 						name: 'Reason:',

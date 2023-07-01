@@ -42,7 +42,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					{ name: 'Server Name:', value: admin.guild.name },
 					{
 						name: 'Sent by:',
-						value: `${admin.user.tag} (${userMention(admin.user.id)})`
+						value: `${admin.user.username} (${userMention(admin.user.id)})`
 					},
 					{
 						name: 'Message',

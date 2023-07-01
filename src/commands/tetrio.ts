@@ -39,45 +39,36 @@ export const data = new SlashCommandBuilder()
 			});
 	});
 
-function getStatsImage(json: UserData): Promise<Buffer> {
-	return new Promise(async (resolve, reject) => {
-		if (!json.data) {
-			reject(json.error ?? 'Unknown error');
-			return;
-		}
-		const { gamesplayed, gameswon, league, username } = json.data.user;
-		const { rank, rating } = league;
-		const canvas = new Canvas(1920, 1080);
-		const ctx = canvas.getContext('2d');
-		const background = new Image();
-		background.src = await promises.readFile(
-			join(
-				dirname(fileURLToPath(import.meta.url)),
-				'../../botfiles/tetrio-coverart-alt.png'
-			)
-		);
-		ctx.drawImage(background, 0, 0);
-		ctx.fillStyle = 'white';
-		// If 'Ubuntu Mono' is not installed, the resulting image will not use a monospace font.
-		// Install the font from https://design.ubuntu.com/font/ or use 'Noto Sans Mono' instead.
-		ctx.font = '200px Ubuntu Mono';
-		ctx.lineWidth = 10;
-		ctx.fillText(username, canvas.width / 2 - 650, 250);
-		ctx.font = '100px Noto Sans Mono';
-		ctx.fillText(
-			`Rank: ${rank == 'z' ? 'Unranked' : rank.toUpperCase()}`,
-			100,
-			500
-		);
-		ctx.fillText(
-			`TR: ${rating == -1 ? 'Unrated' : rating.toFixed(2)}`,
-			100,
-			650
-		);
-		ctx.fillText(`Games Played: ${gamesplayed}`, 100, 800);
-		ctx.fillText(`Games Won: ${gameswon}`, 100, 950);
-		resolve(canvas.encode('png'));
-	});
+async function getStatsImage(json: UserData): Promise<Buffer> {
+	if (!json.data) throw new Error(json.error ?? 'Unknown error');
+	const { gamesplayed, gameswon, league, username } = json.data.user;
+	const { rank, rating } = league;
+	const canvas = new Canvas(1920, 1080);
+	const ctx = canvas.getContext('2d');
+	const background = new Image();
+	background.src = await promises.readFile(
+		join(
+			dirname(fileURLToPath(import.meta.url)),
+			'../../botfiles/tetrio-coverart-alt.png'
+		)
+	);
+	ctx.drawImage(background, 0, 0);
+	ctx.fillStyle = 'white';
+	// If 'Ubuntu Mono' is not installed, the resulting image will not use a monospace font.
+	// Install the font from https://design.ubuntu.com/font/ or use 'Noto Sans Mono' instead.
+	ctx.font = '200px Ubuntu Mono';
+	ctx.lineWidth = 10;
+	ctx.fillText(username, canvas.width / 2 - 650, 250);
+	ctx.font = '100px Noto Sans Mono';
+	ctx.fillText(
+		`Rank: ${rank == 'z' ? 'Unranked' : rank.toUpperCase()}`,
+		100,
+		500
+	);
+	ctx.fillText(`TR: ${rating == -1 ? 'Unrated' : rating.toFixed(2)}`, 100, 650);
+	ctx.fillText(`Games Played: ${gamesplayed}`, 100, 800);
+	ctx.fillText(`Games Won: ${gameswon}`, 100, 950);
+	return await canvas.encode('png');
 }
 
 export async function execute(interaction: ChatInputCommandInteraction) {

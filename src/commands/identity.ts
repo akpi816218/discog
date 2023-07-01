@@ -159,7 +159,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			.setTitle('Identity | Complete Profile')
 			.addFields({
 				name: 'User',
-				value: `${userMention(user.id)} ${user.tag}`
+				value: `${userMention(user.id)} ${user.username}`
 			})
 			.setThumbnail(user.displayAvatarURL());
 		if (!data) {
@@ -279,7 +279,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								.setTitle('Identity | Bio')
 								.setDescription(
 									`${userMention(user.id)} (${
-										user.tag
+										user.username
 									}) has not set their bio yet.`
 								)
 								.setThumbnail(user.displayAvatarURL())
@@ -292,7 +292,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							baseEmbed.setTitle('Identity | Bio').addFields(
 								{
 									name: 'User',
-									value: `${userMention(user.id)} ${user.tag}`
+									value: `${userMention(user.id)} ${user.username}`
 								},
 								{
 									name: 'Bio',
@@ -376,7 +376,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								.setTitle('Identity | Pronouns')
 								.setDescription(
 									`${userMention(user.id)} (${
-										user.tag
+										user.username
 									}) has not set their pronouns yet.`
 								)
 								.setThumbnail(user.displayAvatarURL())
@@ -394,7 +394,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						baseEmbed.setTitle('Identity | Pronouns').addFields(
 							{
 								name: 'User',
-								value: `${userMention(user.id)} (${user.tag})`
+								value: `${userMention(user.id)} (${user.username})`
 							},
 							{
 								name: 'Pronouns',
@@ -484,7 +484,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				if (!genderdata) {
 					await interaction.reply(
 						`${userMention(user.id)} (${
-							user.tag
+							user.username
 						}) has not set their gender yet.`
 					);
 					return;
@@ -500,7 +500,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 								{
 									name: 'User',
 									value: `${userMention(interaction.user.id)} (${
-										interaction.user.tag
+										interaction.user.username
 									})`
 								},
 								{
