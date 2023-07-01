@@ -11,12 +11,13 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
+import { AuditLogDatabaseEntry, JSONValue } from './struct/database';
 import { Command, CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-import TypedJsoning from 'typed-jsoning';
+import { TypedJsoning } from 'typed-jsoning';
 import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
@@ -213,6 +214,13 @@ client
 				} catch {}
 			}
 		}
+	})
+	.on(Events.GuildAuditLogEntryCreate, async (log, guild) => {
+		logger.info(log);
+		new TypedJsoning<AuditLogDatabaseEntry>('botfiles/auditlog.db.json').push(
+			guild.id,
+			log.toJSON() as JSONValue
+		);
 	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
