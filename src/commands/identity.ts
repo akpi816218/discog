@@ -255,7 +255,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 									.setCustomId('/identity_bio_set_text')
 									.setPlaceholder('Enter your bio here')
 									.setStyle(TextInputStyle.Paragraph)
-									.setMaxLength(250)
+									.setMaxLength(500)
 									.setRequired(true)
 									.setLabel('Bio')
 							)

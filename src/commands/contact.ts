@@ -21,7 +21,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					.setLabel('Discord Server')
 			)
 		],
-		content: `Send a DM to ${inlineCode('@equus quagga#4492')}!`,
+		content: `Send a DM to ${inlineCode('@equus_quagga')}!`,
 		ephemeral: true
 	});
 };
