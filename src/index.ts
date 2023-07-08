@@ -274,6 +274,7 @@ async function bdayInterval() {
 		const user = await client.users.fetch(id);
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
+			if (!guild.members.cache.has(id)) return;
 			const birthdayChannels = guild.channels.cache.filter((channel) => {
 				return !!(
 					(channel.type == ChannelType.GuildAnnouncement ||
