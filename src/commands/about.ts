@@ -65,7 +65,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						'GitHub',
 						'https://github.com/akpi816218/discog'
 					)}.\n\nAdditionally, you can join the ${hyperlink(
-						'Discord development and support server',
+						'development and support Discord server',
 						'https://discog.localplayer.dev/invite/support-server'
 					)} to get support and suggest features. If you have any questions, feel free to ask in the server.\n\nAll of the code for this bot is licensed under the ${hyperlink(
 						'MIT License',
