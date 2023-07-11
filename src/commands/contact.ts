@@ -17,8 +17,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			new ActionRowBuilder<ButtonBuilder>().setComponents(
 				new ButtonBuilder()
 					.setStyle(ButtonStyle.Link)
-					.setURL('https://discord.gg/7A7QwXVpsJ')
-					.setLabel('Discord Server')
+					.setURL('https://discog.localplayer.dev/invite/support-server')
+					.setLabel('Support Server')
 			)
 		],
 		content: `Send a DM to ${inlineCode('@equus_quagga')}!`,
