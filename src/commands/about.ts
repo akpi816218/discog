@@ -29,8 +29,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					.setLabel('Changelog'),
 				new ButtonBuilder()
 					.setStyle(ButtonStyle.Link)
-					.setURL('https://discord.gg/invite/7A7QwXVpsJ')
-					.setLabel('Discord Server')
+					.setURL('https://discog.localplayer.dev/invite/support-server')
+					.setLabel('Support/Development Server')
 			)
 		],
 		embeds: [
