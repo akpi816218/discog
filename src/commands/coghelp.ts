@@ -43,10 +43,12 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'donate',
 		'Support bot development! Please? Thank you!'
 	),
-	emojify: new CommandHelpEntry(
-		'emojify',
-		'Converts text to emojis',
-		'<text: string>'
+	github: new CommandHelpEntry(
+		'github',
+		'View some info for GitHub users',
+		'profile <username: string>',
+		'repos <username: string>',
+		'stats <username: string>'
 	),
 	identity: new CommandHelpEntry(
 		'identity',
