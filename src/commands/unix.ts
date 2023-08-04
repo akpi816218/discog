@@ -43,7 +43,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							timestamp
 						).toLocaleString('en-US', {
 							timeZone: 'America/Los_Angeles'
-						})} PST (${time(timestamp)})`
+						})} PST (${time(timestamp / 1_000)})`
 					)
 				]
 			});
