@@ -43,10 +43,12 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'donate',
 		'Support bot development! Please? Thank you!'
 	),
-	emojify: new CommandHelpEntry(
-		'emojify',
-		'Converts text to emojis',
-		'<text: string>'
+	github: new CommandHelpEntry(
+		'github',
+		'View some info for GitHub users',
+		'profile <username: string>',
+		'repos <username: string>',
+		'stats <username: string>'
 	),
 	identity: new CommandHelpEntry(
 		'identity',
@@ -73,11 +75,20 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'Encodes some text or a link in a QR code',
 		'<text: string>'
 	),
+	schedule: new CommandHelpEntry(
+		'schedule',
+		'Schedules a message',
+		'<message: string> <time: number> <channel: channel>'
+	),
 	tetrio: new CommandHelpEntry(
 		'tetrio',
 		"Get a user's stats on TETR.IO, either from their username or Discord account (if connected)",
 		['view <username: string>', 'discord <user: user>']
-	)
+	),
+	unix: new CommandHelpEntry('unix', 'Converts UNIX timestamps', [
+		'date <timestamp: number>',
+		'timestamp <date: string>'
+	])
 };
 
 const fields: APIEmbedField[] = [];

@@ -23,9 +23,7 @@ export const data = new SlashCommandBuilder()
 			.setRequired(true);
 	})
 	.setDMPermission(false)
-	.setDefaultMemberPermissions(
-		PermissionFlagsBits.ManageGuild & PermissionFlagsBits.ModerateMembers
-	);
+	.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({ content: 'Working...', ephemeral: true });
