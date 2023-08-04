@@ -246,7 +246,7 @@ export const InteractionHandlers = {
 				await interaction.deferReply({
 					ephemeral: true
 				});
-				const c = interaction.fields.getTextInputValue('channel'),
+				const c = interaction.fields.getTextInputValue('/schedule.channel'),
 					message = interaction.fields.getTextInputValue('/schedule.message'),
 					t = interaction.fields.getTextInputValue('/schedule.time');
 				if (isNaN(+t)) {
@@ -272,7 +272,7 @@ export const InteractionHandlers = {
 					});
 					return;
 				}
-				const date = new Date(new Date(t));
+				const date = new Date(parseInt(t));
 				scheduleJob(date, async () => {
 					try {
 						await channel.send(message);
@@ -281,7 +281,7 @@ export const InteractionHandlers = {
 					}
 				});
 				await interaction.editReply(
-					`Your message has been scheduled for ${time(date.getSeconds())}`
+					`Your message has been scheduled for ${time(date.getTime() / 1_000)}`
 				);
 		}
 	},

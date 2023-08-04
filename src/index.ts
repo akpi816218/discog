@@ -19,7 +19,6 @@ import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
 import { TypedJsoning } from 'typed-jsoning';
-import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
 import { permissionsBits } from './config';
@@ -176,13 +175,21 @@ client
 		} else if (interaction.isModalSubmit()) {
 			try {
 				await InteractionHandlers.ModalSubmit(interaction);
-			} catch {
+			} catch (e) {
 				try {
-					await interaction.reply({
-						content: 'There was an error while running this command.',
-						ephemeral: true
-					});
-				} catch {}
+					if (interaction.replied)
+						await interaction.editReply({
+							content: 'There was an error while running this command.'
+						});
+					else
+						await interaction.reply({
+							content: 'There was an error while running this command.',
+							ephemeral: true
+						});
+				} catch (e) {
+					logger.error(e);
+				}
+				logger.error(e);
 			}
 		} else if (interaction.isButton()) {
 			try {
@@ -193,7 +200,9 @@ client
 						content: 'There was an error while running this command.',
 						ephemeral: true
 					});
-				} catch {}
+				} catch (e) {
+					logger.error(e);
+				}
 			}
 		} else if (interaction.isUserContextMenuCommand()) {
 			try {
@@ -204,7 +213,9 @@ client
 						content: 'There was an error while running this command.',
 						ephemeral: true
 					});
-				} catch {}
+				} catch (e) {
+					logger.error(e);
+				}
 			}
 		} else if (interaction.isMessageContextMenuCommand()) {
 			try {
@@ -215,7 +226,9 @@ client
 						content: 'There was an error while running this command.',
 						ephemeral: true
 					});
-				} catch {}
+				} catch (e) {
+					logger.error(e);
+				}
 			}
 		} else if (interaction.isStringSelectMenu()) {
 			try {
@@ -226,7 +239,9 @@ client
 						content: 'There was an error while running this command.',
 						ephemeral: true
 					});
-				} catch {}
+				} catch (e) {
+					logger.error(e);
+				}
 			}
 		}
 	})
