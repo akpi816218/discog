@@ -5,7 +5,7 @@
 			"DavidAnson.vscode-markdownlint",
 			"dbaeumer.vscode-eslint",
 			"esbenp.prettier-vscode",
-			"GitHub.codespaces",
+			// "GitHub.codespaces",
 			"GitHub.copilot",
 			"GitHub.vscode-pull-request-github",
 			"gtjman.discord-js-docs",
