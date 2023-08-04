@@ -12,12 +12,14 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
+import { AuditLogDatabaseEntry, JSONValue } from './struct/database';
 import { Command, CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
 import { argv, cwd } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
-import TypedJsoning from 'typed-jsoning';
+import { TypedJsoning } from 'typed-jsoning';
+import { inviteLink } from './config';
 import { join } from 'path';
 import { logger } from './logger';
 import { permissionsBits } from './config';
@@ -228,6 +230,13 @@ client
 			}
 		}
 	})
+	.on(Events.GuildAuditLogEntryCreate, async (log, guild) => {
+		logger.info(log);
+		new TypedJsoning<AuditLogDatabaseEntry>('botfiles/auditlog.db.json').push(
+			guild.id,
+			log.toJSON() as JSONValue
+		);
+	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
@@ -265,6 +274,7 @@ async function bdayInterval() {
 		const user = await client.users.fetch(id);
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
+			if (!guild.members.cache.has(id)) return;
 			const birthdayChannels = guild.channels.cache.filter((channel) => {
 				return !!(
 					(channel.type == ChannelType.GuildAnnouncement ||

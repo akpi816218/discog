@@ -41,7 +41,7 @@
 		"build": "npm run format && npm run lint && npm run compile",
 		"build-commands": "npx tsx src/buildCommands.ts",
 		"compile": "npx tsc",
-		"deploy": "\\rm -drf node_modules && npm ci && npm run build-commands && npm start",
+		"deploy": "npm ci && npm run build-commands && npm start",
 		"format": "npx prettier -w .",
 		"lint": "npx tsx eslint.ts",
 		"precommit": "npm run build",
