@@ -2,7 +2,10 @@
 import {
 	APIEmbedField,
 	ButtonInteraction,
+	CategoryChannel,
 	EmbedBuilder,
+	ForumChannel,
+	Guild,
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
@@ -25,6 +28,7 @@ import { IdentityEntry } from './struct/database';
 import TypedJsoning from 'typed-jsoning';
 import { format } from 'prettier';
 import { logger } from './logger';
+import { scheduleJob } from 'node-schedule';
 
 export const InteractionHandlers = {
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -35,7 +39,7 @@ export const InteractionHandlers = {
 		): Promise<void> {
 			switch (interaction.commandName) {
 				case 'Message JSON':
-					const json = format(
+					const json = await format(
 						JSON.stringify(interaction.targetMessage.toJSON()),
 						{
 							parser: 'json5',
@@ -100,7 +104,7 @@ export const InteractionHandlers = {
 				case 'User JSON':
 					await interaction.reply(
 						codeBlock(
-							format(JSON.stringify(interaction.targetUser.toJSON()), {
+							await format(JSON.stringify(interaction.targetUser.toJSON()), {
 								parser: 'json5',
 								tabWidth: 2,
 								useTabs: false
@@ -238,6 +242,47 @@ export const InteractionHandlers = {
 				await db.set(interaction.user.id, currentbio);
 				await interaction.reply({ content: 'Bio set', ephemeral: true });
 				break;
+			case '/schedule':
+				await interaction.deferReply({
+					ephemeral: true
+				});
+				const c = interaction.fields.getTextInputValue('channel'),
+					message = interaction.fields.getTextInputValue('/schedule.message'),
+					t = interaction.fields.getTextInputValue('/schedule.time');
+				if (isNaN(+t)) {
+					await interaction.editReply({
+						content: 'Error: Invalid timestamp'
+					});
+					return;
+				}
+				const channel = (interaction.guild as Guild).channels.resolve(c);
+				if (!channel) {
+					await interaction.editReply({
+						content: 'Error: Invalid channel ID'
+					});
+					return;
+				}
+				if (
+					!channel.isTextBased ||
+					channel instanceof CategoryChannel ||
+					channel instanceof ForumChannel
+				) {
+					await interaction.editReply({
+						content: 'Error: Channel is not text-based'
+					});
+					return;
+				}
+				const date = new Date(new Date(t));
+				scheduleJob(date, async () => {
+					try {
+						await channel.send(message);
+					} catch (e) {
+						logger.error(e);
+					}
+				});
+				await interaction.editReply(
+					`Your message has been scheduled for ${time(date.getSeconds())}`
+				);
 		}
 	},
 	async StringSelectMenu(

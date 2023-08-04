@@ -1,58 +1,57 @@
 import {
-	ChannelType,
+	ActionRowBuilder,
 	ChatInputCommandInteraction,
-	NewsChannel,
-	PrivateThreadChannel,
-	PublicThreadChannel,
+	ModalBuilder,
 	SlashCommandBuilder,
-	StageChannel,
-	TextChannel,
-	ThreadChannel,
-	time
+	TextInputBuilder,
+	TextInputStyle
 } from 'discord.js';
-import { scheduleJob } from 'node-schedule';
 
 export const data = new SlashCommandBuilder()
 	.setName('schedule')
 	.setDescription('Schedules a message')
-	.addStringOption((option) =>
-		option
-			.setName('message')
-			.setDescription('The message to be scheduled')
-			.setMinLength(10)
-			.setMaxLength(2000)
-			.setRequired(true)
-	)
-	.addIntegerOption((option) =>
-		option
-			.setName('time')
-			.setDescription('When to schedule the message (minutes)')
-			.setRequired(true)
-	)
-	.addChannelOption((option) =>
-		option
-			.setName('channel')
-			.setDescription('The channel the message should be sent to')
-			.addChannelTypes(ChannelType.GuildText)
-			.setRequired(true)
-	);
+	.setDMPermission(true);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply();
-	const channel = interaction.options.getChannel('channel', true) as
-			| NewsChannel
-			| StageChannel
-			| TextChannel
-			| ThreadChannel
-			| PrivateThreadChannel
-			| PublicThreadChannel,
-		message = interaction.options.getString('message', true),
-		t = interaction.options.getInteger('time', true) * 60 * 1_000;
-	const date = new Date(new Date().getTime() + t);
-	scheduleJob(date, async () => {
-		await channel.send(message);
-	});
-	await interaction.reply({
-		content: `Your message has been scheduled for ${time(date.getSeconds())}`
-	});
+	await interaction.showModal(
+		new ModalBuilder()
+			.setTitle('Message Scheduler')
+			.setCustomId('/schedule')
+			.setComponents(
+				new ActionRowBuilder<TextInputBuilder>().setComponents(
+					new TextInputBuilder()
+						.setCustomId('/schedule.channel')
+						.setValue(interaction.channelId)
+						.setRequired(true)
+						.setMinLength(17)
+						.setMaxLength(19)
+						.setLabel('Channel ID')
+						.setStyle(TextInputStyle.Short)
+				),
+				new ActionRowBuilder<TextInputBuilder>().setComponents(
+					new TextInputBuilder()
+						.setCustomId('/schedule.time')
+						.setValue(
+							(interaction.createdTimestamp + 60 * 60 * 1_000).toString()
+						)
+						.setRequired(true)
+						.setMinLength(Date.now().toString().length)
+						.setMaxLength(Date.now().toString().length + 1)
+						.setLabel('UNIX Timestamp (ms)')
+						.setStyle(TextInputStyle.Short)
+				),
+				new ActionRowBuilder<TextInputBuilder>().setComponents(
+					new TextInputBuilder()
+						.setCustomId('/schedule.message')
+						.setValue(
+							'Hello, hoominz of Earth. We are the aliens from Uranus. We will be taking over your planet in 5 minutes. Please prepare for the invasion. Thank you.'
+						)
+						.setRequired(true)
+						.setMinLength(1)
+						.setMaxLength(2000)
+						.setLabel('Message')
+						.setStyle(TextInputStyle.Paragraph)
+				)
+			)
+	);
 };
