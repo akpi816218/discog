@@ -23,7 +23,9 @@ if (argv.length == 0) {
 } else {
 	commandFiles = fs
 		.readdirSync(commandsPath)
-		.filter((file) => argv.includes(file.replace('.ts', '')));
+		.filter(
+			(file) => file.endsWith('.ts') && argv.includes(file.replace('.ts', ''))
+		);
 }
 if (commandFiles.length == 0) {
 	// eslint-disable-next-line no-console
