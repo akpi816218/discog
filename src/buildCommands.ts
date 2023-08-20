@@ -1,29 +1,24 @@
 import 'dotenv/config';
-import {
-	RESTPostAPIChatInputApplicationCommandsJSONBody,
-	Routes,
-	SlashCommandBuilder
-} from 'discord.js';
+import { REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { dirname, default as path } from 'path';
-import { REST } from '@discordjs/rest';
 import { argv } from 'process';
 import { clientId } from './config';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
+import { readdir } from 'fs/promises';
 argv.shift();
 argv.shift();
 const thisdirname = dirname(fileURLToPath(import.meta.url));
-const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const commands = [];
 const commandsPath = path.join(thisdirname, 'commands');
 let commandFiles;
 if (argv.length == 0) {
-	commandFiles = fs
-		.readdirSync(commandsPath)
-		.filter((file) => file.endsWith('.ts'));
+	commandFiles = (await readdir(commandsPath)).filter((file) =>
+		file.endsWith('.ts')
+	);
 } else {
-	commandFiles = fs
-		.readdirSync(commandsPath)
-		.filter((file) => argv.includes(file.replace('.ts', '')));
+	commandFiles = (await readdir(commandsPath)).filter(
+		(file) => file.endsWith('.ts') && argv.includes(file.replace('.ts', ''))
+	);
 }
 if (commandFiles.length == 0) {
 	// eslint-disable-next-line no-console
@@ -39,10 +34,17 @@ for (const file of commandFiles) {
 	} = await import(filePath);
 	commands.push(command.data.toJSON());
 }
-const rest = new REST({ version: '10' }).setToken(
-	process.env.DISCORD_TOKEN as string
-);
-await rest.put(Routes.applicationCommands(clientId), { body: [] });
-await rest.put(Routes.applicationCommands(clientId), { body: commands });
+if (!process.env.DISCORD_TOKEN) {
+	// eslint-disable-next-line no-console
+	console.log('No token found');
+	process.exit(1);
+}
 // eslint-disable-next-line no-console
-console.log(await rest.get(Routes.applicationCommands(clientId)));
+console.log('Registering commands...');
+const data = await new REST()
+	.setToken(process.env.DISCORD_TOKEN as string)
+	.put(Routes.applicationCommands(clientId), {
+		body: commands
+	});
+// eslint-disable-next-line no-console
+console.log(data);
