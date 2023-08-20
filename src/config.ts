@@ -4,9 +4,9 @@ import {
 	Snowflake
 } from 'discord.js';
 // % Production
-// export const applicationId: Snowflake = '1027383984675639348';
+export const applicationId: Snowflake = '1027383984675639348';
 // % Development
-export const applicationId: Snowflake = '1034561538721325056';
+// export const applicationId: Snowflake = '1034561538721325056';
 export const clientId = applicationId;
 export const permissionsBits = new PermissionsBitField().add(
 	PermissionFlagsBits.AttachFiles,
