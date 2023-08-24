@@ -45,7 +45,7 @@ const client = new CommandClient({
 	presence: {
 		activities: [
 			{
-				name: '/bday register',
+				name: '/about',
 				type: ActivityType.Playing
 			}
 		],

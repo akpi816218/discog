@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { dirname, default as path } from 'path';
 import { argv } from 'process';
-import { clientId } from './config';
+import { clientId } from '../src/config';
 import { fileURLToPath } from 'url';
 import { readdir } from 'fs/promises';
 argv.shift();
