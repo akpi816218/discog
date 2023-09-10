@@ -1,6 +1,5 @@
-import { BaseInteraction, Routes, SlashCommandBuilder } from 'discord.js';
+import { BaseInteraction, REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { dirname, join } from 'path';
-import { REST } from '@discordjs/rest';
 import { clientId } from '../src/config';
 import { fileURLToPath } from 'url';
 import { readdir } from 'fs/promises';

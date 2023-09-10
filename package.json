@@ -1,7 +1,6 @@
 {
 	"author": "Akhil Pillai",
 	"dependencies": {
-		"@discordjs/rest": "1.5",
 		"@napi-rs/canvas": "^0.1.44",
 		"discord.js": "^14.13.0",
 		"dotenv": "^16.3.1",
