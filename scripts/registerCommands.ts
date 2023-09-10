@@ -12,7 +12,14 @@ export const commandsPath = join(
 	'commands'
 );
 
-export async function registerCommands(token: string, commandFiles?: string[]) {
+export async function registerCommands(
+	token: string,
+	commandFiles?: string[]
+): Promise<{
+	data: unknown;
+	getCommands: () => Promise<unknown>;
+	rest: REST;
+}> {
 	return new Promise(async (resolve, reject) => {
 		// eslint-disable-next-line no-param-reassign
 		commandFiles =
@@ -32,12 +39,17 @@ export async function registerCommands(token: string, commandFiles?: string[]) {
 		let data: unknown;
 		const rest = new REST().setToken(token);
 		try {
-			data = await rest.put(Routes.applicationCommands(clientId), {
+			await rest.put(Routes.applicationCommands(clientId), {
 				body: commands
 			});
 		} catch (e) {
 			reject(e);
 		}
-		resolve(data);
+		resolve({
+			data,
+			getCommands: async () =>
+				await rest.get(Routes.applicationCommands(clientId)),
+			rest
+		});
 	});
 }

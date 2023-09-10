@@ -25,5 +25,7 @@ if (commandFiles.length == 0) {
 console.log(`Registering ${commandFiles.length} commands...`);
 
 console.log(
-	await registerCommands(process.env.DISCORD_TOKEN as string, commandFiles)
+	await (
+		await registerCommands(process.env.DISCORD_TOKEN as string, commandFiles)
+	).getCommands()
 );
