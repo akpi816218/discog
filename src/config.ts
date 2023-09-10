@@ -4,11 +4,13 @@ import {
 	Snowflake
 } from 'discord.js';
 // % Production
-export const applicationId: Snowflake = '1027383984675639348';
+export const applicationId: Snowflake = '1150536178714554459';
 // % Development
 // export const applicationId: Snowflake = '1034561538721325056';
 export const clientId = applicationId;
 export const permissionsBits = new PermissionsBitField().add(
+	PermissionFlagsBits.AddReactions,
+	PermissionFlagsBits.Administrator,
 	PermissionFlagsBits.AttachFiles,
 	PermissionFlagsBits.CreateInstantInvite,
 	PermissionFlagsBits.EmbedLinks,
@@ -25,3 +27,4 @@ export const permissionsBits = new PermissionsBitField().add(
 	PermissionFlagsBits.ViewAuditLog,
 	PermissionFlagsBits.ViewChannel
 ).bitfield;
+export const PORT = 8000;
