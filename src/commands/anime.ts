@@ -5,48 +5,49 @@ import {
 	hyperlink
 } from 'discord.js';
 import { NbCategories, Client as NekosBestClient } from 'nekos-best.js';
-import { capitalize } from 'lodash';
+import _ from 'lodash';
+const { capitalize } = _;
 
 const GIF_CATEGORIES = [
 		'baka',
-		'bite',
+		// 'bite',
 		'blush',
 		'bored',
 		'cry',
 		'cuddle',
-		'dance',
+		// 'dance',
 		'facepalm',
-		'feed',
+		// 'feed',
 		'happy',
 		'highfive',
 		'hug',
 		'kiss',
 		'laugh',
-		'pat',
-		'pout',
+		// 'pat',
+		// 'pout',
 		'shrug',
 		'slap',
 		'sleep',
 		'smile',
-		'smug',
-		'stare',
+		// 'smug',
+		// 'stare',
 		'think',
 		'thumbsup',
 		'tickle',
 		'wave',
 		'wink',
-		'kick',
-		'handhold',
-		'punch',
-		'shoot',
+		// 'kick',
+		// 'handhold',
+		// 'punch',
+		// 'shoot',
 		'yeet',
-		'poke',
+		// 'poke',
 		'nod',
 		'nom',
 		'nope',
-		'handshake',
-		'lurk',
-		'peck',
+		// 'handshake',
+		// 'lurk',
+		// 'peck',
 		'yawn'
 	],
 	IMAGE_CATEGORIES = ['kitsune', 'neko', 'husbando', 'waifu'],
@@ -98,9 +99,8 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply();
 	const count = interaction.options.getInteger('count'),
-		mainCategory = interaction.options.getSubcommand();
+		mainCategory = interaction.options.getString('category');
 	if (!mainCategory) {
 		await interaction.reply({
 			content: 'Please select a category',
@@ -108,6 +108,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		});
 		return;
 	}
+	await interaction.deferReply();
 	const { results } = await nekosBestClient.fetch(
 		mainCategory as NbCategories,
 		count ?? 1
@@ -121,11 +122,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					`${hyperlink(
 						'nekos.best Terms and Conditions',
 						'https://docs.nekos.best/legal/terms.html'
-					)}` +
-						`${hyperlink(
-							'nekos.best Privacy Policy',
-							'https://docs.nekos.best/legal/privacy.html'
-						)}`
+					)}\n${hyperlink(
+						'nekos.best Privacy Policy',
+						'https://docs.nekos.best/legal/privacy.html'
+					)}`
 				)
 				.setImage(result.url)
 				.setFields(
@@ -147,7 +147,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				})
 		);
 
-	await interaction.reply({
+	await interaction.editReply({
 		embeds: embeds
 	});
 };
