@@ -99,9 +99,8 @@ export const data = new SlashCommandBuilder()
 	.setDMPermission(true);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	await interaction.deferReply();
 	const count = interaction.options.getInteger('count'),
-		mainCategory = interaction.options.getSubcommand();
+		mainCategory = interaction.options.getString('category');
 	if (!mainCategory) {
 		await interaction.reply({
 			content: 'Please select a category',
@@ -109,6 +108,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		});
 		return;
 	}
+	await interaction.deferReply();
 	const { results } = await nekosBestClient.fetch(
 		mainCategory as NbCategories,
 		count ?? 1
@@ -122,11 +122,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					`${hyperlink(
 						'nekos.best Terms and Conditions',
 						'https://docs.nekos.best/legal/terms.html'
-					)}` +
-						`${hyperlink(
-							'nekos.best Privacy Policy',
-							'https://docs.nekos.best/legal/privacy.html'
-						)}`
+					)}\n${hyperlink(
+						'nekos.best Privacy Policy',
+						'https://docs.nekos.best/legal/privacy.html'
+					)}`
 				)
 				.setImage(result.url)
 				.setFields(
@@ -148,7 +147,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				})
 		);
 
-	await interaction.reply({
+	await interaction.editReply({
 		embeds: embeds
 	});
 };
