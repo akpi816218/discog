@@ -21,7 +21,9 @@ export const execute = async (guild: Guild) => {
 						)} or view my profile to find out what I can do!\n${underscore(
 							`Admins, be sure to check out the ${inlineCode(
 								'/admin'
-							)} command! This slash command is already restricted to admins, so you don't need to worry about that.`
+							)} and ${inlineCode(
+								'/conf'
+							)} commands! These slash commands are already restricted to admins, so you don't need to worry about that.`
 						)}`
 					)
 					.setTimestamp()

@@ -19,7 +19,7 @@ export type JSONValue =
 	| JSONValue[]
 	| null;
 
-export interface GuildConfig {
+export interface BaseGuildConfig {
 	auditlog?:
 		| {
 				enabled: true;
@@ -38,17 +38,58 @@ export interface GuildConfig {
 				enabled?: false | null;
 				channel?: null;
 		  };
-	greetings?: {
-		goodbyeEnabled?: boolean | null;
-		welcome?:
-			| {
-					enabled: true;
-					channel: Snowflake;
-			  }
-			| {
-					enabled?: false | null;
-					channel?: null;
-			  };
-	};
+	greetings?:
+		| {
+				channel: Snowflake;
+				goodbyeEnabled?: boolean;
+				welcomeEnabled: true;
+		  }
+		| {
+				channel: Snowflake;
+				goodbyeEnabled: true;
+				welcomeEnabled?: boolean;
+		  }
+		| {
+				channel?: null;
+				goodbyeEnabled?: false;
+				welcomeEnabled?: false;
+		  };
 	systemchannel?: Snowflake | null;
+}
+export interface PopulatedGuildConfig extends BaseGuildConfig {
+	auditlog:
+		| {
+				enabled: true;
+				channel: Snowflake;
+		  }
+		| {
+				enabled: false;
+				channel: null;
+		  };
+	birthdays:
+		| {
+				enabled: true;
+				channel: Snowflake;
+		  }
+		| {
+				enabled: false;
+				channel: null;
+		  };
+	greetings:
+		| {
+				channel: Snowflake;
+				goodbyeEnabled: boolean;
+				welcomeEnabled: true;
+		  }
+		| {
+				channel: Snowflake;
+				goodbyeEnabled: true;
+				welcomeEnabled: boolean;
+		  }
+		| {
+				channel: null;
+				goodbyeEnabled: false;
+				welcomeEnabled: false;
+		  };
+	systemchannel: Snowflake | null;
 }
