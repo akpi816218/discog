@@ -1,4 +1,5 @@
 import { GenderCodes, PronounObject } from 'pronouns.js';
+import { Snowflake } from 'discord.js';
 
 export interface IdentityEntry {
 	bio?: string | null;
@@ -18,6 +19,36 @@ export type JSONValue =
 	| JSONValue[]
 	| null;
 
-export interface AuditLogDatabaseEntry {
-	id: string;
+export interface GuildConfig {
+	auditlog?:
+		| {
+				enabled: true;
+				channel: Snowflake;
+		  }
+		| {
+				enabled?: false | null;
+				channel?: null;
+		  };
+	birthdays?:
+		| {
+				enabled: true;
+				channel: Snowflake;
+		  }
+		| {
+				enabled?: false | null;
+				channel?: null;
+		  };
+	greetings?: {
+		goodbyeEnabled?: boolean | null;
+		welcome?:
+			| {
+					enabled: true;
+					channel: Snowflake;
+			  }
+			| {
+					enabled?: false | null;
+					channel?: null;
+			  };
+	};
+	systemchannel?: Snowflake | null;
 }

@@ -12,7 +12,6 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
-import { AuditLogDatabaseEntry, JSONValue } from './struct/database';
 import { Command, CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
 import { PORT, permissionsBits } from './config';
@@ -243,13 +242,6 @@ client
 				}
 			}
 		}
-	})
-	.on(Events.GuildAuditLogEntryCreate, async (log, guild) => {
-		logger.info(log);
-		new TypedJsoning<AuditLogDatabaseEntry>('botfiles/auditlog.db.json').push(
-			guild.id,
-			log.toJSON() as JSONValue
-		);
 	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
