@@ -62,21 +62,15 @@ export const data = new SlashCommandBuilder()
 					});
 			});
 	})
-	.addSubcommand((subcommand) => {
-		return subcommand
-			.setName('lockchannel')
-			.setDescription('Lock a channel')
-			.addChannelOption((option) => {
-				return option
-					.setName('channel')
-					.setDescription('Channel to (un)lock')
-					.setRequired(true);
+	.addSubcommandGroup((subcommandGroup) => {
+		return subcommandGroup
+			.setName('channel')
+			.setDescription('Manage channels')
+			.addSubcommand((subcommand) => {
+				return subcommand.setName('clear').setDescription('Clear a channel');
 			})
-			.addBooleanOption((option) => {
-				return option
-					.setName('unlock')
-					.setDescription('Unlock? (Default: lock)')
-					.setRequired(true);
+			.addSubcommand((subcommand) => {
+				return subcommand.setName('lock').setDescription('Lock a channel');
 			});
 	});
 
