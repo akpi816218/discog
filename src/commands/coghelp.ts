@@ -11,6 +11,7 @@ import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 // ! New commands go here in the `fields` object
 const entries: { [key: string]: CommandHelpEntry } = {
 	about: new CommandHelpEntry('about', 'Shows info about the bot'),
+	admin: new CommandHelpEntry('admin', 'Run `/admin` for help'),
 	anime: new CommandHelpEntry(
 		'anime',
 		'Get an anime image or GIF from nekos.best',
