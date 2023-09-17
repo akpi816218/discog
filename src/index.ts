@@ -192,13 +192,16 @@ client
 		} else if (interaction.isButton()) {
 			try {
 				await InteractionHandlers.Button(interaction);
-			} catch {
+			} catch (e) {
 				try {
 					await interaction.reply({
 						content: 'There was an error while running this command.',
 						ephemeral: true
 					});
-				} catch (e) {
+				} catch {
+					await interaction.editReply(
+						'There was an error while running this command.'
+					);
 					logger.error(e);
 				}
 			}

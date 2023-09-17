@@ -26,11 +26,9 @@ import {
 } from 'pronouns.js';
 import { IdentityEntry } from './struct/database';
 import TypedJsoning from 'typed-jsoning';
-import _ from 'lodash';
 import { format } from 'prettier';
 import { logger } from './logger';
 import { scheduleJob } from 'node-schedule';
-const { chunk } = _;
 
 export const InteractionHandlers = {
 	async Button(interaction: ButtonInteraction) {
@@ -59,12 +57,8 @@ export const InteractionHandlers = {
 						'Error: cannot clear this channel.\nCause may be insufficient permissions or invalid channel type.'
 					);
 				else {
-					const messages = chunk(
-						(await channel.messages.fetch()).map((msg) => msg),
-						100
-					);
-					for (const messageGroup of messages) {
-						await channel.bulkDelete(messageGroup);
+					for (const [, message] of await channel.messages.fetch()) {
+						await message.delete();
 					}
 				}
 				await interaction.editReply('Deleted all messages in this channel.');

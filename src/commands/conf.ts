@@ -9,6 +9,7 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 	bold,
+	channelMention,
 	inlineCode,
 	underscore
 } from 'discord.js';
@@ -88,6 +89,11 @@ export const data = new SlashCommandBuilder()
 					.setDescription('The channel to send welcome and goodbye messages to')
 					.setRequired(false);
 			});
+	})
+	.addSubcommand((subcommand) => {
+		return subcommand
+			.setName('view')
+			.setDescription('View the current configuration');
 	});
 
 const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
@@ -123,10 +129,10 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 								setDefaults
 									? bold(
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
-												'/conf'
+												'/conf view'
 											)}`
 									  )
-									: null
+									: ''
 							}`
 						)
 						.setFields(
@@ -136,7 +142,9 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 							},
 							{
 								name: 'Channel',
-								value: config.auditlog.channel ?? 'None'
+								value: config.auditlog.channel
+									? channelMention(config.auditlog.channel)
+									: 'None'
 							}
 						)
 				]
@@ -174,10 +182,10 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 								setDefaults
 									? bold(
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
-												'/conf'
+												'/conf view'
 											)}`
 									  )
-									: null
+									: ''
 							}`
 						)
 						.setFields(
@@ -187,7 +195,9 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 							},
 							{
 								name: 'Channel',
-								value: config.birthdays.channel ?? 'None'
+								value: config.birthdays.channel
+									? channelMention(config.birthdays.channel)
+									: 'None'
 							}
 						)
 				]
@@ -243,82 +253,26 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 								setDefaults
 									? bold(
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
-												'/conf'
+												'/conf view'
 											)}`
 									  )
-									: null
+									: ''
 							}`
 						)
 						.setFields(
 							{
-								name: 'Enabled',
+								name: 'Welcome Enabled',
+								value: config.greetings.welcomeEnabled.toString()
+							},
+							{
+								name: 'Goodbye Enabled',
 								value: config.greetings.goodbyeEnabled.toString()
 							},
 							{
 								name: 'Channel',
-								value: config.greetings.channel ?? 'None'
-							}
-						)
-				]
-			});
-			return config;
-		},
-		null: async (
-			interaction: ChatInputCommandInteraction,
-			setDefaults: boolean,
-			config: PopulatedGuildConfig
-		): Promise<PopulatedGuildConfig> => {
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setTitle('Configuration Information')
-						.setDescription(
-							`Configure DisCog for your server\n${inlineCode(
-								'/conf auditlog <enabled: boolean> [channel: channel]'
-							)}\n${inlineCode(
-								'/conf birthdays <enabled: boolean> [channel: channel]'
-							)}\n${inlineCode(
-								'/conf greetings <welcome: boolean> <goodbye: boolean> [channel: channel]'
-							)}${
-								setDefaults
-									? `\n\n${bold(
-											'Since this server had no prior data, the defaults have been calculated and set.'
-									  )}`
-									: null
-							}\n\n${underscore(bold('Current Configuration:'))}`
-						)
-						.setFields(
-							{
-								name: 'Audit Log — Enabled',
-								value: config.auditlog.enabled.toString()
-							},
-							{
-								name: 'Audit Log — Channel',
-								value: config.auditlog.channel ?? 'None'
-							},
-							{
-								name: 'Birthday Announcements — Enabled',
-								value: config.birthdays.enabled.toString()
-							},
-							{
-								name: 'Birthday Announcements — Channel',
-								value: config.birthdays.channel ?? 'None'
-							},
-							{
-								name: 'Welcome Messages — Enabled',
-								value: config.greetings.welcomeEnabled.toString()
-							},
-							{
-								name: 'Goodbye Messages — Enabled',
-								value: config.greetings.goodbyeEnabled.toString()
-							},
-							{
-								name: 'Welcome/Goodbye Messages — Channel',
-								value: config.greetings.channel ?? 'None'
-							},
-							{
-								name: 'System Messages — Channel',
-								value: config.systemchannel ?? 'None'
+								value: config.greetings.channel
+									? channelMention(config.greetings.channel)
+									: 'None'
 							}
 						)
 				]
@@ -345,13 +299,87 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 												'/conf'
 											)}`
 									  )
-									: null
+									: ''
 							}`
 						)
 						.setFields({
 							name: 'Channel',
-							value: config.systemchannel ?? 'None'
+							value: config.systemchannel
+								? channelMention(config.systemchannel)
+								: 'None'
 						})
+				]
+			});
+			return config;
+		},
+		view: async (
+			interaction: ChatInputCommandInteraction,
+			setDefaults: boolean,
+			config: PopulatedGuildConfig
+		): Promise<PopulatedGuildConfig> => {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('Configuration Information')
+						.setDescription(
+							`Configure DisCog for your server\n${inlineCode(
+								'/conf view'
+							)}\n${inlineCode(
+								'/conf auditlog <enabled: boolean> [channel: channel]'
+							)}\n${inlineCode(
+								'/conf birthdays <enabled: boolean> [channel: channel]'
+							)}\n${inlineCode(
+								'/conf greetings <welcome: boolean> <goodbye: boolean> [channel: channel]'
+							)}${
+								setDefaults
+									? `\n\n${bold(
+											'Since this server had no prior data, the defaults have been calculated and set.'
+									  )}`
+									: ''
+							}\n\n${underscore(bold('Current Configuration:'))}`
+						)
+						.setFields(
+							{
+								name: 'Audit Log — Enabled',
+								value: config.auditlog.enabled.toString()
+							},
+							{
+								name: 'Audit Log — Channel',
+								value: config.auditlog.channel
+									? channelMention(config.auditlog.channel)
+									: 'None'
+							},
+							{
+								name: 'Birthday Announcements — Enabled',
+								value: config.birthdays.enabled.toString()
+							},
+							{
+								name: 'Birthday Announcements — Channel',
+								value: config.birthdays.channel
+									? channelMention(config.birthdays.channel)
+									: 'None'
+							},
+							{
+								name: 'Welcome Messages — Enabled',
+								value: config.greetings.welcomeEnabled.toString()
+							},
+							{
+								name: 'Goodbye Messages — Enabled',
+								value: config.greetings.goodbyeEnabled.toString()
+							},
+							{
+								name: 'Welcome/Goodbye Messages — Channel',
+								value: config.greetings.channel
+									? channelMention(config.greetings.channel)
+									: 'None'
+							},
+							{
+								name: 'System Messages — Channel',
+								value: config.systemchannel
+									? channelMention(config.systemchannel)
+									: 'None'
+							}
+						)
 				]
 			});
 			return config;
@@ -393,11 +421,19 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				enabled: true
 			};
 		else newConfig.birthdays = { enabled: false };
-		if (guild.systemChannel) {
-			newConfig.greetings!.welcomeEnabled = true;
-			newConfig.greetings!.goodbyeEnabled = true;
-			newConfig.greetings!.channel = guild.systemChannel.id;
-		} else newConfig.greetings!.welcomeEnabled = false;
+		newConfig.greetings = {};
+		if (guild.systemChannel)
+			newConfig.greetings = {
+				channel: guild.systemChannel.id,
+				goodbyeEnabled: true,
+				welcomeEnabled: true
+			};
+		else
+			newConfig.greetings = {
+				channel: null,
+				goodbyeEnabled: false,
+				welcomeEnabled: false
+			};
 	} else {
 		newConfig = currentConfig;
 		if (!newConfig.birthdays) {
@@ -433,19 +469,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				  };
 		}
 	}
-	const subcommand = interaction.options.getSubcommandGroup() as
-		| keyof typeof handlers
-		| null;
-	const finalConfig = subcommand
-		? await handlers[subcommand](
-				interaction,
-				setDefaults,
-				newConfig as PopulatedGuildConfig
-		  )
-		: await handlers.null(
-				interaction,
-				setDefaults,
-				newConfig as PopulatedGuildConfig
-		  );
+	const subcommand =
+		interaction.options.getSubcommand() as keyof typeof handlers;
+	const finalConfig = await handlers[subcommand](
+		interaction,
+		setDefaults,
+		newConfig as PopulatedGuildConfig
+	);
 	await db.set(interaction.guildId!, finalConfig);
 };

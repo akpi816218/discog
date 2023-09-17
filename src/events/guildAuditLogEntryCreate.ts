@@ -21,16 +21,16 @@ import {
 	roleMention,
 	userMention
 } from 'discord.js';
-import { GuildConfig } from '../struct/database';
+import { BaseGuildConfig } from '../struct/database';
 import { TypedJsoning } from 'typed-jsoning';
 
 export const name = Events.GuildAuditLogEntryCreate;
 export const once = false;
 
-const db = new TypedJsoning<GuildConfig>('botfiles/guildconf.db.json');
+const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json');
 export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
 	const config = db.get(guild.id);
-	if (!db.has(guild.id) || !config?.auditlog?.enabled) return;
+	if (!config?.auditlog?.enabled || !config?.auditlog?.channel) return;
 	const channel = await guild.channels.fetch(config.auditlog.channel);
 	if (
 		!channel ||
