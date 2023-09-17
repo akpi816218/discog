@@ -151,7 +151,6 @@ export const handlers = {
 	},
 	channel: {
 		clear: async (interaction: ChatInputCommandInteraction) => {
-			await interaction.deferReply({ ephemeral: true });
 			if (!interaction.inGuild()) {
 				await interaction.editReply(
 					'Error: cannot clear this channel.\nCause: not in a guild.'
@@ -197,7 +196,6 @@ export const handlers = {
 			}, 10_000);
 		},
 		lock: async (interaction: ChatInputCommandInteraction) => {
-			await interaction.deferReply();
 			if (!interaction.guild) {
 				await interaction.editReply(
 					'Error: cannot lock/unlock this channel.\nCause: not in a guild.'
@@ -305,7 +303,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 			});
 			break;
 	}
-	await interaction.reply({
+	await interaction.editReply({
 		embeds: [
 			new EmbedBuilder().setFooter({
 				iconURL: interaction.client.user.displayAvatarURL(),

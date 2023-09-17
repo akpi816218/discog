@@ -268,7 +268,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 			setDefaults: boolean,
 			config: PopulatedGuildConfig
 		): Promise<PopulatedGuildConfig> => {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
 						.setTitle('Configuration Information')
