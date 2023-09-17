@@ -97,7 +97,7 @@ export const handlers = {
 					.map((u) => userMention(u.id))
 					.join(', ')}\nFailed to add role to following users:\n${bad
 					.map((u) => userMention(u.id))
-					.join(', ')})`
+					.join(', ')}`
 			});
 		},
 		bots: async (interaction: ChatInputCommandInteraction) => {
@@ -120,7 +120,7 @@ export const handlers = {
 						.map((u) => userMention(u.id))
 						.join(', ')}\nFailed to add role to following bot users:\n${bad
 						.map((u) => userMention(u.id))
-						.join(', ')})`
+						.join(', ')}`
 				});
 			}
 		},
@@ -144,7 +144,7 @@ export const handlers = {
 						.map((u) => userMention(u.id))
 						.join(', ')}\nFailed to add role to following human users:\n${bad
 						.map((u) => userMention(u.id))
-						.join(', ')})`
+						.join(', ')}`
 				});
 			}
 		}
