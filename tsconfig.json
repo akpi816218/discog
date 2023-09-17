@@ -13,6 +13,6 @@
 		"isolatedModules": true,
 		"alwaysStrict": true
 	},
-	"include": ["src/**/*", ".next/types/**/*.ts"],
+	"include": ["src/**/*", "scripts/**/*"],
 	"exclude": ["node_modules"]
 }

@@ -6,7 +6,8 @@ import {
 	SlashCommandBuilder,
 	Snowflake,
 	TextInputBuilder,
-	TextInputStyle
+	TextInputStyle,
+	userMention
 } from 'discord.js';
 import TypedJsoning from 'typed-jsoning';
 
@@ -111,7 +112,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 						return;
 					}
 					await interaction.reply(
-						`Blacklisted users: ${blacklist.map((id) => `<@${id}>`).join(', ')}`
+						`Blacklisted users: ${blacklist
+							.map((id) => userMention(id))
+							.join(', ')}`
 					);
 					break;
 				case 'rm':
@@ -146,7 +149,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					}
 					await interaction.reply({
 						allowedMentions: { parse: [] },
-						content: `<@${whitelist.join('>, <@')}>`
+						content: `Blacklisted users: ${whitelist
+							.map((id) => userMention(id))
+							.join(', ')}`
 					});
 					break;
 				case 'rm':

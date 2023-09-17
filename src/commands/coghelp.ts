@@ -11,6 +11,15 @@ import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 // ! New commands go here in the `fields` object
 const entries: { [key: string]: CommandHelpEntry } = {
 	about: new CommandHelpEntry('about', 'Shows info about the bot'),
+	admin: new CommandHelpEntry('admin', 'Run `/admin` for help'),
+	anime: new CommandHelpEntry(
+		'anime',
+		'Get an anime image or GIF from nekos.best',
+		[
+			'image <category: string> [count: 1 <= number <= 5 || 1]',
+			'gif <category: string> [count: 1 <= number <= 5 || 1]'
+		]
+	),
 	announce: new CommandHelpEntry(
 		'announce',
 		'Creates an announcement in the specified channel',
@@ -114,17 +123,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const embed = new EmbedBuilder()
 		.setTitle('DisCog Help')
 		.setDescription(
-			`${inlineCode(
-				'[argument: type]'
-			)} represents an optional argument. ${inlineCode(
-				'<argument: type>'
-			)} represents a required argument.\n${inlineCode(
-				'@self'
-			)} represents the user who ran the command.\n${inlineCode(
-				'type || default'
-			)} means an option of type ${inlineCode(
-				'type'
-			)} with a default value of ${inlineCode('default')}.`
+			`\`[argument: type]\` represents an optional argument. \`<argument: type>\` represents a required argument.\n\`@self\` represents the user who ran the command.\n\`type || default\` means an option of type \`type\`with a default value of \`default\`.\n\`[argument: a < number < b]\` represents an optional argument of type \`number\` between \`a\` and \`b\` (exclusive). `
 		)
 		.setTimestamp()
 		.setFooter({

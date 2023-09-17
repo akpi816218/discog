@@ -74,9 +74,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							{
 								name: 'Owner',
 								value: `${
-									(
-										await guild.fetchOwner()
-									).user.username
+									(await guild.fetchOwner()).user.username
 								} (${userMention(guild.ownerId)})`
 							},
 							{

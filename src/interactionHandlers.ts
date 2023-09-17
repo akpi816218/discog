@@ -26,13 +26,51 @@ import {
 } from 'pronouns.js';
 import { IdentityEntry } from './struct/database';
 import TypedJsoning from 'typed-jsoning';
+import _ from 'lodash';
 import { format } from 'prettier';
 import { logger } from './logger';
 import { scheduleJob } from 'node-schedule';
+const { chunk } = _;
 
 export const InteractionHandlers = {
-	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-	async Button(_interaction: ButtonInteraction) {},
+	async Button(interaction: ButtonInteraction) {
+		switch (interaction.customId) {
+			case '/admin_channel_clear':
+				await interaction.deferReply({ ephemeral: true });
+				if (
+					!interaction.inGuild() ||
+					!interaction.guild ||
+					!interaction.channel
+				) {
+					await interaction.editReply(
+						'Error: cannot clear this channel.\nCause: not in guild.'
+					);
+					return;
+				}
+				const channel = interaction.channel;
+				if (
+					!channel ||
+					channel.isDMBased() ||
+					channel.isVoiceBased() ||
+					!channel.isTextBased() ||
+					channel.isThread()
+				)
+					await interaction.editReply(
+						'Error: cannot clear this channel.\nCause may be insufficient permissions or invalid channel type.'
+					);
+				else {
+					const messages = chunk(
+						(await channel.messages.fetch()).map((msg) => msg),
+						100
+					);
+					for (const messageGroup of messages) {
+						await channel.bulkDelete(messageGroup);
+					}
+				}
+				await interaction.editReply('Deleted all messages in this channel.');
+				break;
+		}
+	},
 	ContextMenu: {
 		async Message(
 			interaction: MessageContextMenuCommandInteraction

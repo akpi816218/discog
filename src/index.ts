@@ -12,16 +12,15 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
-import { AuditLogDatabaseEntry, JSONValue } from './struct/database';
 import { Command, CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
-import { argv, cwd } from 'process';
+import { PORT, permissionsBits } from './config';
+import { argv, cwd, stdout } from 'process';
 import { Event } from './struct/discord/Structure';
 import { InteractionHandlers } from './interactionHandlers';
 import { TypedJsoning } from 'typed-jsoning';
 import { join } from 'path';
 import { logger } from './logger';
-import { permissionsBits } from './config';
 import { readdirSync } from 'fs';
 import { scheduleJob } from 'node-schedule';
 
@@ -74,8 +73,7 @@ const server = createServer(
 		route: '/invite'
 	},
 	{
-		handler: (_req, res) =>
-			res.status(200).sendFile(join(cwd(), 'web', 'index.html')),
+		handler: (_req, res) => res.redirect('/api'),
 		method: Methods.GET,
 		route: '/'
 	},
@@ -245,13 +243,6 @@ client
 			}
 		}
 	})
-	.on(Events.GuildAuditLogEntryCreate, async (log, guild) => {
-		logger.info(log);
-		new TypedJsoning<AuditLogDatabaseEntry>('botfiles/auditlog.db.json').push(
-			guild.id,
-			log.toJSON() as JSONValue
-		);
-	})
 	.on(Events.Debug, (m) => logger.debug(m))
 	.on(Events.Error, (m) => logger.error(m))
 	.on(Events.Warn, (m) => logger.warn(m));
@@ -262,6 +253,7 @@ await client
 
 process.on('SIGINT', () => {
 	client.destroy();
+	stdout.write('\n');
 	logger.info('Destroyed Client.');
 	process.exit(0);
 });
@@ -270,9 +262,10 @@ process.on('SIGINT', () => {
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
-server.listen(8000);
+server.listen(PORT);
 
 logger.info('Process setup complete.');
+logger.info(`Listening on port ${PORT}`);
 
 async function bdayInterval() {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');

@@ -12,7 +12,7 @@ import {
  */
 export class CommandHelpEntry {
 	description: string;
-	_name: string;
+	name: string;
 	_usage: string[] | undefined;
 
 	/**
@@ -27,26 +27,37 @@ export class CommandHelpEntry {
 		description: string,
 		...usage: RestOrArray<string>
 	) {
-		this._name = name;
+		/**
+		 * The name of the command
+		 * @type {string}
+		 * @private
+		 * @readonly
+		 */
+		this.name = name;
+		/**
+		 * The description of the command
+		 * @type {string}
+		 * @public
+		 * @readonly
+		 */
 		this.description = description;
+		/**
+		 * The usage of the command
+		 * @type {string[]}
+		 * @private
+		 * @readonly
+		 */
 		this._usage = normalizeArray(usage);
-	}
-
-	/**
-	 * The name of the command
-	 * @type {string}
-	 */
-	get name(): string {
-		return inlineCode(this._name);
 	}
 
 	/**
 	 * The usage of the command
 	 * @type {string[]}
+	 * @readonly
 	 */
 	get usage(): string[] {
-		if (!this._usage) return [inlineCode(`/${this._name}`)];
-		return this._usage.map((val) => inlineCode(`/${this._name} ${val}`));
+		if (!this._usage) return [inlineCode(`/${this.name}`)];
+		return this._usage.map((val) => inlineCode(`/${this.name} ${val}`));
 	}
 
 	/**
