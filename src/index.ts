@@ -39,7 +39,10 @@ const client = new CommandClient({
 		GatewayIntentBits.GuildInvites,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildScheduledEvents
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.GuildScheduledEvents,
+		GatewayIntentBits.GuildWebhooks
 	],
 	presence: {
 		activities: [

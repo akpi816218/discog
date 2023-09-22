@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import {
+	AuditLogEvent,
 	BaseChannel,
 	EmbedBuilder,
 	Emoji,
@@ -36,12 +37,15 @@ export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
 		!channel ||
 		!channel.isTextBased() ||
 		channel.isVoiceBased() ||
-		channel.isDMBased() ||
 		channel.isThread()
 	)
 		return;
 	const embed = new EmbedBuilder()
-			.setTitle(`Audit Log Entry | ${entry.action} | ${entry.actionType}`)
+			.setTitle(
+				`Audit Log Entry | ${auditLogEventActionToReadableString(
+					entry.action
+				)} | ${entry.actionType}`
+			)
 			.setTimestamp(entry.createdTimestamp),
 		target = entry.target;
 	let targetString = '';
@@ -63,6 +67,7 @@ export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
 	else if (target instanceof GuildScheduledEvent)
 		targetString = hyperlink(target.name, new URL(target.url).toString());
 	else return;
+
 	embed.addFields(
 		{
 			name: 'Target',
@@ -79,4 +84,10 @@ export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
 			value: entry.reason || 'No reason provided'
 		}
 	);
+
+	await channel.send({ embeds: [embed] });
 };
+
+function auditLogEventActionToReadableString(action: AuditLogEvent) {
+	return AuditLogEvent[action];
+}
