@@ -13,7 +13,6 @@ import {
 	underscore,
 	userMention
 } from 'discord.js';
-import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('admin')
@@ -263,46 +262,27 @@ export const handlers = {
 					}
 				);
 			}
+			await interaction.editReply(
+				`Channel ${channel} has been ${unlock ? 'unlocked' : 'locked'}!`
+			);
 		}
 	}
 };
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const subcommandGroup = interaction.options.getSubcommandGroup() as
-		| keyof typeof handlers
-		| null;
+	const subcommandGroup =
+		interaction.options.getSubcommandGroup() as keyof typeof handlers;
 	await interaction.deferReply({
 		ephemeral: !subcommandGroup && !interaction.options.getSubcommand()
 	});
-	switch (subcommandGroup) {
-		case 'addrole':
-			const subcommanda = interaction.options.getSubcommand(
-				true
-			) as keyof typeof handlers.addrole;
-			await handlers.addrole[subcommanda](interaction);
-			break;
-		case 'channel':
-			const subcommandc = interaction.options.getSubcommand(
-				true
-			) as keyof typeof handlers.channel;
-			await handlers.channel[subcommandc](interaction);
-			break;
-		case null:
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder().setFields(
-						new CommandHelpEntry('admin', 'Automatically run admin tasks', [
-							'admin addrole all <role>',
-							'admin addrole bots <role>',
-							'admin addrole humans <role>',
-							'admin channel lock <channel> [unlock: boolean | false]',
-							'admin channel clear'
-						]).toDiscordAPIEmbedField()
-					)
-				]
-			});
-			break;
-	}
+	if (subcommandGroup === 'addrole')
+		await handlers.addrole[
+			interaction.options.getSubcommand(true) as keyof typeof handlers.addrole
+		](interaction);
+	else
+		await handlers.channel[
+			interaction.options.getSubcommand(true) as keyof typeof handlers.channel
+		](interaction);
 	await interaction.editReply({
 		embeds: [
 			new EmbedBuilder().setFooter({
