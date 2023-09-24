@@ -1,12 +1,38 @@
-import { Events, GuildMember, userMention } from 'discord.js';
+import {
+	EmbedBuilder,
+	Events,
+	GuildMember,
+	NewsChannel,
+	TextChannel,
+	userMention
+} from 'discord.js';
+import { getGuildGreetingData } from './a.getGuildConf';
 export const name = Events.GuildMemberAdd;
 export const once = false;
 
 export const execute = async (member: GuildMember) => {
-	if (member.guild.systemChannel)
-		await member.guild.systemChannel.send(
-			`Welcome to ${member.guild.name}, ${userMention(
-				member.id
-			)})! You are Member #${member.guild.memberCount}.`
-		);
+	const config = getGuildGreetingData(member.guild);
+	if (!config?.welcomeEnabled) return;
+	await (
+		(await member.guild.channels.fetch(config.channel)) as
+			| NewsChannel
+			| TextChannel
+			| undefined
+	)?.send({
+		embeds: [
+			new EmbedBuilder()
+				.setTitle('Member Joined')
+				.setDescription(
+					`${userMention(member.id)}\nNow at ${
+						(await member.guild.fetch()).memberCount
+					}members`
+				)
+				.setColor(0x00ff00)
+				.setTimestamp()
+				.setFooter({
+					iconURL: member.guild.members.me?.displayAvatarURL(),
+					text: 'Powered by DisCog'
+				})
+		]
+	});
 };

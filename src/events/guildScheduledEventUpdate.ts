@@ -1,4 +1,5 @@
 import { Events, GuildScheduledEvent } from 'discord.js';
+import { getGuildAuditLoggingChannel } from './a.getGuildConf';
 export const name = Events.GuildScheduledEventDelete;
 export const once = false;
 
@@ -6,6 +7,7 @@ export const execute = async (
 	_oldevent: GuildScheduledEvent,
 	newevent: GuildScheduledEvent
 ) => {
-	if (newevent.guild?.systemChannel)
-		await newevent.guild.systemChannel.send(`Updated Event: ${newevent.url}`);
+	await getGuildAuditLoggingChannel(newevent.guild!)?.send(
+		`Updated Event: ${newevent.url}`
+	);
 };

@@ -74,11 +74,11 @@ export const execute = async (
 				value: `\`${
 					before.videoQualityMode
 						? VideoQualityMode[before.videoQualityMode]
-						: 'None'
+						: 'Unset'
 				}\` => \`${
 					after.videoQualityMode
 						? VideoQualityMode[after.videoQualityMode]
-						: 'None'
+						: 'Unset'
 				}\``
 			});
 		if (dp.rtcRegion)

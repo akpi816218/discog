@@ -6,8 +6,10 @@ import {
 	ChannelType,
 	ChatInputCommandInteraction,
 	EmbedBuilder,
+	NewsChannel,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
+	TextChannel,
 	bold,
 	channelMention,
 	inlineCode,
@@ -106,10 +108,19 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 			const channel = interaction.options.getChannel('channel', false),
 				enabled = interaction.options.getBoolean('enabled', true);
 			if (enabled && channel)
-				config.auditlog = {
-					channel: channel.id,
-					enabled
-				};
+				if (
+					channel! instanceof NewsChannel &&
+					channel! instanceof TextChannel
+				) {
+					await interaction.editReply(
+						'You must provide a generic text channel to enable audit logs.'
+					);
+					return config;
+				} else
+					config.auditlog = {
+						channel: channel.id,
+						enabled
+					};
 			else if (enabled && !channel) {
 				await interaction.editReply(
 					'You must provide a channel to enable audit logs'
@@ -159,13 +170,22 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 			const channel = interaction.options.getChannel('channel', false),
 				enabled = interaction.options.getBoolean('enabled', true);
 			if (enabled && channel)
-				config.birthdays = {
-					channel: channel.id,
-					enabled
-				};
+				if (
+					channel! instanceof NewsChannel &&
+					channel! instanceof TextChannel
+				) {
+					await interaction.editReply(
+						'You must provide a generic text channel to enable birthday announcements.'
+					);
+					return config;
+				} else
+					config.birthdays = {
+						channel: channel.id,
+						enabled
+					};
 			else if (enabled && !channel) {
 				await interaction.editReply(
-					'You must provide a channel to enable birthday announcements'
+					'You must provide a channel to enable birthday announcements.'
 				);
 				return config;
 			} else if (!enabled)
@@ -217,17 +237,35 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 				goodbye = interaction.options.getBoolean('goodbye', true),
 				welcome = interaction.options.getBoolean('welcome', true);
 			if (goodbye && channel)
-				config.greetings = {
-					channel: channel.id,
-					goodbyeEnabled: goodbye,
-					welcomeEnabled: welcome
-				};
+				if (
+					channel! instanceof NewsChannel &&
+					channel! instanceof TextChannel
+				) {
+					await interaction.editReply(
+						'You must provide a generic text channel to enable audit logs.'
+					);
+					return config;
+				} else
+					config.greetings = {
+						channel: channel.id,
+						goodbyeEnabled: goodbye,
+						welcomeEnabled: welcome
+					};
 			else if (welcome && channel)
-				config.greetings = {
-					channel: channel.id,
-					goodbyeEnabled: goodbye,
-					welcomeEnabled: welcome
-				};
+				if (
+					channel! instanceof NewsChannel &&
+					channel! instanceof TextChannel
+				) {
+					await interaction.editReply(
+						'You must provide a generic text channel to enable audit logs.'
+					);
+					return config;
+				} else
+					config.greetings = {
+						channel: channel.id,
+						goodbyeEnabled: goodbye,
+						welcomeEnabled: welcome
+					};
 			else if ((welcome || goodbye) && !channel)
 				await interaction.editReply(
 					'You must provide a channel to enable greeting messages'
@@ -285,8 +323,17 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 			config: PopulatedGuildConfig
 		): Promise<PopulatedGuildConfig> => {
 			const channel = interaction.options.getChannel('channel', false);
-			if (channel) config.systemchannel = channel.id;
-			else config.systemchannel = null;
+			if (channel) {
+				if (
+					channel! instanceof NewsChannel &&
+					channel! instanceof TextChannel
+				) {
+					await interaction.editReply(
+						'You must provide a generic text channel to enable audit logs.'
+					);
+					return config;
+				} else config.systemchannel = channel.id;
+			} else config.systemchannel = null;
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
