@@ -15,7 +15,7 @@
 		"eol-last": "error",
 		"func-call-spacing": "error",
 		"getter-return": "error",
-		"indent": ["error", "tab"],
+		"indent": "off",
 		"new-parens": "error",
 		"no-alert": "error",
 		"no-console": "error",

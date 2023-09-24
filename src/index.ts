@@ -28,8 +28,6 @@ argv.shift();
 argv.shift();
 if (argv.includes('-d')) logger.level = 'debug';
 
-logger.info('RunID: %d', Math.floor(Math.random() * 100));
-
 const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 
 const client = new CommandClient({

@@ -1,4 +1,5 @@
 import {
+	AuditLogEvent,
 	BaseGuildTextChannel,
 	BaseGuildVoiceChannel,
 	DMChannel,
@@ -35,10 +36,12 @@ export const execute = async (
 	);
 	if (!auditlogChannel || !auditlogChannel.isTextBased()) return;
 
-	// eslint-disable-next-line no-param-reassign
-	before = await before.fetch();
-	// eslint-disable-next-line no-param-reassign
-	after = await after.fetch();
+	const entry = (
+		await after.guild.fetchAuditLogs({
+			limit: 1,
+			type: AuditLogEvent.ChannelUpdate
+		})
+	).entries.first();
 
 	const embed = new EmbedBuilder()
 		.setTitle('Channel Updated')
@@ -48,9 +51,21 @@ export const execute = async (
 		.setFooter({
 			iconURL: after.guild.members.me?.displayAvatarURL(),
 			text: 'Powered by DisCog'
-		});
+		})
+		.setFields(
+			entry?.executor
+				? [
+						{
+							name: 'Updated By',
+							value: entry.executor.toString() ?? 'Unknown'
+						}
+				  ]
+				: []
+		);
 
 	const differentProperties = getDifferentProperties(before, after);
+
+	console.log(entry);
 
 	if (differentProperties.name)
 		embed.addFields({
@@ -170,13 +185,13 @@ export const execute = async (
 			});
 	}
 
-	if (differentProperties.permissionOverwrites)
+	if (entry?.changes) {
 		embed.addFields({
 			name: 'Permission Overwrites',
 			value: `\`${before.permissionOverwrites.cache
 				.map(
 					(overwrite) =>
-						`${
+						`Before:\n${
 							overwrite.type === OverwriteType.Role
 								? roleMention(overwrite.id)
 								: userMention(overwrite.id)
@@ -184,7 +199,7 @@ export const execute = async (
 							.toArray()
 							.join(', ')}`
 				)
-				.join('\n')}\` => \`${after.permissionOverwrites.cache
+				.join('\n')}\`\n\nAfter:\n\`${after.permissionOverwrites.cache
 				.map(
 					(overwrite) =>
 						`${
@@ -197,6 +212,8 @@ export const execute = async (
 				)
 				.join('\n')}\``
 		});
+		console.log(differentProperties.permissionOverwrites);
+	}
 
 	await auditlogChannel.send({
 		embeds: [embed]
@@ -205,7 +222,7 @@ export const execute = async (
 
 function getDifferentProperties(before: GuildChannel, after: GuildChannel) {
 	return Object.entries(after).reduce((diff, [key, value]) => {
-		if (before[key as keyof GuildChannel] !== value) {
+		if (before[key as keyof GuildChannel] != value) {
 			// @ts-expect-error Properties are not read-only at creation
 			diff[key as keyof GuildChannel] = value;
 		}
