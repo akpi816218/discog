@@ -1,19 +1,20 @@
 import {
 	BaseGuildTextChannel,
 	BaseGuildVoiceChannel,
-	ChannelType,
 	DMChannel,
 	EmbedBuilder,
 	Events,
 	ForumChannel,
 	ForumLayoutType,
 	GuildChannel,
+	OverwriteType,
 	PrivateThreadChannel,
 	PublicThreadChannel,
-	SortOrderType,
 	StageChannel,
 	VideoQualityMode,
-	channelMention
+	channelMention,
+	roleMention,
+	userMention
 } from 'discord.js';
 import { BaseGuildConfig } from '../struct/database';
 import TypedJsoning from 'typed-jsoning';
@@ -43,7 +44,11 @@ export const execute = async (
 		.setTitle('Channel Updated')
 		.setDescription(channelMention(after.id))
 		.setTimestamp()
-		.setColor(0xff0000);
+		.setColor(0xffff00)
+		.setFooter({
+			iconURL: after.guild.members.me?.displayAvatarURL(),
+			text: 'Powered by DisCog'
+		});
 
 	const differentProperties = getDifferentProperties(before, after);
 
@@ -52,40 +57,12 @@ export const execute = async (
 			name: 'Name',
 			value: `\`${before.name}\` => \`${after.name}\``
 		});
-	if (differentProperties.type)
-		embed.addFields({
-			name: 'Type',
-			value: `\`${ChannelType[differentProperties.type]}\``
-		});
-	if (differentProperties.parent)
-		embed.addFields({
-			name: 'Parent Category',
-			value: `\`${before.parent?.name ?? 'None'}\` => \`${
-				after.parent?.name ?? 'None'
-			}\``
-		});
-	if (differentProperties.position) {
-		embed.addFields({
-			name: 'Position',
-			value: `\`${before.position}\` => \`${after.position}\``
-		});
-	}
 
 	if (
 		after instanceof BaseGuildVoiceChannel &&
 		before instanceof BaseGuildVoiceChannel
 	) {
 		const dp = differentProperties as Partial<BaseGuildVoiceChannel>;
-		if (dp.bitrate)
-			embed.addFields({
-				name: 'Bitrate',
-				value: `\`${before.bitrate}\` => \`${after.bitrate}\``
-			});
-		if (dp.full)
-			embed.addFields({
-				name: 'Full',
-				value: `\`${before.full}\` => \`${after.full}\``
-			});
 		if (dp.userLimit)
 			embed.addFields({
 				name: 'User Limit',
@@ -93,7 +70,7 @@ export const execute = async (
 			});
 		if (dp.videoQualityMode)
 			embed.addFields({
-				name: 'Video Quality Mode',
+				name: 'Video Quality',
 				value: `\`${
 					before.videoQualityMode
 						? VideoQualityMode[before.videoQualityMode]
@@ -113,11 +90,6 @@ export const execute = async (
 			});
 		if (before instanceof StageChannel && after instanceof StageChannel) {
 			const dp = differentProperties as Partial<StageChannel>;
-			if (dp.topic)
-				embed.addFields({
-					name: 'Topic',
-					value: `\`${after.topic ?? 'None'}\` => \`${before.topic ?? 'None'}\``
-				});
 			if (dp.rateLimitPerUser)
 				embed.addFields({
 					name: 'Slowmode Rate Limit',
@@ -130,16 +102,6 @@ export const execute = async (
 		after instanceof BaseGuildTextChannel
 	) {
 		const dp = differentProperties as Partial<BaseGuildTextChannel>;
-		if (dp.topic)
-			embed.addFields({
-				name: 'Topic',
-				value: `\`${after.topic ?? 'None'}\` => \`${before.topic ?? 'None'}\``
-			});
-		if (dp.nsfw)
-			embed.addFields({
-				name: 'NSFW',
-				value: `\`${before.nsfw}\` => \`${after.nsfw}\``
-			});
 		if (dp.rateLimitPerUser)
 			embed.addFields({
 				name: 'Slowmode Rate Limit',
@@ -194,19 +156,6 @@ export const execute = async (
 					after.defaultReactionEmoji?.name ?? 'None'
 				}\``
 			});
-		if (dp.defaultSortOrder)
-			embed.addFields({
-				name: 'Default Sort Order',
-				value: `\`${
-					before.defaultSortOrder
-						? SortOrderType[before.defaultSortOrder]
-						: 'None'
-				}\` => \`${
-					after.defaultSortOrder
-						? SortOrderType[after.defaultSortOrder]
-						: 'None'
-				}\``
-			});
 		if (dp.defaultThreadRateLimitPerUser)
 			embed.addFields({
 				name: 'Default Thread Rate Limit Per User',
@@ -214,33 +163,39 @@ export const execute = async (
 					after.defaultThreadRateLimitPerUser ?? 'None'
 				}\``
 			});
-		if (dp.nsfw)
-			embed.addFields({
-				name: 'NSFW',
-				value: `\`${before.nsfw}\` => \`${after.nsfw}\``
-			});
 		if (dp.rateLimitPerUser)
 			embed.addFields({
 				name: 'Slowmode Rate Limit',
 				value: `\`${before.rateLimitPerUser}\` => \`${after.rateLimitPerUser}\``
 			});
-		if (dp.topic)
-			embed.addFields({
-				name: 'Topic',
-				value: `\`${after.topic ?? 'None'}\` => \`${before.topic ?? 'None'}\``
-			});
 	}
-
-	if (differentProperties.permissionsLocked)
-		embed.addFields({
-			name: 'Permissions Locked With Parent',
-			value: `\`${before.permissionsLocked}\` => \`${after.permissionsLocked}\``
-		});
 
 	if (differentProperties.permissionOverwrites)
 		embed.addFields({
 			name: 'Permission Overwrites',
-			value: `\`${before.permissionOverwrites.cache.toJSON()}\` => \`${after.permissionOverwrites.cache.toJSON()}\``
+			value: `\`${before.permissionOverwrites.cache
+				.map(
+					(overwrite) =>
+						`${
+							overwrite.type === OverwriteType.Role
+								? roleMention(overwrite.id)
+								: userMention(overwrite.id)
+						}\n${overwrite.allow.toArray().join(', ')} \n${overwrite.deny
+							.toArray()
+							.join(', ')}`
+				)
+				.join('\n')}\` => \`${after.permissionOverwrites.cache
+				.map(
+					(overwrite) =>
+						`${
+							overwrite.type === OverwriteType.Role
+								? roleMention(overwrite.id)
+								: userMention(overwrite.id)
+						}\n${overwrite.allow.toArray().join(', ')} \n${overwrite.deny
+							.toArray()
+							.join(', ')}`
+				)
+				.join('\n')}\``
 		});
 
 	await auditlogChannel.send({
