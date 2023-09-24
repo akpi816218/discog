@@ -85,6 +85,12 @@ export const data = new SlashCommandBuilder()
 							.setName('channel')
 							.setDescription('Channel to lock')
 							.setRequired(false);
+					})
+					.addBooleanOption((option) => {
+						return option
+							.setName('unlock')
+							.setDescription('Unlock the channel instead')
+							.setRequired(false);
 					});
 			});
 	});
