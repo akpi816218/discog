@@ -66,10 +66,26 @@ export const data = new SlashCommandBuilder()
 			.setName('channel')
 			.setDescription('Manage channels')
 			.addSubcommand((subcommand) => {
-				return subcommand.setName('clear').setDescription('Clear a channel');
+				return subcommand
+					.setName('clear')
+					.setDescription('Clear a channel')
+					.addChannelOption((option) => {
+						return option
+							.setName('channel')
+							.setDescription('Channel to clear')
+							.setRequired(false);
+					});
 			})
 			.addSubcommand((subcommand) => {
-				return subcommand.setName('lock').setDescription('Lock a channel');
+				return subcommand
+					.setName('lock')
+					.setDescription('Lock a channel')
+					.addChannelOption((option) => {
+						return option
+							.setName('channel')
+							.setDescription('Channel to lock')
+							.setRequired(false);
+					});
 			});
 	});
 
@@ -201,9 +217,11 @@ export const handlers = {
 				);
 				return;
 			}
-			const channel = await interaction.guild.channels.fetch(
-					interaction.options.getChannel('channel', true).id
-				),
+			const channel = interaction.options.getChannel('channel')
+					? await interaction.guild.channels.fetch(
+							interaction.options.getChannel('channel')!.id
+					  )
+					: interaction.channel,
 				unlock = interaction.options.getBoolean('unlock', false);
 			if (
 				!channel ||
