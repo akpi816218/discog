@@ -4,13 +4,10 @@
 
 ## Contributions
 
-Commits and PRs must be comprehensive and clearly describe their purpose and summarize changes made.
-
-- Commits and PRs must include all dependency changes and edits to `package.json`.
-- PRs must be merged via a squash commit.
+All contributions are welcome! We are actively looking for more developers.
 
 ### Pre-Commit Tasks
 
-- Test all features if committing to `gitmaster` branch.
+- Test all features before committing to the `gitmaster` branch.
 - Lint and compile code. Edit code if needed. Repeat until no errors are returned.
 - Commit and push.
