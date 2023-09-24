@@ -56,6 +56,7 @@ export interface BaseGuildConfig {
 		  };
 	systemchannel?: Snowflake | null;
 }
+
 export interface PopulatedGuildConfig extends BaseGuildConfig {
 	auditlog:
 		| {

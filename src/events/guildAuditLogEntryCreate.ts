@@ -1,16 +1,23 @@
-/* eslint-disable indent */
+/* eslint-disable */
 import {
+	APIEmbedField,
 	AuditLogEvent,
 	BaseChannel,
 	EmbedBuilder,
 	Emoji,
 	Events,
 	Guild,
+	GuildAuditLogsActionType,
 	GuildAuditLogsEntry,
+	GuildAuditLogsEntryExtraField,
+	GuildBasedChannel,
 	GuildScheduledEvent,
 	Integration,
 	Invite,
 	Message,
+	PartialDMChannel,
+	PartialGroupDMChannel,
+	PrivateThreadChannel,
 	Role,
 	StageInstance,
 	Sticker,
@@ -30,23 +37,14 @@ export const once = false;
 
 const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json');
 export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
-	const config = db.get(guild.id);
-	if (!config?.auditlog?.enabled || !config?.auditlog?.channel) return;
-	const channel = await guild.channels.fetch(config.auditlog.channel);
-	if (
-		!channel ||
-		!channel.isTextBased() ||
-		channel.isVoiceBased() ||
-		channel.isThread()
-	)
-		return;
 	const embed = new EmbedBuilder()
 			.setTitle(
 				`Audit Log Entry | ${auditLogEventActionToReadableString(
 					entry.action
 				)} | ${entry.actionType}`
 			)
-			.setTimestamp(entry.createdTimestamp),
+			.setTimestamp(entry.createdTimestamp)
+			.setColor(getEmbedColor(entry.actionType)),
 		target = entry.target;
 	let targetString = '';
 	if (target instanceof Guild) targetString = 'This server';
@@ -68,26 +66,129 @@ export const execute = async (entry: GuildAuditLogsEntry, guild: Guild) => {
 		targetString = hyperlink(target.name, new URL(target.url).toString());
 	else return;
 
-	embed.addFields(
-		{
-			name: 'Target',
-			value: targetString
-		},
-		{
-			name: 'Executor',
-			value: entry.executor
-				? userMention(entry.executor.id)
-				: 'Unknown Executor'
-		},
-		{
-			name: 'Reason',
-			value: entry.reason || 'No reason provided'
-		}
-	);
+	embed.addFields({
+		name: 'Target',
+		value: targetString
+	});
 
-	await channel.send({ embeds: [embed] });
+	if (entry.executor) {
+		embed.addFields({
+			name: 'Executor',
+			value: userMention(entry.executor.id)
+		});
+	}
 };
 
 function auditLogEventActionToReadableString(action: AuditLogEvent) {
 	return AuditLogEvent[action];
+}
+
+function getEmbedColor(actionType: GuildAuditLogsActionType) {
+	if (actionType === 'Create') return 0xff0000;
+	else if (actionType === 'Delete') return 0x00ff00;
+	else if (actionType === 'Update') return 0xffff00;
+	else return 0x0000ff;
+}
+
+function getEventDetails(entry: GuildAuditLogsEntry): APIEmbedField[] {
+	switch (entry.action) {
+		case AuditLogEvent.ChannelCreate:
+			return [
+				{
+					name: 'Name',
+					value: (entry.extra as { name: string }).name
+				}
+			];
+		case AuditLogEvent.ChannelDelete:
+			return [
+				{
+					name: 'Name',
+					value: (entry.target as GuildBasedChannel).name
+				}
+			];
+		case AuditLogEvent.ChannelUpdate:
+			const changes = entry.changes;
+			const nameChangea = changes.find((change) => change.key === 'name');
+			if (nameChangea) {
+				return [
+					{
+						name: 'Name',
+						value: `Changed from "${nameChangea.old}" to "${nameChangea.new}"`
+					}
+				];
+			}
+			return [];
+		case AuditLogEvent.MemberRoleUpdate:
+			const roleChanges = entry.changes as {
+				key: string;
+				old: string[];
+				new: string[];
+			}[];
+			const addedRoles = roleChanges
+				.filter((change) => change.key === '$add')
+				.map((change) => `<@&${change.new}>`);
+			const removedRoles = roleChanges
+				.filter((change) => change.key === '$remove')
+				.map((change) => `<@&${change.old}>`);
+			return [
+				{
+					name: 'Added roles',
+					value: addedRoles.join(', ')
+				},
+				{
+					name: 'Removed roles',
+					value: removedRoles.join(', ')
+				}
+			];
+		case AuditLogEvent.MemberKick:
+			return [
+				{
+					name: 'Reason',
+					value: entry.reason ?? 'No reason provided'
+				}
+			];
+		case AuditLogEvent.MemberBanAdd:
+			return [
+				{
+					name: 'Reason',
+					value: entry.reason ?? 'No reason provided'
+				}
+			];
+		case AuditLogEvent.MemberUpdate:
+			return [
+				{
+					name: 'Duration',
+					value: (entry.extra as unknown as { duration: string }).duration
+				},
+				{
+					name: 'Reason',
+					value: entry.reason ?? 'No reason provided'
+				}
+			];
+		case AuditLogEvent.GuildUpdate:
+			const guildChanges = entry.changes as {
+				key: string;
+				old: any;
+				new: any;
+			}[];
+			const nameChange = guildChanges.find((change) => change.key === 'name');
+			const iconChange = guildChanges.find(
+				(change) => change.key === 'iconHash'
+			);
+			const changesString = [];
+			if (nameChange) {
+				changesString.push(
+					`Name changed from "${nameChange.old}" to "${nameChange.new}"`
+				);
+			}
+			if (iconChange) {
+				changesString.push('Icon changed');
+			}
+			return changesString.map((change) => ({
+				name: 'Change',
+				value: change
+			}));
+		default:
+			return [];
+	}
 }
