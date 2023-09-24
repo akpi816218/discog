@@ -1,6 +1,6 @@
 # DisCog
 
-...is a general-purpose Discord bot.
+...is a general-purpose Discord bot. This project has its own website at [discog.localplayer.dev](https://discog.localplayer.dev).
 
 ## Contributions
 
