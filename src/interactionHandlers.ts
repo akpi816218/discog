@@ -15,14 +15,22 @@ import {
 	UserContextMenuCommandInteraction,
 	codeBlock,
 	inlineCode,
-	time
+	time,
+	userMention
 } from 'discord.js';
 import {
 	GenderCodes,
 	Pronoun,
-	PronounCodes,
-	isPronounCode,
-	isPronounValue
+	/**
+	 * @deprecated
+		PronounCodes,
+	*/
+	isPronounCode
+	/**
+	 * @deprecated
+		,
+		isPronounValue
+	*/
 } from 'pronouns.js';
 import { IdentityEntry } from './struct/database';
 import TypedJsoning from 'typed-jsoning';
@@ -31,7 +39,7 @@ import { logger } from './logger';
 import { scheduleJob } from 'node-schedule';
 
 export const InteractionHandlers = {
-	async Button(interaction: ButtonInteraction) {
+	async Button(interaction: ButtonInteraction): Promise<void> {
 		switch (interaction.customId) {
 			case '/admin_channel_clear':
 				await interaction.deferReply({ ephemeral: true });
@@ -147,8 +155,35 @@ export const InteractionHandlers = {
 		}
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
-		const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
+		/**
+		 * @deprecated
+			const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
+		*/
 		switch (interaction.customId) {
+			case '/contact_suggestion':
+				const devs = new TypedJsoning<string[]>('botfiles/dev.db.json').get(
+						'whitelist'
+					),
+					suggestion = interaction.fields.getTextInputValue('suggestion');
+				if (!devs) throw new Error('No developers found in the database.');
+				for (const devId of devs) {
+					const dev = await interaction.client.users.fetch(devId);
+					await dev.send({
+						embeds: [
+							new EmbedBuilder()
+								.setTitle('New Suggestion')
+								.setDescription(suggestion)
+								.setTimestamp()
+								.setFooter({
+									iconURL: interaction.user.displayAvatarURL(),
+									text: `Suggested by ${userMention(interaction.user.id)} (${
+										interaction.user.tag
+									})`
+								})
+						]
+					});
+				}
+				break;
 			case '/global':
 				await interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
@@ -238,42 +273,48 @@ export const InteractionHandlers = {
 					}`
 				);
 				break;
-			case '/identity_pronouns_set_custom':
-				const choice = `CustomPronoun:${interaction.fields.getTextInputValue(
-					'/pronouns_modal_text'
-				)}`;
-				if (!isPronounValue(choice)) {
-					await interaction.reply('Error: Invalid formatting');
-					return;
-				}
-				const pn = new Pronoun(PronounCodes.other, choice);
-				const currentpn = db.get(interaction.user.id) || {
-					bio: null,
-					gender: null,
-					name: null,
-					pronouns: null
-				};
-				currentpn.pronouns = pn;
-				await db.set(interaction.user.id, currentpn);
-				await interaction.reply({
-					content: `User pronouns set: ${pn.toString()}`,
-					ephemeral: true
-				});
-				break;
-			case '/identity_bio_set':
-				const bio = interaction.fields.getTextInputValue(
-					'/identity_bio_set_text'
-				);
-				const currentbio = db.get(interaction.user.id) || {
-					bio: '',
-					gender: null,
-					name: '',
-					pronouns: null
-				};
-				currentbio.bio = bio;
-				await db.set(interaction.user.id, currentbio);
-				await interaction.reply({ content: 'Bio set', ephemeral: true });
-				break;
+			/**
+			 * @deprecated
+				case '/identity_pronouns_set_custom':
+					const choice = `CustomPronoun:${interaction.fields.getTextInputValue(
+						'/pronouns_modal_text'
+					)}`;
+					if (!isPronounValue(choice)) {
+						await interaction.reply('Error: Invalid formatting');
+						return;
+					}
+					const pn = new Pronoun(PronounCodes.other, choice);
+					const currentpn = db.get(interaction.user.id) || {
+						bio: null,
+						gender: null,
+						name: null,
+						pronouns: null
+					};
+					currentpn.pronouns = pn;
+					await db.set(interaction.user.id, currentpn);
+					await interaction.reply({
+						content: `User pronouns set: ${pn.toString()}`,
+						ephemeral: true
+					});
+					break;
+			*/
+			/**
+			 * @deprecated
+				case '/identity_bio_set':
+					const bio = interaction.fields.getTextInputValue(
+						'/identity_bio_set_text'
+					);
+					const currentbio = db.get(interaction.user.id) || {
+						bio: '',
+						gender: null,
+						name: '',
+						pronouns: null
+					};
+					currentbio.bio = bio;
+					await db.set(interaction.user.id, currentbio);
+					await interaction.reply({ content: 'Bio set', ephemeral: true });
+					break;
+			*/
 			case '/schedule':
 				await interaction.deferReply({
 					ephemeral: true
