@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 
 export enum Methods {
 	// eslint-disable-next-line no-unused-vars
@@ -20,6 +21,7 @@ export interface Route {
 
 export function createServer(...routes: Route[]) {
 	const app = express();
+	app.use(cors());
 	for (const { handler, method, route } of routes) {
 		app[method](route, handler);
 	}
