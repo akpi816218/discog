@@ -1,13 +1,4 @@
-import { GenderCodes, PronounObject } from 'pronouns.js';
 import { Snowflake } from 'discord.js';
-
-export interface IdentityEntry {
-	bio?: string | null;
-	gender: { bits: GenderCodes[] } | null;
-	name?: string | null;
-	pronouns: PronounObject | null;
-	orientation?: string | null;
-}
 
 export type JSONValue =
 	| string

@@ -18,21 +18,6 @@ import {
 	time,
 	userMention
 } from 'discord.js';
-import {
-	GenderCodes,
-	Pronoun,
-	/**
-	 * @deprecated
-		PronounCodes,
-	*/
-	isPronounCode
-	/**
-	 * @deprecated
-		,
-		isPronounValue
-	*/
-} from 'pronouns.js';
-import { IdentityEntry } from './struct/database';
 import TypedJsoning from 'typed-jsoning';
 import { format } from 'prettier';
 import { logger } from './logger';
@@ -155,10 +140,6 @@ export const InteractionHandlers = {
 		}
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
-		/**
-		 * @deprecated
-			const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
-		*/
 		switch (interaction.customId) {
 			case '/contact_suggestion':
 				const devs = new TypedJsoning<string[]>('botfiles/dev.db.json').get(
@@ -273,48 +254,6 @@ export const InteractionHandlers = {
 					}`
 				);
 				break;
-			/**
-			 * @deprecated
-				case '/identity_pronouns_set_custom':
-					const choice = `CustomPronoun:${interaction.fields.getTextInputValue(
-						'/pronouns_modal_text'
-					)}`;
-					if (!isPronounValue(choice)) {
-						await interaction.reply('Error: Invalid formatting');
-						return;
-					}
-					const pn = new Pronoun(PronounCodes.other, choice);
-					const currentpn = db.get(interaction.user.id) || {
-						bio: null,
-						gender: null,
-						name: null,
-						pronouns: null
-					};
-					currentpn.pronouns = pn;
-					await db.set(interaction.user.id, currentpn);
-					await interaction.reply({
-						content: `User pronouns set: ${pn.toString()}`,
-						ephemeral: true
-					});
-					break;
-			*/
-			/**
-			 * @deprecated
-				case '/identity_bio_set':
-					const bio = interaction.fields.getTextInputValue(
-						'/identity_bio_set_text'
-					);
-					const currentbio = db.get(interaction.user.id) || {
-						bio: '',
-						gender: null,
-						name: '',
-						pronouns: null
-					};
-					currentbio.bio = bio;
-					await db.set(interaction.user.id, currentbio);
-					await interaction.reply({ content: 'Bio set', ephemeral: true });
-					break;
-			*/
 			case '/schedule':
 				await interaction.deferReply({
 					ephemeral: true
@@ -359,49 +298,7 @@ export const InteractionHandlers = {
 		}
 	},
 	async StringSelectMenu(
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		interaction: StringSelectMenuInteraction
-	): Promise<void> {
-		const db = new TypedJsoning<IdentityEntry>('botfiles/identity.db.json');
-		switch (interaction.customId) {
-			case '/identity_pronouns_set_select':
-				const choice = interaction.values[0];
-				if (!isPronounCode(choice)) {
-					await interaction.reply({
-						content: 'Error: Invalid formatting',
-						ephemeral: true
-					});
-					return;
-				}
-				const pn = new Pronoun(choice);
-				const currentpn = db.get(interaction.user.id) || {
-					bio: null,
-					gender: null,
-					name: null,
-					pronouns: null
-				};
-				currentpn.pronouns = pn.toJSON();
-				await db.set(interaction.user.id, currentpn);
-				const doneMsg = await interaction.reply({
-					content: `User pronouns set: ${pn.value}`,
-					fetchReply: true
-				});
-				setTimeout(() => doneMsg.delete(), 5_000);
-				break;
-			case '/identity_gender_set_select':
-				const selected = interaction.values as GenderCodes[];
-				const igssdata = db.get(interaction.user.id) || {
-					bio: null,
-					gender: null,
-					name: null,
-					pronouns: null
-				};
-				igssdata.gender = { bits: selected };
-				await db.set(interaction.user.id, igssdata);
-				await interaction.reply({
-					content: 'Done.',
-					ephemeral: true
-				});
-				break;
-		}
-	}
+	): Promise<void> {}
 };
