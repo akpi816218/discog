@@ -233,8 +233,7 @@ export const handlers = {
 				!channel ||
 				channel.isDMBased() ||
 				channel.isVoiceBased() ||
-				!channel.isTextBased() ||
-				channel.isThread()
+				!channel.isTextBased()
 			) {
 				await interaction.editReply(
 					'Error: cannot lock/unlock this channel.\nCause may be insufficient permissions or invalid channel type.'
@@ -242,28 +241,33 @@ export const handlers = {
 				return;
 			}
 			if (!unlock) {
-				await channel.permissionOverwrites.edit(
-					interaction.guild.roles.everyone,
-					{
-						AddReactions: false,
-						AttachFiles: false,
-						CreateInstantInvite: false,
-						CreatePrivateThreads: false,
-						CreatePublicThreads: false,
-						EmbedLinks: false,
-						ManageMessages: false,
-						ManageThreads: false,
-						ReadMessageHistory: true,
-						SendMessages: false,
-						SendMessagesInThreads: false,
-						SendTTSMessages: false,
-						SendVoiceMessages: false,
-						Speak: false,
-						UseApplicationCommands: false,
-						ViewChannel: true
-					}
-				);
-			} else {
+				if (channel.isThread())
+					await channel.setLocked(true, 'Channel locked by DisCog');
+				else
+					await channel.permissionOverwrites.edit(
+						interaction.guild.roles.everyone,
+						{
+							AddReactions: false,
+							AttachFiles: false,
+							CreateInstantInvite: false,
+							CreatePrivateThreads: false,
+							CreatePublicThreads: false,
+							EmbedLinks: false,
+							ManageMessages: false,
+							ManageThreads: false,
+							ReadMessageHistory: true,
+							SendMessages: false,
+							SendMessagesInThreads: false,
+							SendTTSMessages: false,
+							SendVoiceMessages: false,
+							Speak: false,
+							UseApplicationCommands: false,
+							ViewChannel: true
+						}
+					);
+			} else if (channel.isThread())
+				await channel.setLocked(false, 'Channel locked by DisCog');
+			else
 				await channel.permissionOverwrites.edit(
 					interaction.guild.roles.everyone,
 					{
@@ -285,9 +289,10 @@ export const handlers = {
 						ViewChannel: null
 					}
 				);
-			}
 			await interaction.editReply(
-				`Channel ${channel} has been ${unlock ? 'unlocked' : 'locked'}!`
+				`Channel ${channel} has been ${unlock ? 'unlocked' : 'locked'}!${
+					unlock && 'All permissions have been reset to predefined defaults.'
+				}`
 			);
 		}
 	}
