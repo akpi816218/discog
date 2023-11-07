@@ -291,7 +291,9 @@ export const handlers = {
 				);
 			await interaction.editReply(
 				`Channel ${channel} has been ${unlock ? 'unlocked' : 'locked'}!${
-					unlock && 'All permissions have been reset to predefined defaults.'
+					unlock
+						? '\nAll permissions have been reset to predefined defaults.'
+						: ''
 				}`
 			);
 		}
