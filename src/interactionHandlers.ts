@@ -2,10 +2,7 @@
 import {
 	APIEmbedField,
 	ButtonInteraction,
-	CategoryChannel,
 	EmbedBuilder,
-	ForumChannel,
-	Guild,
 	GuildMember,
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
@@ -254,47 +251,6 @@ export const InteractionHandlers = {
 					}`
 				);
 				break;
-			case '/schedule':
-				await interaction.deferReply({
-					ephemeral: true
-				});
-				const c = interaction.fields.getTextInputValue('/schedule.channel'),
-					message = interaction.fields.getTextInputValue('/schedule.message'),
-					t = interaction.fields.getTextInputValue('/schedule.time');
-				if (isNaN(+t)) {
-					await interaction.editReply({
-						content: 'Error: Invalid timestamp'
-					});
-					return;
-				}
-				const channel = (interaction.guild as Guild).channels.resolve(c);
-				if (!channel) {
-					await interaction.editReply({
-						content: 'Error: Invalid channel ID'
-					});
-					return;
-				}
-				if (
-					!channel.isTextBased ||
-					channel instanceof CategoryChannel ||
-					channel instanceof ForumChannel
-				) {
-					await interaction.editReply({
-						content: 'Error: Channel is not text-based'
-					});
-					return;
-				}
-				const date = new Date(parseInt(t));
-				scheduleJob(date, async () => {
-					try {
-						await channel.send(message);
-					} catch (e) {
-						logger.error(e);
-					}
-				});
-				await interaction.editReply(
-					`Your message has been scheduled for ${time(date.getTime() / 1_000)}`
-				);
 		}
 	},
 	async StringSelectMenu(
