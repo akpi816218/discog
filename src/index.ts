@@ -76,11 +76,6 @@ const server = createServer(
 		route: '/invite'
 	},
 	{
-		handler: (_req, res) => res.redirect('/api'),
-		method: Methods.GET,
-		route: '/'
-	},
-	{
 		handler: (req, res) => {
 			if (
 				req.headers['content-type'] != 'application/json' &&
@@ -89,6 +84,10 @@ const server = createServer(
 				res.status(415).end();
 			else
 				res
+					.headers({
+						'Access-Control-Allow-Origin': 'https://discog.localplayer.dev',
+						'Vary': 'Origin'
+					})
 					.status(200)
 					.contentType('application/json')
 					.send({
@@ -103,16 +102,9 @@ const server = createServer(
 					.end();
 		},
 		method: Methods.GET,
-		route: '/api'
+		route: '/api/bot'
 	}
-).use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept'
-	);
-	next();
-});
+);
 
 const commandsPath = join(cwd(), 'src', 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
