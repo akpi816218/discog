@@ -58,7 +58,6 @@ const BaseEmbed = (interaction: ChatInputCommandInteraction) =>
 			}),
 	OctoKit = new Octokit({ userAgent: 'DisCog' });
 const Handlers: {
-	// eslint-disable-next-line no-unused-vars
 	[key: string]: (interaction: ChatInputCommandInteraction) => unknown;
 } = {
 	profile: async (interaction: ChatInputCommandInteraction) => {

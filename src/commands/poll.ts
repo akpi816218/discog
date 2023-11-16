@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import {
 	BaseGuildTextChannel,
 	ChatInputCommandInteraction,
@@ -105,11 +104,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		});
 	const NumberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 	// Populate embed with options
-	options.forEach((value, index) => {
-		// eslint-disable-next-line no-param-reassign
-		if (!value) value = '';
-		embed.addFields({ name: NumberEmojis[index], value });
-	});
+	options.forEach((value, index) =>
+		embed.addFields({ name: NumberEmojis[index], value: value ?? '' })
+	);
 	const channel = interaction.options.getChannel('channel', true);
 	if (!channel) throw new Error();
 	if (!(channel instanceof BaseGuildTextChannel))

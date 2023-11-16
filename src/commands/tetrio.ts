@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import {
 	AttachmentBuilder,
 	ChatInputCommandInteraction,
@@ -89,7 +88,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 			);
 			break;
 	}
-	// eslint-disable-next-line no-console
 	if (data === null) {
 		await interaction.editReply(
 			'There is no TETR.IO account linked to that Discord user.'

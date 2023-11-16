@@ -6,6 +6,7 @@ import {
 	Events,
 	ForumChannel,
 	GatewayIntentBits,
+	MediaChannel,
 	OAuth2Scopes,
 	PresenceUpdateStatus,
 	Snowflake,
@@ -301,7 +302,8 @@ async function bdayInterval() {
 			if (
 				!channel ||
 				channel instanceof CategoryChannel ||
-				channel instanceof ForumChannel
+				channel instanceof ForumChannel ||
+				channel instanceof MediaChannel
 			)
 				continue;
 			const replies = [

@@ -1,6 +1,3 @@
-// ! Remove the `/* eslint-disable no-extra-parens */` while editing this file
-/* eslint-disable no-extra-parens */
-/* eslint-disable indent */
 import { BaseGuildConfig, PopulatedGuildConfig } from '../struct/database';
 import {
 	ChannelType,
