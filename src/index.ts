@@ -13,11 +13,11 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
-import { Command, CommandClient } from './struct/discord/Extend';
+import { CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
 import { PORT, permissionsBits } from './config';
 import { argv, cwd, stdout } from 'process';
-import { Event } from './struct/discord/Structure';
+import { Event } from './struct/discord/types';
 import { InteractionHandlers } from './interactionHandlers';
 import { TypedJsoning } from 'typed-jsoning';
 import { join } from 'path';
@@ -82,40 +82,30 @@ const server = createServer(
 				req.headers['content-type'] != undefined
 			)
 				res.status(415).end();
-			else
+			else if (client.isReady())
 				res
-					.headers({
+					.header({
 						'Access-Control-Allow-Origin': 'https://discog.localplayer.dev',
-						'Vary': 'Origin'
+						Vary: 'Origin'
 					})
 					.status(200)
 					.contentType('application/json')
 					.send({
 						clientPing: client.ws.ping,
 						clientReady: client.isReady(),
-						commandCount: client.commands.size,
-						guildCount: client.guilds.cache.size,
+						commandCount: client.application?.commands.cache.size,
+						guildCount: client.application?.approximateGuildCount,
 						lastReady: client.readyAt?.valueOf(),
 						timestamp: Date.now(),
 						uptime: client.uptime
 					})
 					.end();
+			else res.status(503).end();
 		},
 		method: Methods.GET,
 		route: '/api/bot'
 	}
 );
-
-const commandsPath = join(cwd(), 'src', 'commands');
-const commandFiles = readdirSync(commandsPath).filter((file) =>
-	file.endsWith('.ts')
-);
-for (const file of commandFiles) {
-	const filePath = join(commandsPath, file);
-	const command: Command = await import(filePath);
-	client.commands.set(command.data.name, command);
-}
-client.commands.freeze();
 
 const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
@@ -257,7 +247,6 @@ process.on('SIGINT', () => {
 });
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
 
 server.listen(PORT);

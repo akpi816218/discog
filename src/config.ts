@@ -1,13 +1,8 @@
-import {
-	PermissionFlagsBits,
-	PermissionsBitField,
-	Snowflake
-} from 'discord.js';
+import { PermissionFlagsBits, PermissionsBitField } from 'discord.js';
 // % Production
-export const applicationId: Snowflake = '1150536178714554459';
+// export const clientId = '1150536178714554459';
 // % Development
-// export const applicationId: Snowflake = '1034561538721325056';
-export const clientId = applicationId;
+export const clientId = '1034561538721325056';
 export const permissionsBits = new PermissionsBitField().add(
 	PermissionFlagsBits.AddReactions,
 	PermissionFlagsBits.Administrator,

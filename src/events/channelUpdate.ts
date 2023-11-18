@@ -14,6 +14,7 @@ import {
 	StageChannel,
 	VideoQualityMode,
 	channelMention,
+	codeBlock,
 	roleMention,
 	userMention
 } from 'discord.js';
@@ -188,29 +189,33 @@ export const execute = async (
 	if (entry?.changes) {
 		embed.addFields({
 			name: 'Permission Overwrites',
-			value: `\`${before.permissionOverwrites.cache
-				.map(
-					(overwrite) =>
-						`Before:\n${
-							overwrite.type === OverwriteType.Role
-								? roleMention(overwrite.id)
-								: userMention(overwrite.id)
-						}\n${overwrite.allow.toArray().join(', ')} \n${overwrite.deny
-							.toArray()
-							.join(', ')}`
-				)
-				.join('\n')}\`\n\nAfter:\n\`${after.permissionOverwrites.cache
-				.map(
-					(overwrite) =>
-						`${
-							overwrite.type === OverwriteType.Role
-								? roleMention(overwrite.id)
-								: userMention(overwrite.id)
-						}\n${overwrite.allow.toArray().join(', ')} \n${overwrite.deny
-							.toArray()
-							.join(', ')}`
-				)
-				.join('\n')}\``
+			value: `Before:\n${codeBlock(
+				before.permissionOverwrites.cache
+					.map(
+						(overwrite) =>
+							`Allowed: ${
+								overwrite.type === OverwriteType.Role
+									? roleMention(overwrite.id)
+									: userMention(overwrite.id)
+							}\nDenied: ${overwrite.allow
+								.toArray()
+								.join(', ')}\n${overwrite.deny.toArray().join(', ')}`
+					)
+					.join('\n')
+			)}\n\nAfter:\n${codeBlock(
+				after.permissionOverwrites.cache
+					.map(
+						(overwrite) =>
+							`${
+								overwrite.type === OverwriteType.Role
+									? roleMention(overwrite.id)
+									: userMention(overwrite.id)
+							}\n${overwrite.allow.toArray().join(', ')} \n${overwrite.deny
+								.toArray()
+								.join(', ')}`
+					)
+					.join('\n')
+			)}`
 		});
 		console.log(differentProperties.permissionOverwrites);
 	}

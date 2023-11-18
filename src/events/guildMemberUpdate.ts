@@ -10,17 +10,20 @@ import { getGuildAuditLoggingChannel } from './a.getGuildConf';
 export const name = Events.GuildMemberUpdate;
 export const once = false;
 export const execute = async (before: GuildMember, after: GuildMember) => {
+	const channel = getGuildAuditLoggingChannel(after.guild);
+	if (!channel) return;
+
 	const embed = new EmbedBuilder()
-		.setTitle('Member Updated')
-		.setDescription(`${userMention(after.id)}`)
-		.setColor(0xffff00)
-		.setTimestamp()
-		.setThumbnail(after.user.displayAvatarURL())
-		.setFooter({
-			iconURL: after.guild.members.me?.displayAvatarURL(),
-			text: 'Powered by DisCog'
-		});
-	const differentProperties = getDifferentProperties(before, after);
+			.setTitle('Member Updated')
+			.setDescription(`${userMention(after.id)}`)
+			.setColor(0xffff00)
+			.setTimestamp()
+			.setThumbnail(after.user.displayAvatarURL())
+			.setFooter({
+				iconURL: after.guild.members.me?.displayAvatarURL(),
+				text: 'Powered by DisCog'
+			}),
+		differentProperties = getDifferentProperties(before, after);
 	if (differentProperties.nickname)
 		embed.addFields({
 			name: 'Nickname',
@@ -35,8 +38,8 @@ export const execute = async (before: GuildMember, after: GuildMember) => {
 				.map((r) => roleMention(r.id))
 				.join(', ')}`
 		});
-	if (differentProperties.premiumSinceTimestamp)
-		await getGuildAuditLoggingChannel(after.guild)?.send({ embeds: [embed] });
+
+	await channel.send({ embeds: [embed] });
 };
 
 function getDifferentProperties(before: GuildMember, after: GuildMember) {

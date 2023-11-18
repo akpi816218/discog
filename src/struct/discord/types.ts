@@ -6,3 +6,5 @@ export interface Event {
 	once: boolean;
 	execute: EventExecuteHandler;
 }
+
+export type Writable<T> = { -readonly [P in keyof T]: T[P] };
