@@ -13,7 +13,7 @@ import {
 	codeBlock,
 	userMention
 } from 'discord.js';
-import { CommandClient } from './struct/discord/Extend';
+import { Command, CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
 import { PORT, permissionsBits } from './config';
 import { argv, cwd, stdout } from 'process';
@@ -106,6 +106,17 @@ const server = createServer(
 		route: '/api/bot'
 	}
 );
+
+const commandsPath = join(cwd(), 'src', 'commands');
+const commandFiles = readdirSync(commandsPath).filter((file) =>
+	file.endsWith('.ts')
+);
+for (const file of commandFiles) {
+	const filePath = join(commandsPath, file);
+	const command: Command = await import(filePath);
+	client.commands.set(command.data.name, command);
+}
+client.commands.freeze();
 
 const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter((file) =>
