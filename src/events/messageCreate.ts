@@ -1,4 +1,4 @@
-import { Events, Message } from 'discord.js';
+import { Events, Message, userMention } from 'discord.js';
 import TypedJsoning from 'typed-jsoning';
 import { UserLevelingData } from '../struct/database';
 import { getLevelfromXP } from '../commands/levels';
@@ -24,5 +24,15 @@ export const execute = async (message: Message) => {
 	const currentLevel = getLevelfromXP(prevXP + add),
 		prevLevel = getLevelfromXP(prevXP);
 	if (currentLevel === prevLevel) return;
-	message.reply({ embeds: [baseEmbed()] });
+	message.reply({
+		embeds: [
+			baseEmbed(await message.guild.members.fetchMe())
+				.setTitle('Level Up!')
+				.setDescription(
+					`${userMention(
+						message.author.id
+					)} leveled up to rank ${currentLevel}!`
+				)
+		]
+	});
 };

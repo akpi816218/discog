@@ -1,15 +1,16 @@
-import { BaseInteraction, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, GuildMember, User } from 'discord.js';
 
-export function baseEmbed(interaction: BaseInteraction) {
+export function baseEmbed(user: User | GuildMember) {
+	if (user instanceof GuildMember) user = user.user;
 	return new EmbedBuilder()
 		.setFooter({
-			iconURL: interaction.client.user.displayAvatarURL(),
+			iconURL: user.displayAvatarURL(),
 			text: 'Powered by DisCog'
 		})
 		.setTimestamp()
 		.setAuthor({
-			iconURL: interaction.client.user.displayAvatarURL(),
-			name: interaction.client.user.username,
+			iconURL: user.displayAvatarURL(),
+			name: user.username,
 			url: 'https://discog.localplayer.dev/'
 		});
 }
