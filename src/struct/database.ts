@@ -10,6 +10,11 @@ export type JSONValue =
 	| JSONValue[]
 	| null;
 
+export interface UserLevelingData {
+	lastCountedMessageTimestamp: number;
+	xp: number;
+}
+
 export interface BaseGuildConfig {
 	auditlog?:
 		| {
