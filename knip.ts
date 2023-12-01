@@ -1,8 +1,7 @@
 import { KnipConfig } from 'knip';
 
-const config: KnipConfig = {
-	entry: ['src/index.ts'],
-	project: ['src/**/*.ts']
-};
-
-export default config;
+export default {
+	entry: ['scripts/*.ts', 'src/index.ts', 'src/{commands,events}/**/*.ts'],
+	project: ['src/**/*.ts'],
+	ignoreDependencies: ['husky']
+} satisfies KnipConfig;

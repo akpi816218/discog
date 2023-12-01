@@ -6,6 +6,7 @@ import {
 } from 'discord.js';
 import { NbCategories, Client as NekosBestClient } from 'nekos-best.js';
 import _ from 'lodash';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 const { capitalize } = _;
 
 const GIF_CATEGORIES = [
@@ -53,41 +54,50 @@ const GIF_CATEGORIES = [
 	IMAGE_CATEGORIES = ['kitsune', 'neko', 'husbando', 'waifu'],
 	nekosBestClient = new NekosBestClient();
 
+export const help = new CommandHelpEntry(
+	'anime',
+	'Get an anime image or GIF from nekos.best',
+	[
+		'image <category: string> [count: 1 <= number <= 5 || 1]',
+		'gif <category: string> [count: 1 <= number <= 5 || 1]'
+	]
+);
+
 export const data = new SlashCommandBuilder()
 	.setName('anime')
 	.setDescription('Get an anime image or GIF from nekos.best')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('image')
 			.setDescription('Get an anime image from nekos.best')
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('category')
 					.setDescription('The category of image to get')
 					.setRequired(true)
 					.addChoices(
-						...IMAGE_CATEGORIES.map((category) => {
+						...IMAGE_CATEGORIES.map(category => {
 							return { name: capitalize(category), value: category };
 						})
 					);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('gif')
 			.setDescription('Get an anime GIF from nekos.best')
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('category')
 					.setDescription('The category of GIF to get')
 					.setRequired(true)
 					.addChoices(
-						...GIF_CATEGORIES.map((category) => {
+						...GIF_CATEGORIES.map(category => {
 							return { name: capitalize(category), value: category };
 						})
 					);
 			})
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('count')
 					.setDescription('The number of GIFs to get')

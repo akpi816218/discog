@@ -6,6 +6,7 @@ import {
 	userMention
 } from 'discord.js';
 import { TypedJsoning } from 'typed-jsoning';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('bday')
@@ -14,7 +15,7 @@ export const data = new SlashCommandBuilder()
 		new SlashCommandSubcommandBuilder()
 			.setName('register')
 			.setDescription('Register your birthday')
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('month')
 					.setDescription('Month of birth')
@@ -22,7 +23,7 @@ export const data = new SlashCommandBuilder()
 					.setMaxValue(12)
 					.setRequired(true);
 			})
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('date')
 					.setDescription('Date of birth')
@@ -30,7 +31,7 @@ export const data = new SlashCommandBuilder()
 					.setMaxValue(31)
 					.setRequired(true);
 			})
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('year')
 					.setDescription('Year of birth')
@@ -43,13 +44,22 @@ export const data = new SlashCommandBuilder()
 		new SlashCommandSubcommandBuilder()
 			.setName('view')
 			.setDescription("View someone's birthday")
-			.addUserOption((option) => {
+			.addUserOption(option => {
 				return option
 					.setName('user')
 					.setDescription('User to view birthday')
 					.setRequired(false);
 			})
 	);
+
+export const help = new CommandHelpEntry(
+	'bday',
+	"Register your birthday or view another's",
+	[
+		'register <month: number> <day: number> <year: number>',
+		'view [user: user || @self]'
+	]
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');

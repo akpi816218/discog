@@ -6,17 +6,18 @@ import {
 	SlashCommandBuilder,
 	userMention
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('dm')
 	.setDescription('Send an official server message to a user via DMs')
-	.addUserOption((option) => {
+	.addUserOption(option => {
 		return option
 			.setName('user')
 			.setDescription('The target user')
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('message')
 			.setDescription('The message to send')
@@ -24,6 +25,12 @@ export const data = new SlashCommandBuilder()
 	})
 	.setDMPermission(false)
 	.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+
+export const help = new CommandHelpEntry(
+	'dm',
+	'Sends an official server message to a user via DMs',
+	'<user: user> <message: string>'
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({ content: 'Working...', ephemeral: true });

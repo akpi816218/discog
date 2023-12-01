@@ -4,12 +4,16 @@ import cors from 'cors';
 export enum Methods {
 	DELETE = 'delete',
 	GET = 'get',
+	/** @public */
 	HEAD = 'head',
 	PATCH = 'patch',
+	/** @public */
 	POST = 'post',
+	/** @public */
 	PUT = 'put'
 }
 
+/** @public */
 export interface Route {
 	handler: (req: Request, res: Response) => void;
 	method: Methods;

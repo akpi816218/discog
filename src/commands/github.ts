@@ -7,37 +7,38 @@ import {
 	SlashCommandBuilder
 } from 'discord.js';
 import { Octokit } from 'octokit';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('github')
 	.setDescription('Get information about a GitHub user.')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('profile')
 			.setDescription("View a GitHub user's profile.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
 					.setRequired(true);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('repos')
 			.setDescription("View a GitHub user's repositories.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
 					.setRequired(true);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('stats')
 			.setDescription("View a GitHub user's stats.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
@@ -45,7 +46,13 @@ export const data = new SlashCommandBuilder()
 			});
 	});
 
-// ! Make sure to add command to `coghelp.ts`
+export const help = new CommandHelpEntry(
+	'github',
+	'View some info for GitHub users',
+	'profile <username: string>',
+	'repos <username: string>',
+	'stats <username: string>'
+);
 
 const BaseEmbed = (interaction: ChatInputCommandInteraction) =>
 		new EmbedBuilder()
@@ -149,7 +156,7 @@ const Handlers: {
 					BaseEmbed(interaction)
 						.setDescription(null)
 						.setFields(
-							...data.map((repo) => ({
+							...data.map(repo => ({
 								name: repo.name,
 								value:
 									repo.description ??

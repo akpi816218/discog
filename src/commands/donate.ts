@@ -5,10 +5,16 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('donate')
 	.setDescription('Support bot development! Please? Thank you!');
+
+export const help = new CommandHelpEntry(
+	'donate',
+	'Support bot development! Please? Thank you!'
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({

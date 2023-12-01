@@ -8,17 +8,23 @@ import {
 	time,
 	userMention
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('info')
 	.setDescription('Get some info')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand.setName('guild').setDescription('Guild info');
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand.setName('channel').setDescription('Channel info');
 	})
 	.setDMPermission(false);
+
+export const help = new CommandHelpEntry('info', 'Gets some info', [
+	'channel',
+	'guild'
+]);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply('Working...');

@@ -12,6 +12,9 @@ import {
 	underscore,
 	userMention
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
+
+export const help = new CommandHelpEntry('admin', 'Admin commands');
 
 export const data = new SlashCommandBuilder()
 	.setName('admin')
@@ -22,37 +25,37 @@ export const data = new SlashCommandBuilder()
 			PermissionFlagsBits.ManageRoles |
 			PermissionFlagsBits.ModerateMembers
 	)
-	.addSubcommandGroup((subcommandGroup) => {
+	.addSubcommandGroup(subcommandGroup => {
 		return subcommandGroup
 			.setName('addrole')
 			.setDescription('Add a role to users')
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('all')
 					.setDescription('Add a role to all users')
-					.addRoleOption((option) => {
+					.addRoleOption(option => {
 						return option
 							.setName('role')
 							.setDescription('Role to add')
 							.setRequired(true);
 					});
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('humans')
 					.setDescription('Add a role to all humans')
-					.addRoleOption((option) => {
+					.addRoleOption(option => {
 						return option
 							.setName('role')
 							.setDescription('Role to add')
 							.setRequired(true);
 					});
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('bots')
 					.setDescription('Add a role to all bots')
-					.addRoleOption((option) => {
+					.addRoleOption(option => {
 						return option
 							.setName('role')
 							.setDescription('Role to add')
@@ -60,32 +63,32 @@ export const data = new SlashCommandBuilder()
 					});
 			});
 	})
-	.addSubcommandGroup((subcommandGroup) => {
+	.addSubcommandGroup(subcommandGroup => {
 		return subcommandGroup
 			.setName('channel')
 			.setDescription('Manage channels')
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('clear')
 					.setDescription('Clear a channel')
-					.addChannelOption((option) => {
+					.addChannelOption(option => {
 						return option
 							.setName('channel')
 							.setDescription('Channel to clear')
 							.setRequired(false);
 					});
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('lock')
 					.setDescription('Lock a channel')
-					.addChannelOption((option) => {
+					.addChannelOption(option => {
 						return option
 							.setName('channel')
 							.setDescription('Channel to lock')
 							.setRequired(false);
 					})
-					.addBooleanOption((option) => {
+					.addBooleanOption(option => {
 						return option
 							.setName('unlock')
 							.setDescription('Unlock the channel instead')
@@ -114,9 +117,9 @@ export const handlers = {
 			await interaction.editReply({
 				allowedMentions: { parse: [] },
 				content: `Added role ${roleMention(role.id)} to following users:\n${good
-					.map((u) => userMention(u.id))
+					.map(u => userMention(u.id))
 					.join(', ')}\nFailed to add role to following users:\n${bad
-					.map((u) => userMention(u.id))
+					.map(u => userMention(u.id))
 					.join(', ')}`
 			});
 		},
@@ -137,9 +140,9 @@ export const handlers = {
 					content: `Added role ${roleMention(
 						role.id
 					)} to following bot users:\n${good
-						.map((u) => userMention(u.id))
+						.map(u => userMention(u.id))
 						.join(', ')}\nFailed to add role to following bot users:\n${bad
-						.map((u) => userMention(u.id))
+						.map(u => userMention(u.id))
 						.join(', ')}`
 				});
 			}
@@ -161,9 +164,9 @@ export const handlers = {
 					content: `Added role ${roleMention(
 						role.id
 					)} to following human users:\n${good
-						.map((u) => userMention(u.id))
+						.map(u => userMention(u.id))
 						.join(', ')}\nFailed to add role to following human users:\n${bad
-						.map((u) => userMention(u.id))
+						.map(u => userMention(u.id))
 						.join(', ')}`
 				});
 			}

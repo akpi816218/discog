@@ -1,27 +1,16 @@
-import {
-	ChatInputCommandInteraction,
-	Client,
-	ClientOptions,
-	SlashCommandBuilder
-} from 'discord.js';
+import { Client, ClientOptions } from 'discord.js';
 import { Collection, ReadonlyCollection } from '@discordjs/collection';
+import { Command } from './types';
 
-export class ExtendedCollection<K, V> extends Collection<K, V> {
+/**
+	export
+*/ class ExtendedCollection<K, V> extends Collection<K, V> {
 	constructor(entries?: readonly (readonly [K, V])[] | null) {
 		super(entries);
 	}
 	public freeze(): ReadonlyCollection<K, V> {
 		return Object.freeze(this);
 	}
-}
-
-export type CommandExecuteHandler = (
-	// eslint-disable-next-line no-unused-vars
-	interaction: ChatInputCommandInteraction
-) => Promise<void>;
-export interface Command {
-	data: SlashCommandBuilder;
-	execute: CommandExecuteHandler;
 }
 
 export class ExtendedClient extends Client {

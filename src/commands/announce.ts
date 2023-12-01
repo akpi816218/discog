@@ -5,31 +5,38 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('announce')
 	.setDescription('Creates an announcement in the specified channel')
 	.setDMPermission(false)
-	.addChannelOption((option) => {
+	.addChannelOption(option => {
 		return option
 			.setName('channel')
 			.setDescription('The channel to send the announcement to')
 			.addChannelTypes(ChannelType.GuildText)
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('message')
 			.setDescription('The message to be announced')
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('mentions')
 			.setDescription('Add all roles you want to ping')
 			.setRequired(false);
 	})
 	.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+
+export const help = new CommandHelpEntry(
+	'announce',
+	'Creates an announcement in the specified channel',
+	'<channel: channel> <message: string> [mentionEveryone: boolean || false]'
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();

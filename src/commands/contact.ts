@@ -9,16 +9,19 @@ import {
 	TextInputStyle,
 	inlineCode
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('contact')
 	.setDescription('Send a report to the developers')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		subcommand
 			.setName('suggestion')
 			.setDescription('Send a suggestion to the developers');
 		return subcommand;
 	});
+
+export const help = new CommandHelpEntry('contact', 'Contact the developers');
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	if (interaction.options.getSubcommand() === 'suggestion')
