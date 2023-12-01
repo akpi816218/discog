@@ -76,6 +76,11 @@ const server = createServer(
 		route: '/invite'
 	},
 	{
+		handler: (_req, res) => res.sendStatus(200),
+		method: Methods.GET,
+		route: '/'
+	},
+	{
 		handler: (req, res) => {
 			if (
 				req.headers['content-type'] != 'application/json' &&
@@ -93,9 +98,9 @@ const server = createServer(
 					.send({
 						clientPing: client.ws.ping,
 						clientReady: client.isReady(),
-						commandCount: client.application?.commands.cache.size,
-						guildCount: client.application?.approximateGuildCount,
-						lastReady: client.readyAt?.valueOf(),
+						commandCount: client.application!.commands.cache.size,
+						guildCount: client.application!.approximateGuildCount,
+						lastReady: client.readyAt!.valueOf(),
 						timestamp: Date.now(),
 						uptime: client.uptime
 					})
