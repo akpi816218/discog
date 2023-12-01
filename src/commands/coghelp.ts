@@ -39,10 +39,6 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'[command: string]'
 	),
 	contact: new CommandHelpEntry('contact', 'Contact the developers'),
-	dev: new CommandHelpEntry(
-		'dev',
-		'Developer-only command. Go ahead and try it, I dare you.'
-	),
 	dm: new CommandHelpEntry(
 		'dm',
 		'Sends an official server message to a user via DMs',
@@ -59,23 +55,7 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'repos <username: string>',
 		'stats <username: string>'
 	),
-	identity: new CommandHelpEntry(
-		'identity',
-		`CRU${strikethrough('D')} an identity profile`,
-		[
-			'view [user: user || @self]',
-			'pronouns set [custom: boolean || false]',
-			'pronouns view [user: user || @self]',
-			'name set <name: string>',
-			'name view [user: user || @self]',
-			'bio set',
-			'bio view [user: user || @self]',
-			'gender set',
-			'gender view [user: user || @self]'
-		]
-	),
 	info: new CommandHelpEntry('info', 'Gets some info', ['channel', 'guild']),
-	ping: new CommandHelpEntry('ping', "Check the bot's ping"),
 	poll: new CommandHelpEntry('poll', 'Creates a poll', [
 		'<question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
 	]),
@@ -83,11 +63,6 @@ const entries: { [key: string]: CommandHelpEntry } = {
 		'qr',
 		'Encodes some text or a link in a QR code',
 		'<text: string>'
-	),
-	schedule: new CommandHelpEntry(
-		'schedule',
-		'Schedules a message',
-		'<message: string> <time: number> <channel: channel>'
 	),
 	tetrio: new CommandHelpEntry(
 		'tetrio',

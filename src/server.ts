@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 
 export enum Methods {
 	DELETE = 'delete',
 	GET = 'get',
+	HEAD = 'head',
+	PATCH = 'patch',
 	POST = 'post',
 	PUT = 'put'
 }
@@ -18,5 +21,17 @@ export function createServer(...routes: Route[]) {
 	for (const { handler, method, route } of routes) {
 		app[method](route, handler);
 	}
+	// cors
+	app.use(
+		cors({
+			origin: 'https://discog.localplayer.dev',
+			methods: [Methods.DELETE, Methods.GET, Methods.PATCH].map(e =>
+				e.toUpperCase()
+			),
+			maxAge: 86400,
+			allowedHeaders: ['Content-Type', 'Authorization'],
+			credentials: true
+		})
+	);
 	return app;
 }
