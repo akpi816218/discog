@@ -13,6 +13,6 @@
 		"isolatedModules": true,
 		"alwaysStrict": true
 	},
-	"include": ["src/**/*", "scripts/**/*", "knip.ts"],
+	"include": ["src/**/*", "scripts/**/*", "*.ts"],
 	"exclude": ["node_modules"]
 }
