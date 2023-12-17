@@ -33,9 +33,9 @@ export const execute = async (before: GuildMember, after: GuildMember) => {
 		embed.addFields({
 			name: 'Roles',
 			value: `${before.roles.cache
-				.map((r) => roleMention(r.id))
+				.map(r => roleMention(r.id))
 				.join(', ')} => ${after.roles.cache
-				.map((r) => roleMention(r.id))
+				.map(r => roleMention(r.id))
 				.join(', ')}`
 		});
 

@@ -228,7 +228,7 @@ export const handlers = {
 			const channel = interaction.options.getChannel('channel')
 					? await interaction.guild.channels.fetch(
 							interaction.options.getChannel('channel')!.id
-					  )
+						)
 					: interaction.channel,
 				unlock = interaction.options.getBoolean('unlock', false);
 			if (

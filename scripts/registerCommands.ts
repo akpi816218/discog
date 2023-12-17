@@ -23,7 +23,7 @@ export async function registerCommands(
 		// eslint-disable-next-line no-param-reassign
 		commandFiles =
 			commandFiles ??
-			(await readdir(commandsPath)).filter((file) => file.endsWith('.ts'));
+			(await readdir(commandsPath)).filter(file => file.endsWith('.ts'));
 		const commands = [];
 		for (const file of commandFiles)
 			commands.push(

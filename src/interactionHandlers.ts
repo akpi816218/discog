@@ -180,8 +180,8 @@ export const InteractionHandlers = {
 						badGuilds.push(guild.name);
 						guild
 							.fetchOwner()
-							.then((member) => member.createDM())
-							.then((dm) =>
+							.then(member => member.createDM())
+							.then(dm =>
 								dm.send({
 									embeds: [
 										new EmbedBuilder()
@@ -220,8 +220,8 @@ export const InteractionHandlers = {
 						badGuilds.push(guild.name);
 						guild
 							.fetchOwner()
-							.then((member) => member.createDM())
-							.then((dm) =>
+							.then(member => member.createDM())
+							.then(dm =>
 								dm.send({
 									embeds: [
 										new EmbedBuilder()
@@ -246,7 +246,7 @@ export const InteractionHandlers = {
 						badGuilds.length > 0
 							? `The following guilds did not receive the announcement: ${badGuilds.join(
 									', '
-							  )}`
+								)}`
 							: 'All guilds received the announcement.'
 					}`
 				);
