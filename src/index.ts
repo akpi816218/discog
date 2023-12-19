@@ -20,16 +20,22 @@ import { argv, cwd, stdout } from 'process';
 import { Command, Event } from './struct/discord/types';
 import { InteractionHandlers } from './interactionHandlers';
 import { TypedJsoning } from 'typed-jsoning';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { logger } from './logger';
 import { readdirSync } from 'fs';
 import { scheduleJob } from 'node-schedule';
+import { SerializedCommandHelpEntry } from './struct/CommandHelpEntry';
 
 argv.shift();
 argv.shift();
-if (argv.includes('-d')) logger.level = 'debug';
+if (argv.includes('-d')) {
+	logger.level = 'debug';
+	logger.info('Debug mode enabled.');
+}
 
 const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
+logger.debug('Loaded dev database.');
 
 const client = new CommandClient({
 	intents: [
@@ -55,6 +61,7 @@ const client = new CommandClient({
 		status: PresenceUpdateStatus.Online
 	}
 });
+logger.debug('Created client instance.');
 
 const server = createServer(
 	{
@@ -111,17 +118,25 @@ const server = createServer(
 		route: '/api/bot'
 	}
 );
+logger.debug('Created server instance.');
 
-const commandsPath = join(cwd(), 'src', 'commands');
+const commandsPath = join(dirname(fileURLToPath(import.meta.url)), 'commands');
 const commandFiles = readdirSync(commandsPath).filter(file =>
 	file.endsWith('.ts')
 );
+logger.debug('Loaded command files.');
+const cmndb = new TypedJsoning<SerializedCommandHelpEntry>(
+	'botfiles/cmnds.db.json'
+);
 for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
+	logger.debug(`Loading command ${filePath}`);
 	const command: Command = await import(filePath);
 	client.commands.set(command.data.name, command);
+	if (command.help) cmndb.set(command.data.name, command.help.toJSON());
 }
 client.commands.freeze();
+logger.debug('Loaded commands.');
 
 const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
@@ -132,8 +147,8 @@ for (const file of eventFiles) {
 		client.once(event.name, async (...args) => await event.execute(...args));
 	else client.on(event.name, async (...args) => await event.execute(...args));
 }
+logger.debug('Loaded events.');
 
-// Keep in index
 client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async interaction => {
@@ -248,6 +263,7 @@ client
 	.on(Events.Debug, m => logger.debug(m))
 	.on(Events.Error, m => logger.error(m))
 	.on(Events.Warn, m => logger.warn(m));
+logger.debug('Set up client events.');
 
 await client
 	.login(process.env.DISCORD_TOKEN)
@@ -262,11 +278,12 @@ process.on('SIGINT', () => {
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
 scheduleJob('0 7 * * *', () => bdayInterval().catch(e => logger.error(e)));
+logger.debug('Scheduled birthday interval.');
 
 server.listen(PORT);
+logger.info(`Listening to HTTP server on port ${PORT}.`);
 
 logger.info('Process setup complete.');
-logger.info(`Listening on port ${PORT}`);
 
 async function bdayInterval() {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');

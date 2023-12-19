@@ -1,25 +1,25 @@
 import {
-	APIEmbedField,
 	ChatInputCommandInteraction,
-	Collection,
 	EmbedBuilder,
 	SlashCommandBuilder,
 	inlineCode
 } from 'discord.js';
-import { readdir } from 'fs/promises';
-import { CommandHelpEntry } from '../struct/CommandHelpEntry';
-import { commandsPath } from '../../scripts/registerCommands';
+import {
+	CommandHelpEntry,
+	SerializedCommandHelpEntry
+} from '../struct/CommandHelpEntry';
+import TypedJsoning from 'typed-jsoning';
+import { Collection } from '@discordjs/collection';
 
-const files = (await readdir(commandsPath)).filter(file =>
-		file.endsWith('.ts')
-	),
-	fields = new Collection<string, APIEmbedField>();
-for (const file of files) {
-	const { help } = (await import(`${commandsPath}/${file}`)) as {
-		help?: CommandHelpEntry;
-	};
-	if (help) fields.set(help.name, help.toDiscordAPIEmbedField());
-}
+const db = new TypedJsoning<SerializedCommandHelpEntry>(
+	'botfiles/coghelp.db.json'
+);
+
+export const help = new CommandHelpEntry(
+	'coghelp',
+	'Shows general help or help for a specific command',
+	'[command: string]'
+);
 
 export const data = new SlashCommandBuilder()
 	.setName('coghelp')
@@ -29,18 +29,12 @@ export const data = new SlashCommandBuilder()
 			.setName('command')
 			.setDescription('The command to show help for')
 			.setChoices(
-				...Object.keys(fields).map(key => {
+				...Object.keys(db.all()).map(key => {
 					return { name: key, value: key };
 				})
 			)
 			.setRequired(false);
 	});
-
-export const help = new CommandHelpEntry(
-	'coghelp',
-	'Shows general help or help for a specific command',
-	'[command: string]'
-);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const embed = new EmbedBuilder()
@@ -55,8 +49,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		})
 		.setColor(0x00ff00);
 	const command = interaction.options.getString('command');
-	if (!command) embed.addFields(...fields.values());
-	else if (fields.has(command)) embed.addFields(fields.get(command)!);
+	const fields = new Collection(
+		Object.values(db.all()).map(v => [v.name, CommandHelpEntry.fromJSON(v)])
+	);
+	if (!command) embed.addFields(...fields.map(v => v.toDiscordAPIEmbedField()));
+	else if (fields.has(command))
+		embed.addFields(fields.get(command)!.toDiscordAPIEmbedField());
 	else
 		embed.setDescription(
 			`Command ${inlineCode(command)} not found. Use ${inlineCode(
