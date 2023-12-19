@@ -1,8 +1,11 @@
-import { BaseInteraction, REST, Routes, SlashCommandBuilder } from 'discord.js';
+import { REST, Routes } from 'discord.js';
 import { dirname, join } from 'path';
 import { clientId } from '../src/config';
 import { fileURLToPath } from 'url';
 import { readdir } from 'fs/promises';
+import TypedJsoning from 'typed-jsoning';
+import { SerializedCommandHelpEntry } from '../src/struct/CommandHelpEntry';
+import { Command } from '../src/struct/discord/types';
 
 export const commandsPath = join(
 	dirname(fileURLToPath(import.meta.url)),
@@ -19,36 +22,32 @@ export async function registerCommands(
 	getCommands: () => Promise<unknown>;
 	rest: REST;
 }> {
-	return new Promise(async (resolve, reject) => {
-		// eslint-disable-next-line no-param-reassign
-		commandFiles =
-			commandFiles ??
-			(await readdir(commandsPath)).filter(file => file.endsWith('.ts'));
-		const commands = [];
-		for (const file of commandFiles)
-			commands.push(
-				(
-					(await import(join(commandsPath, file))) as {
-						data: SlashCommandBuilder;
-						// eslint-disable-next-line no-unused-vars
-						execute?: (interaction: BaseInteraction) => Promise<void>;
-					}
-				).data.toJSON()
-			);
-		let data: unknown;
-		const rest = new REST().setToken(token);
-		try {
-			await rest.put(Routes.applicationCommands(clientId), {
-				body: commands
-			});
-		} catch (e) {
-			reject(e);
-		}
-		resolve({
-			data,
-			getCommands: async () =>
-				await rest.get(Routes.applicationCommands(clientId)),
-			rest
-		});
+	// eslint-disable-next-line no-param-reassign
+	commandFiles =
+		commandFiles ??
+		(await readdir(commandsPath)).filter(file => file.endsWith('.ts'));
+	const cmndb = new TypedJsoning<SerializedCommandHelpEntry>(
+		'botfiles/cmnds.db.json'
+	);
+	for (const file of commandFiles) {
+		const filePath = join(commandsPath, file);
+		const command: Command = await import(filePath);
+		if (command.help) cmndb.set(command.data.name, command.help.toJSON());
+	}
+	const commands = [];
+	for (const file of commandFiles)
+		commands.push(
+			((await import(join(commandsPath, file))) as Command).data.toJSON()
+		);
+	let data: unknown;
+	const rest = new REST().setToken(token);
+	await rest.put(Routes.applicationCommands(clientId), {
+		body: commands
 	});
+	return {
+		data,
+		getCommands: async () =>
+			await rest.get(Routes.applicationCommands(clientId)),
+		rest
+	};
 }
