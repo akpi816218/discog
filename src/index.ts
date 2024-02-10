@@ -133,10 +133,10 @@ for (const file of commandFiles) {
 	logger.debug(`Loading command ${filePath}`);
 	const command: Command = await import(filePath);
 	client.commands.set(command.data.name, command);
-	if (command.help) cmndb.set(command.data.name, command.help.toJSON());
+	if (command.help) await cmndb.set(command.data.name, command.help.toJSON());
 }
 client.commands.freeze();
-logger.debug('Loaded commands.');
+logger.info('Loaded commands.');
 
 const eventsPath = join(cwd(), 'src', 'events');
 const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.ts'));

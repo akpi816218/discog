@@ -12,7 +12,7 @@ import TypedJsoning from 'typed-jsoning';
 import { Collection } from '@discordjs/collection';
 
 const db = new TypedJsoning<SerializedCommandHelpEntry>(
-	'botfiles/coghelp.db.json'
+	'botfiles/cmnds.db.json'
 );
 
 export const help = new CommandHelpEntry(
@@ -52,15 +52,16 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const fields = new Collection(
 		Object.values(db.all()).map(v => [v.name, CommandHelpEntry.fromJSON(v)])
 	);
-	if (!command) embed.addFields(...fields.map(v => v.toDiscordAPIEmbedField()));
+	if (!command) embed.setFields(...fields.map(v => v.toDiscordAPIEmbedField()));
 	else if (fields.has(command))
-		embed.addFields(fields.get(command)!.toDiscordAPIEmbedField());
+		embed.setFields(fields.get(command)!.toDiscordAPIEmbedField());
 	else
 		embed.setDescription(
 			`Command ${inlineCode(command)} not found. Use ${inlineCode(
 				'/coghelp'
 			)} to see all commands.`
 		);
+
 	await interaction.reply({
 		embeds: [embed]
 	});
