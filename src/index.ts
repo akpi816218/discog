@@ -108,7 +108,7 @@ const server = createServer(
 );
 
 const commandsPath = join(cwd(), 'src', 'commands');
-const commandFiles = readdirSync(commandsPath).filter((file) =>
+const commandFiles = readdirSync(commandsPath).filter(file =>
 	file.endsWith('.ts')
 );
 for (const file of commandFiles) {
@@ -119,9 +119,7 @@ for (const file of commandFiles) {
 client.commands.freeze();
 
 const eventsPath = join(cwd(), 'src', 'events');
-const eventFiles = readdirSync(eventsPath).filter((file) =>
-	file.endsWith('.ts')
-);
+const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
 for (const file of eventFiles) {
 	const filePath = join(eventsPath, file);
 	const event: Event = await import(filePath);
@@ -133,7 +131,7 @@ for (const file of eventFiles) {
 // Keep in index
 client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
-	.on(Events.InteractionCreate, async (interaction) => {
+	.on(Events.InteractionCreate, async interaction => {
 		if (interaction.user.bot) return;
 		if (
 			devdb.get('blacklist')?.includes(interaction.user.id) &&
@@ -242,9 +240,9 @@ client
 			}
 		}
 	})
-	.on(Events.Debug, (m) => logger.debug(m))
-	.on(Events.Error, (m) => logger.error(m))
-	.on(Events.Warn, (m) => logger.warn(m));
+	.on(Events.Debug, m => logger.debug(m))
+	.on(Events.Error, m => logger.error(m))
+	.on(Events.Warn, m => logger.warn(m));
 
 await client
 	.login(process.env.DISCORD_TOKEN)
@@ -258,7 +256,7 @@ process.on('SIGINT', () => {
 });
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
-scheduleJob('0 7 * * *', () => bdayInterval().catch((e) => logger.error(e)));
+scheduleJob('0 7 * * *', () => bdayInterval().catch(e => logger.error(e)));
 
 server.listen(PORT);
 
@@ -281,7 +279,7 @@ async function bdayInterval() {
 		for (let guild of client.guilds.cache.values()) {
 			guild = await guild.fetch();
 			if (!guild.members.cache.has(id)) return;
-			const birthdayChannels = guild.channels.cache.filter((channel) => {
+			const birthdayChannels = guild.channels.cache.filter(channel => {
 				return !!(
 					(channel.type == ChannelType.GuildAnnouncement ||
 						channel.type == ChannelType.GuildText) &&

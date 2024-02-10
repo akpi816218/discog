@@ -15,36 +15,36 @@ const db = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
 export const data = new SlashCommandBuilder()
 	.setName('dev')
 	.setDescription('Developer-only command')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('global')
 			.setDescription('Send a global system announcement');
 	})
-	.addSubcommandGroup((group) => {
+	.addSubcommandGroup(group => {
 		return group
 			.setName('whitelist')
 			.setDescription('Manage the bot developer whitelist')
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('add')
 					.setDescription('Add a user to the dev list')
-					.addUserOption((option) => {
+					.addUserOption(option => {
 						return option
 							.setName('user')
 							.setDescription('The user to add to the dev list')
 							.setRequired(true);
 					});
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('ls')
 					.setDescription('List all users in the dev list');
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('rm')
 					.setDescription('Remove a user from the dev list')
-					.addUserOption((option) => {
+					.addUserOption(option => {
 						return option
 							.setName('user')
 							.setDescription('The user to remove from the dev list')
@@ -52,31 +52,31 @@ export const data = new SlashCommandBuilder()
 					});
 			});
 	})
-	.addSubcommandGroup((group) => {
+	.addSubcommandGroup(group => {
 		return group
 			.setName('blacklist')
 			.setDescription('Manage the bot user blacklist')
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('add')
 					.setDescription('Blacklist a user from using the bot')
-					.addUserOption((option) => {
+					.addUserOption(option => {
 						return option
 							.setName('user')
 							.setDescription('The user to blacklist')
 							.setRequired(true);
 					});
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('ls')
 					.setDescription('List all users in the blacklist');
 			})
-			.addSubcommand((subcommand) => {
+			.addSubcommand(subcommand => {
 				return subcommand
 					.setName('rm')
 					.setDescription('Remove a user from the blacklist')
-					.addUserOption((option) => {
+					.addUserOption(option => {
 						return option
 							.setName('user')
 							.setDescription('The user to remove from the blacklist')
@@ -112,7 +112,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					}
 					await interaction.reply(
 						`Blacklisted users: ${blacklist
-							.map((id) => userMention(id))
+							.map(id => userMention(id))
 							.join(', ')}`
 					);
 					break;
@@ -149,7 +149,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					await interaction.reply({
 						allowedMentions: { parse: [] },
 						content: `Blacklisted users: ${whitelist
-							.map((id) => userMention(id))
+							.map(id => userMention(id))
 							.join(', ')}`
 					});
 					break;

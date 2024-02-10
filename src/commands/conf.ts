@@ -21,75 +21,75 @@ export const data = new SlashCommandBuilder()
 	.setDefaultMemberPermissions(
 		PermissionFlagsBits.ManageGuild | PermissionFlagsBits.ViewAuditLog
 	)
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('auditlog')
 			.setDescription('Configure the audit log')
-			.addBooleanOption((option) => {
+			.addBooleanOption(option => {
 				return option
 					.setName('enabled')
 					.setDescription('Whether to enable the audit log')
 					.setRequired(true);
 			})
-			.addChannelOption((option) => {
+			.addChannelOption(option => {
 				return option
 					.setName('channel')
 					.setDescription('The channel to send audit logs to')
 					.setRequired(false);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('birthdays')
 			.setDescription('Configure the birthday announcements')
-			.addBooleanOption((option) => {
+			.addBooleanOption(option => {
 				return option
 					.setName('enabled')
 					.setDescription('Whether to enable birthday announcements')
 					.setRequired(true);
 			})
-			.addChannelOption((option) => {
+			.addChannelOption(option => {
 				return option
 					.setName('channel')
 					.setDescription('The channel to send birthday announcements to')
 					.setRequired(false);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('systemchannel')
 			.setDescription('Configure the system messages channel')
-			.addChannelOption((option) => {
+			.addChannelOption(option => {
 				return option
 					.setName('channel')
 					.setDescription('The channel to send system messages to')
 					.setRequired(false);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('greetings')
 			.setDescription('Configure the greeting messages')
-			.addBooleanOption((option) => {
+			.addBooleanOption(option => {
 				return option
 					.setName('welcome')
 					.setDescription('Whether to enable welcome messages')
 					.setRequired(true);
 			})
-			.addBooleanOption((option) => {
+			.addBooleanOption(option => {
 				return option
 					.setName('goodbye')
 					.setDescription('Whether to enable goodbye messages')
 					.setRequired(true);
 			})
-			.addChannelOption((option) => {
+			.addChannelOption(option => {
 				return option
 					.setName('channel')
 					.setDescription('The channel to send welcome and goodbye messages to')
 					.setRequired(false);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('view')
 			.setDescription('View the current configuration');
@@ -139,7 +139,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
 												'/conf view'
 											)}`
-									  )
+										)
 									: ''
 							}`
 						)
@@ -201,7 +201,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
 												'/conf view'
 											)}`
-									  )
+										)
 									: ''
 							}`
 						)
@@ -290,7 +290,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
 												'/conf view'
 											)}`
-									  )
+										)
 									: ''
 							}`
 						)
@@ -342,7 +342,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 											`\n\nSince this server had no prior data, the defaults have been calculated and set. You can view the current settings at any time by running ${inlineCode(
 												'/conf'
 											)}`
-									  )
+										)
 									: ''
 							}`
 						)
@@ -378,7 +378,7 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 								setDefaults
 									? `\n\n${bold(
 											'Since this server had no prior data, the defaults have been calculated and set.'
-									  )}`
+										)}`
 									: ''
 							}\n\n${underscore(bold('Current Configuration:'))}`
 						)
@@ -434,18 +434,16 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const currentConfig = db.get(interaction.guildId!),
 		guild = interaction.guild!;
 	const bdayChannel = await (async () => {
-		const birthdayChannels = (await guild.channels.fetch()).filter(
-			(channel) => {
-				return !!(
-					((channel?.type == ChannelType.GuildAnnouncement ||
-						channel?.type == ChannelType.GuildText) &&
-						(channel?.name.toLowerCase().includes('bday') ||
-							channel?.name.toLowerCase().includes('birthday') ||
-							channel?.name.toLowerCase().includes('b-day'))) ||
-					channel?.id == guild.systemChannel?.id
-				);
-			}
-		);
+		const birthdayChannels = (await guild.channels.fetch()).filter(channel => {
+			return !!(
+				((channel?.type == ChannelType.GuildAnnouncement ||
+					channel?.type == ChannelType.GuildText) &&
+					(channel?.name.toLowerCase().includes('bday') ||
+						channel?.name.toLowerCase().includes('birthday') ||
+						channel?.name.toLowerCase().includes('b-day'))) ||
+				channel?.id == guild.systemChannel?.id
+			);
+		});
 		return birthdayChannels.first() ?? guild.systemChannel ?? null;
 	})();
 	let newConfig: BaseGuildConfig = {},
@@ -506,11 +504,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				? {
 						channel: newConfig.systemchannel,
 						enabled: true
-				  }
+					}
 				: {
 						channel: null,
 						enabled: false
-				  };
+					};
 		}
 	}
 	const subcommand =

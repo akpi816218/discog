@@ -12,10 +12,10 @@ import {
 export const data = new SlashCommandBuilder()
 	.setName('info')
 	.setDescription('Get some info')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand.setName('guild').setDescription('Guild info');
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand.setName('channel').setDescription('Channel info');
 	})
 	.setDMPermission(false);

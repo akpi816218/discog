@@ -82,12 +82,12 @@ for (const entry of Object.values(entries))
 export const data = new SlashCommandBuilder()
 	.setName('coghelp')
 	.setDescription('Shows help')
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('command')
 			.setDescription('The command to show help for')
 			.setChoices(
-				...Object.keys(entries).map((key) => {
+				...Object.keys(entries).map(key => {
 					return { name: key, value: key };
 				})
 			)

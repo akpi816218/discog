@@ -14,7 +14,7 @@ export const data = new SlashCommandBuilder()
 		new SlashCommandSubcommandBuilder()
 			.setName('register')
 			.setDescription('Register your birthday')
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('month')
 					.setDescription('Month of birth')
@@ -22,7 +22,7 @@ export const data = new SlashCommandBuilder()
 					.setMaxValue(12)
 					.setRequired(true);
 			})
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('date')
 					.setDescription('Date of birth')
@@ -30,7 +30,7 @@ export const data = new SlashCommandBuilder()
 					.setMaxValue(31)
 					.setRequired(true);
 			})
-			.addIntegerOption((option) => {
+			.addIntegerOption(option => {
 				return option
 					.setName('year')
 					.setDescription('Year of birth')
@@ -43,7 +43,7 @@ export const data = new SlashCommandBuilder()
 		new SlashCommandSubcommandBuilder()
 			.setName('view')
 			.setDescription("View someone's birthday")
-			.addUserOption((option) => {
+			.addUserOption(option => {
 				return option
 					.setName('user')
 					.setDescription('User to view birthday')

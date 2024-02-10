@@ -56,7 +56,7 @@ export class CommandHelpEntry {
 	 */
 	get usage(): string[] {
 		if (!this._usage) return [inlineCode(`/${this.name}`)];
-		return this._usage.map((val) => inlineCode(`/${this.name} ${val}`));
+		return this._usage.map(val => inlineCode(`/${this.name} ${val}`));
 	}
 
 	/**

@@ -11,33 +11,33 @@ import { Octokit } from 'octokit';
 export const data = new SlashCommandBuilder()
 	.setName('github')
 	.setDescription('Get information about a GitHub user.')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('profile')
 			.setDescription("View a GitHub user's profile.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
 					.setRequired(true);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('repos')
 			.setDescription("View a GitHub user's repositories.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
 					.setRequired(true);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('stats')
 			.setDescription("View a GitHub user's stats.")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The GitHub username to view.')
@@ -149,7 +149,7 @@ const Handlers: {
 					BaseEmbed(interaction)
 						.setDescription(null)
 						.setFields(
-							...data.map((repo) => ({
+							...data.map(repo => ({
 								name: repo.name,
 								value:
 									repo.description ??

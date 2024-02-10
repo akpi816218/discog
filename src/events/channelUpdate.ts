@@ -60,7 +60,7 @@ export const execute = async (
 							name: 'Updated By',
 							value: entry.executor.toString() ?? 'Unknown'
 						}
-				  ]
+					]
 				: []
 		);
 
@@ -192,7 +192,7 @@ export const execute = async (
 			value: `Before:\n${codeBlock(
 				before.permissionOverwrites.cache
 					.map(
-						(overwrite) =>
+						overwrite =>
 							`Allowed: ${
 								overwrite.type === OverwriteType.Role
 									? roleMention(overwrite.id)
@@ -205,7 +205,7 @@ export const execute = async (
 			)}\n\nAfter:\n${codeBlock(
 				after.permissionOverwrites.cache
 					.map(
-						(overwrite) =>
+						overwrite =>
 							`${
 								overwrite.type === OverwriteType.Role
 									? roleMention(overwrite.id)

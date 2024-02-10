@@ -13,7 +13,7 @@ import {
 export const data = new SlashCommandBuilder()
 	.setName('contact')
 	.setDescription('Send a report to the developers')
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		subcommand
 			.setName('suggestion')
 			.setDescription('Send a suggestion to the developers');

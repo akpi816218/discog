@@ -11,73 +11,73 @@ export const data = new SlashCommandBuilder()
 	.setDescription('Create a poll')
 	.setDMPermission(false)
 	// #region data
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('question')
 			.setDescription('The question to be asked in the poll')
 			.setRequired(true);
 	})
-	.addChannelOption((option) => {
+	.addChannelOption(option => {
 		return option
 			.setName('channel')
 			.setDescription('The channel to post the poll to')
 			.setRequired(true);
 	})
-	.addBooleanOption((option) => {
+	.addBooleanOption(option => {
 		return option
 			.setName('pingeveryone')
 			.setDescription('Ping @everyone?')
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option1')
 			.setDescription('An answer')
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option2')
 			.setDescription('An answer')
 			.setRequired(true);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option3')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option4')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option5')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option6')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option7')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option8')
 			.setDescription('An answer')
 			.setRequired(false);
 	})
-	.addStringOption((option) => {
+	.addStringOption(option => {
 		return option
 			.setName('option9')
 			.setDescription('An answer')

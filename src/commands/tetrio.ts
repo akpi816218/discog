@@ -15,22 +15,22 @@ import { promises } from 'fs';
 export const data = new SlashCommandBuilder()
 	.setName('tetrio')
 	.setDescription("View a user's stats on TETR.IO")
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('view')
 			.setDescription("View a user's stats on TETR.IO by username")
-			.addStringOption((option) => {
+			.addStringOption(option => {
 				return option
 					.setName('username')
 					.setDescription('The username of the user to view')
 					.setRequired(true);
 			});
 	})
-	.addSubcommand((subcommand) => {
+	.addSubcommand(subcommand => {
 		return subcommand
 			.setName('discord')
 			.setDescription("View a user's stats on TETR.IO by Discord ID")
-			.addUserOption((option) => {
+			.addUserOption(option => {
 				return option
 					.setName('user')
 					.setDescription('The user to view')

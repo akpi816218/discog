@@ -30,7 +30,7 @@ export const execute = async (channel: GuildChannel) => {
 				name: 'Permissions',
 				value: channel.permissionOverwrites.cache
 					.map(
-						(overwrite) =>
+						overwrite =>
 							`${
 								overwrite.type === OverwriteType.Role
 									? roleMention(overwrite.id)

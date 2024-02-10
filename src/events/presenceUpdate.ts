@@ -42,14 +42,14 @@ export const execute = async (before: Presence, after: Presence) => {
 		name: 'Activities',
 		value: `**Removed:** ${diff.removed
 			.map(
-				(activity) =>
+				activity =>
 					`${getActivityTypeText(activity)} ${activity.name}${
 						activity.details ? ` (${activity.details})` : ''
 					}`
 			)
 			.join('\n')}\n\n**Added:** ${diff.added
 			.map(
-				(activity) =>
+				activity =>
 					`${getActivityTypeText(activity)} ${activity.name}${
 						activity.details ? ` (${activity.details})` : ''
 					}`
