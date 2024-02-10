@@ -69,4 +69,31 @@ export class CommandHelpEntry {
 			value: `${this.description}\n${this.usage.join('\n')}`
 		};
 	}
+
+	/**
+	 * Converts the command entry to a JSON object
+	 * @returns {SerializedCommandHelpEntry}
+	 */
+	toJSON(): SerializedCommandHelpEntry {
+		return {
+			description: this.description,
+			name: this.name,
+			usage: this._usage
+		};
+	}
+
+	/**
+	 * Creates a new command entry from a JSON object
+	 * @param json {{description: string, name: string, usage?: string[]}
+	 * @returns {CommandHelpEntry}
+	 */
+	static fromJSON(json: SerializedCommandHelpEntry): CommandHelpEntry {
+		return new CommandHelpEntry(json.name, json.description, json.usage ?? []);
+	}
+}
+
+export interface SerializedCommandHelpEntry {
+	description: string;
+	name: string;
+	usage?: string[];
 }

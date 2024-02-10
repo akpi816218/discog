@@ -11,6 +11,7 @@ import { dirname, join } from 'path';
 import { getUser, userFromDiscord } from '../struct/tetrio/getUser';
 import { fileURLToPath } from 'url';
 import { promises } from 'fs';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('tetrio')
@@ -38,37 +39,11 @@ export const data = new SlashCommandBuilder()
 			});
 	});
 
-async function getStatsImage(json: UserData): Promise<Buffer> {
-	if (!json.data) throw new Error(json.error ?? 'Unknown error');
-	const { gamesplayed, gameswon, league, username } = json.data.user;
-	const { rank, rating } = league;
-	const canvas = new Canvas(1920, 1080);
-	const ctx = canvas.getContext('2d');
-	const background = new Image();
-	background.src = await promises.readFile(
-		join(
-			dirname(fileURLToPath(import.meta.url)),
-			'../../botfiles/tetrio-coverart-alt.png'
-		)
-	);
-	ctx.drawImage(background, 0, 0);
-	ctx.fillStyle = 'white';
-	// If 'Ubuntu Mono' is not installed, the resulting image will not use a monospace font.
-	// Install the font from https://design.ubuntu.com/font/ or use 'Noto Sans Mono' instead.
-	ctx.font = '200px Ubuntu Mono';
-	ctx.lineWidth = 10;
-	ctx.fillText(username, canvas.width / 2 - 650, 250);
-	ctx.font = '100px Noto Sans Mono';
-	ctx.fillText(
-		`Rank: ${rank == 'z' ? 'Unranked' : rank.toUpperCase()}`,
-		100,
-		500
-	);
-	ctx.fillText(`TR: ${rating == -1 ? 'Unrated' : rating.toFixed(2)}`, 100, 650);
-	ctx.fillText(`Games Played: ${gamesplayed}`, 100, 800);
-	ctx.fillText(`Games Won: ${gameswon}`, 100, 950);
-	return await canvas.encode('png');
-}
+export const help = new CommandHelpEntry(
+	'tetrio',
+	"Get a user's stats on TETR.IO, either from their username or Discord account (if connected)",
+	['view <username: string>', 'discord <user: user>']
+);
 
 export async function execute(interaction: ChatInputCommandInteraction) {
 	await interaction.deferReply();
@@ -126,4 +101,36 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 			})
 		]
 	});
+}
+
+async function getStatsImage(json: UserData): Promise<Buffer> {
+	if (!json.data) throw new Error(json.error ?? 'Unknown error');
+	const { gamesplayed, gameswon, league, username } = json.data.user;
+	const { rank, rating } = league;
+	const canvas = new Canvas(1920, 1080);
+	const ctx = canvas.getContext('2d');
+	const background = new Image();
+	background.src = await promises.readFile(
+		join(
+			dirname(fileURLToPath(import.meta.url)),
+			'../../botfiles/tetrio-coverart-alt.png'
+		)
+	);
+	ctx.drawImage(background, 0, 0);
+	ctx.fillStyle = 'white';
+	// If 'Ubuntu Mono' is not installed, the resulting image will not use a monospace font.
+	// Install the font from https://design.ubuntu.com/font/ or use 'Noto Sans Mono' instead.
+	ctx.font = '200px Ubuntu Mono';
+	ctx.lineWidth = 10;
+	ctx.fillText(username, canvas.width / 2 - 650, 250);
+	ctx.font = '100px Noto Sans Mono';
+	ctx.fillText(
+		`Rank: ${rank == 'z' ? 'Unranked' : rank.toUpperCase()}`,
+		100,
+		500
+	);
+	ctx.fillText(`TR: ${rating == -1 ? 'Unrated' : rating.toFixed(2)}`, 100, 650);
+	ctx.fillText(`Games Played: ${gamesplayed}`, 100, 800);
+	ctx.fillText(`Games Won: ${gameswon}`, 100, 950);
+	return await canvas.encode('png');
 }

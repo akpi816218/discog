@@ -1,14 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { Snowflake } from 'discord.js';
-
-export type JSONValue =
-	| string
-	| number
-	| boolean
-	| {
-			[x: string]: JSONValue;
-	  }
-	| JSONValue[]
-	| null;
 
 export interface BaseGuildConfig {
 	auditlog?:

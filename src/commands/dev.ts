@@ -96,7 +96,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 	switch (interaction.options.getSubcommandGroup()) {
 		case 'blacklist':
 			switch (interaction.options.getSubcommand()) {
-				case 'add':
+				case 'add': {
 					const auser = interaction.options.getUser('user', true);
 					if (blacklist.includes(auser.id)) {
 						await interaction.reply('User is already blacklisted.');
@@ -105,7 +105,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					await db.set('blacklist', [...blacklist, auser.id]);
 					await interaction.reply('Done.');
 					break;
-				case 'ls':
+				}
+				case 'ls': {
 					if (blacklist.length === 0) {
 						await interaction.reply('No users are blacklisted.');
 						return;
@@ -116,7 +117,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							.join(', ')}`
 					);
 					break;
-				case 'rm':
+				}
+				case 'rm': {
 					const ruser = interaction.options.getUser('user', true);
 					if (!blacklist.includes(ruser.id)) {
 						await interaction.reply('User is not blacklisted.');
@@ -128,11 +130,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					);
 					await interaction.reply('Done.');
 					break;
+				}
 			}
 			break;
 		case 'whitelist':
 			switch (interaction.options.getSubcommand()) {
-				case 'add':
+				case 'add': {
 					const auser = interaction.options.getUser('user', true);
 					if (whitelist.includes(auser.id)) {
 						await interaction.reply('User is already whitelisted.');
@@ -141,7 +144,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					await db.set('whitelist', [...whitelist, auser.id]);
 					await interaction.reply('Done.');
 					break;
-				case 'ls':
+				}
+				case 'ls': {
 					if (whitelist.length === 0) {
 						await interaction.reply('No users are whitelisted.');
 						return;
@@ -153,7 +157,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							.join(', ')}`
 					});
 					break;
-				case 'rm':
+				}
+				case 'rm': {
 					const ruser = interaction.options.getUser('user', true);
 					if (!whitelist.includes(ruser.id)) {
 						await interaction.reply('User is not whitelisted.');
@@ -165,12 +170,13 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 					);
 					await interaction.reply('Done.');
 					break;
+				}
 			}
 			break;
 		case undefined:
-		default:
+		default: {
 			switch (interaction.options.getSubcommand()) {
-				case 'global':
+				case 'global': {
 					interaction.showModal(
 						new ModalBuilder()
 							.setTitle('DisCog Global System Announcement')
@@ -186,7 +192,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 							)
 					);
 					break;
+				}
 			}
 			break;
+		}
 	}
 };

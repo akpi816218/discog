@@ -4,6 +4,7 @@ import {
 	SlashCommandBuilder
 } from 'discord.js';
 import { QRCodeSegment, create, toBuffer } from 'qrcode';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('qr')
@@ -21,7 +22,11 @@ export const data = new SlashCommandBuilder()
 			.setRequired(false);
 	});
 
-// ! Make sure to add command to `coghelp.ts`
+export const help = new CommandHelpEntry(
+	'qr',
+	'Encodes some text or a link in a QR code',
+	'<text: string>'
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.reply({

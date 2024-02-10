@@ -5,6 +5,7 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('announce')
@@ -30,6 +31,12 @@ export const data = new SlashCommandBuilder()
 			.setRequired(false);
 	})
 	.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+
+export const help = new CommandHelpEntry(
+	'announce',
+	'Creates an announcement in the specified channel',
+	'<channel: channel> <message: string> [mentionEveryone: boolean || false]'
+);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();

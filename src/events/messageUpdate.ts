@@ -10,9 +10,15 @@ export const name = Events.MessageUpdate;
 export const once = false;
 
 export const execute = async (old: Message, updated: Message) => {
-	if (updated.author.bot || !updated.inGuild()) return;
+	if (
+		old.author.bot ||
+		!old.inGuild() ||
+		updated.author.bot ||
+		!updated.inGuild()
+	)
+		return;
 	const channel = getGuildAuditLoggingChannel(updated.guild);
-	if (!channel) return;
+	if (!channel || old.content === updated.content) return;
 	await channel.send({
 		embeds: [
 			new EmbedBuilder()

@@ -4,6 +4,7 @@ import {
 	SlashCommandBuilder,
 	time
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('unix')
@@ -30,6 +31,11 @@ export const data = new SlashCommandBuilder()
 					.setRequired(true);
 			});
 	});
+
+export const help = new CommandHelpEntry('unix', 'Converts UNIX timestamps', [
+	'date <timestamp: number>',
+	'timestamp <date: string>'
+]);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	switch (interaction.options.getSubcommand()) {

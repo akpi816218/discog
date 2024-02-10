@@ -6,6 +6,7 @@ import {
 	userMention
 } from 'discord.js';
 import { TypedJsoning } from 'typed-jsoning';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('bday')
@@ -51,10 +52,19 @@ export const data = new SlashCommandBuilder()
 			})
 	);
 
+export const help = new CommandHelpEntry(
+	'bday',
+	"Register your birthday or view another's",
+	[
+		'register <month: number> <day: number> <year: number>',
+		'view [user: user || @self]'
+	]
+);
+
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	const db = new TypedJsoning<string>('botfiles/bday.db.json');
 	switch (interaction.options.getSubcommand()) {
-		case 'register':
+		case 'register': {
 			await interaction.deferReply({
 				ephemeral: true
 			});
@@ -69,25 +79,29 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				content: `Your birthday is set to ${bday.toLocaleDateString()}`
 			});
 			break;
+		}
 		case 'view':
-			await interaction.deferReply();
-			const id = interaction.options.getUser('user')?.id ?? interaction.user.id;
-			const ubday = db.get(id);
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setTitle('User Birthday')
-						.setDescription(
-							!!ubday
-								? `${userMention(id)}'s birthday is on ${ubday}.`
-								: `${userMention(id)} has not registered their birthday.`
-						)
-						.setFooter({
-							iconURL: interaction.client.user.displayAvatarURL(),
-							text: 'Powered by DisCog'
-						})
-				]
-			});
+			{
+				await interaction.deferReply();
+				const id =
+					interaction.options.getUser('user')?.id ?? interaction.user.id;
+				const ubday = db.get(id);
+				await interaction.editReply({
+					embeds: [
+						new EmbedBuilder()
+							.setTitle('User Birthday')
+							.setDescription(
+								ubday
+									? `${userMention(id)}'s birthday is on ${ubday}.`
+									: `${userMention(id)} has not registered their birthday.`
+							)
+							.setFooter({
+								iconURL: interaction.client.user.displayAvatarURL(),
+								text: 'Powered by DisCog'
+							})
+					]
+				});
+			}
 			break;
 	}
 };

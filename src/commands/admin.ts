@@ -12,6 +12,9 @@ import {
 	underscore,
 	userMention
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
+
+export const help = new CommandHelpEntry('admin', 'Admin commands');
 
 export const data = new SlashCommandBuilder()
 	.setName('admin')

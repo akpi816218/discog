@@ -9,6 +9,7 @@ import {
 	TextInputStyle,
 	inlineCode
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('contact')
@@ -19,6 +20,8 @@ export const data = new SlashCommandBuilder()
 			.setDescription('Send a suggestion to the developers');
 		return subcommand;
 	});
+
+export const help = new CommandHelpEntry('contact', 'Contact the developers');
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	if (interaction.options.getSubcommand() === 'suggestion')

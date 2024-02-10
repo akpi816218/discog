@@ -5,6 +5,7 @@ import {
 	SlashCommandBuilder,
 	userMention
 } from 'discord.js';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('poll')
@@ -84,6 +85,10 @@ export const data = new SlashCommandBuilder()
 			.setRequired(false);
 	});
 // #endregion data
+
+export const help = new CommandHelpEntry('poll', 'Creates a poll', [
+	'<question: string> <channel: channel> [pingeveryone: boolean || false] <option1: string> <option2: string> [option3: string] [option3: string] [option4: string] [option5: string] [option6: string] [option7: string] [option8: string] [option9: string]'
+]);
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();

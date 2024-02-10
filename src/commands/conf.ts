@@ -13,6 +13,7 @@ import {
 	underscore
 } from 'discord.js';
 import { TypedJsoning } from 'typed-jsoning';
+import { CommandHelpEntry } from '../struct/CommandHelpEntry';
 
 export const data = new SlashCommandBuilder()
 	.setName('conf')
@@ -94,6 +95,18 @@ export const data = new SlashCommandBuilder()
 			.setName('view')
 			.setDescription('View the current configuration');
 	});
+
+export const help = new CommandHelpEntry(
+	'conf',
+	'Configure DisCog for your server',
+	[
+		'view',
+		'auditlog <enabled: boolean> [channel: channel]',
+		'birthdays <enabled: boolean> [channel: channel]',
+		'systemchannel [channel: channel]',
+		'greetings <welcome: boolean> <goodbye: boolean> [channel: channel]'
+	]
+);
 
 const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 	handlers = {

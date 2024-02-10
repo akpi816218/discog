@@ -3,7 +3,7 @@ import { UserData } from './UserData';
 // eslint-disable-next-line no-duplicate-imports
 import fetch from 'node-fetch';
 
-export const API_BASE = 'https://ch.tetr.io/api';
+const API_BASE = 'https://ch.tetr.io/api';
 
 export async function getUser(
 	username: string,
