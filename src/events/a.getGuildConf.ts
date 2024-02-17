@@ -1,23 +1,31 @@
+import { openKv } from '@deno/kv';
 import { BaseGuildConfig } from '../struct/database';
 import { Guild } from 'discord.js';
-import TypedJsoning from 'typed-jsoning';
+import { DENO_KV_URL, DatabaseKeys } from '../config';
 
-const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json');
+const db = await openKv(DENO_KV_URL);
 
-export function getGuildAuditLoggingChannel(guild: Guild) {
-	const config = db.get(guild.id);
-	if (!config?.auditlog?.enabled || !config?.auditlog?.channel) return;
+export async function getGuildAuditLoggingChannel(guild: Guild) {
+	const config = await getGuildConfig(guild);
+	if (!config.auditlog?.enabled || !config?.auditlog?.channel) return;
 	const auditlogChannel = guild.channels.cache.get(config.auditlog.channel);
 	if (!auditlogChannel || !auditlogChannel.isTextBased()) return;
 	return auditlogChannel;
 }
 
-export function getGuildGreetingData(guild: Guild) {
-	const config = db.get(guild.id);
+export async function getGuildGreetingData(guild: Guild) {
+	const config = await getGuildConfig(guild);
 	if (
-		config?.greetings?.channel ||
-		(!config?.greetings?.goodbyeEnabled && !config?.greetings?.welcomeEnabled)
+		config.greetings?.channel ||
+		(!config.greetings?.goodbyeEnabled && !config.greetings?.welcomeEnabled)
 	)
 		return;
 	return config.greetings;
+}
+
+async function getGuildConfig(guild: Guild) {
+	return (
+		(await db.get<BaseGuildConfig>([DatabaseKeys.GuildConfig, guild.id]))
+			.value ?? {}
+	);
 }

@@ -13,7 +13,9 @@ export const once = false;
 export const execute = async (invite: Invite) => {
 	if (!invite.guild) return;
 	const guild = await invite.guild.fetch();
-	await getGuildAuditLoggingChannel(guild)?.send({
+	await (
+		await getGuildAuditLoggingChannel(guild)
+	)?.send({
 		embeds: [
 			new EmbedBuilder()
 				.setTitle('Invite Created')

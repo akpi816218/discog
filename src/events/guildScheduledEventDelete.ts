@@ -4,7 +4,7 @@ export const name = Events.GuildScheduledEventDelete;
 export const once = false;
 
 export const execute = async (event: GuildScheduledEvent) => {
-	await getGuildAuditLoggingChannel(event.guild!)?.send(
-		`Event Deleted: ${event.url}`
-	);
+	await (
+		await getGuildAuditLoggingChannel(event.guild!)
+	)?.send(`Event Deleted: ${event.url}`);
 };

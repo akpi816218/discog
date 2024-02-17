@@ -10,7 +10,7 @@ import { getGuildAuditLoggingChannel } from './a.getGuildConf';
 export const name = Events.GuildMemberUpdate;
 export const once = false;
 export const execute = async (before: GuildMember, after: GuildMember) => {
-	const channel = getGuildAuditLoggingChannel(after.guild);
+	const channel = await getGuildAuditLoggingChannel(after.guild);
 	if (!channel) return;
 
 	const embed = new EmbedBuilder()

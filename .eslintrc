@@ -43,7 +43,7 @@
 		"no-unneeded-ternary": "error",
 		"no-unreachable": "error",
 		"no-unused-expressions": "error",
-		"no-unused-vars": "warn",
+		"no-unused-vars": "off",
 		"no-var": "error",
 		"no-with": "error",
 		"object-curly-newline": "error",

@@ -12,8 +12,9 @@ import {
 	inlineCode,
 	underscore
 } from 'discord.js';
-import { TypedJsoning } from 'typed-jsoning';
 import { CommandHelpEntry } from '../struct/CommandHelpEntry';
+import { openKv } from '@deno/kv';
+import { DENO_KV_URL, DatabaseKeys } from '../config';
 
 export const data = new SlashCommandBuilder()
 	.setName('conf')
@@ -108,7 +109,7 @@ export const help = new CommandHelpEntry(
 	]
 );
 
-const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
+const db = await openKv(DENO_KV_URL),
 	handlers = {
 		auditlog: async (
 			interaction: ChatInputCommandInteraction,
@@ -444,7 +445,13 @@ const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json'),
 	};
 export const execute = async (interaction: ChatInputCommandInteraction) => {
 	await interaction.deferReply();
-	const currentConfig = db.get(interaction.guildId!),
+	const currentConfig =
+			(
+				await db.get<BaseGuildConfig>([
+					DatabaseKeys.GuildConfig,
+					interaction.guildId!
+				])
+			).value ?? {},
 		guild = interaction.guild!;
 	const bdayChannel = await (async () => {
 		const birthdayChannels = (await guild.channels.fetch()).filter(channel => {
@@ -531,5 +538,5 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 		setDefaults,
 		newConfig as PopulatedGuildConfig
 	);
-	await db.set(interaction.guildId!, finalConfig);
+	await db.set([DatabaseKeys.GuildConfig, interaction.guildId!], finalConfig);
 };

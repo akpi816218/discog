@@ -17,7 +17,9 @@ export const execute = async (channel: GuildChannel) => {
 			type: AuditLogEvent.ChannelCreate
 		})
 	).entries.first();
-	await getGuildAuditLoggingChannel(channel.guild)?.send({
+	await (
+		await getGuildAuditLoggingChannel(channel.guild)
+	)?.send({
 		embeds: [
 			new EmbedBuilder()
 				.setTitle('Channel Created')

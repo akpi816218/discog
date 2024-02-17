@@ -11,9 +11,9 @@ export const once = false;
 
 export const execute = async (message: Message) => {
 	if (!message.inGuild()) return;
-	const channel = getGuildAuditLoggingChannel(message.guild);
-	if (!channel) return;
-	await channel.send({
+	await (
+		await getGuildAuditLoggingChannel(message.guild)
+	)?.send({
 		embeds: [
 			new EmbedBuilder()
 				.setTitle('Message Deleted')

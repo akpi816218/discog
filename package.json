@@ -1,34 +1,35 @@
 {
 	"author": "Akhil Pillai",
 	"dependencies": {
+		"@deno/kv": "^0.7.0",
 		"@discordjs/collection": "^2.0.0",
 		"@napi-rs/canvas": "^0.1.45",
 		"cors": "^2.8.5",
 		"discord.js": "^14.14.1",
-		"dotenv": "^16.4.2",
+		"dotenv": "^16.4.4",
 		"express": "^4.18.2",
 		"node-fetch": "^3.3.2",
 		"node-schedule": "^2.1.1",
 		"octokit": "^3.1.2",
-		"pino": "^8.18.0",
+		"pino": "^8.19.0",
 		"pino-pretty": "^10.3.1",
 		"qrcode": "^1.5.3",
 		"typed-jsoning": "^1.0.3"
 	},
 	"description": "",
 	"devDependencies": {
-		"@commitlint/cli": "^18.6.0",
-		"@commitlint/config-conventional": "^18.6.0",
+		"@commitlint/cli": "^18.6.1",
+		"@commitlint/config-conventional": "^18.6.2",
 		"@types/cors": "^2.8.17",
 		"@types/eslint": "^8.56.2",
 		"@types/express": "^4.17.21",
 		"@types/node-schedule": "^2.1.6",
 		"@types/qrcode": "^1.5.5",
-		"@typescript-eslint/eslint-plugin": "^6.21.0",
-		"@typescript-eslint/parser": "^6.21.0",
+		"@typescript-eslint/eslint-plugin": "^7.0.1",
+		"@typescript-eslint/parser": "^7.0.1",
 		"eslint": "^8.56.0",
-		"husky": "^9.0.10",
-		"knip": "^5.0.0",
+		"husky": "^9.0.11",
+		"knip": "^5.0.1",
 		"npm-check-updates": "^16.14.15",
 		"prettier": "^3.2.5",
 		"tsx": "^4.7.1",
@@ -40,7 +41,6 @@
 	"name": "discog",
 	"private": true,
 	"scripts": {
-		"build": "npm urn up && npm urn check && npm urn lint && npm urn knip && npm urn fmt",
 		"build-commands": "tsx scripts/buildCommands.ts",
 		"check": "tsc",
 		"deploy": "npm ci && npm start",
@@ -50,6 +50,7 @@
 		"lint": "tsx scripts/eslint.ts",
 		"precommit": "npm urn build",
 		"start": "tsx src/index.ts",
-		"up": "ncu -u && npm i"
+		"up": "ncu -u && npm i",
+		"prepare": "husky"
 	}
 }

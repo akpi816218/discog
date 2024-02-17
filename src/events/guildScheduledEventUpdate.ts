@@ -7,7 +7,7 @@ export const execute = async (
 	_oldevent: GuildScheduledEvent,
 	newevent: GuildScheduledEvent
 ) => {
-	await getGuildAuditLoggingChannel(newevent.guild!)?.send(
-		`Updated Event: ${newevent.url}`
-	);
+	await (
+		await getGuildAuditLoggingChannel(newevent.guild!)
+	)?.send(`Updated Event: ${newevent.url}`);
 };

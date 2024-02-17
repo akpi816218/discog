@@ -87,7 +87,9 @@ export const execute = async (channel: GuildChannel) => {
 			}
 		);
 	}
-	await getGuildAuditLoggingChannel(channel.guild)?.send({
+	await (
+		await getGuildAuditLoggingChannel(channel.guild)
+	)?.send({
 		embeds: [embed]
 	});
 };

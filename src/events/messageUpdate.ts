@@ -17,9 +17,9 @@ export const execute = async (old: Message, updated: Message) => {
 		!updated.inGuild()
 	)
 		return;
-	const channel = getGuildAuditLoggingChannel(updated.guild);
-	if (!channel || old.content === updated.content) return;
-	await channel.send({
+	await (
+		await getGuildAuditLoggingChannel(updated.guild)
+	)?.send({
 		embeds: [
 			new EmbedBuilder()
 				.setTitle('Message Updated')

@@ -11,7 +11,7 @@ export const name = Events.GuildMemberRemove;
 export const once = false;
 
 export const execute = async (member: GuildMember) => {
-	const config = getGuildGreetingData(member.guild);
+	const config = await getGuildGreetingData(member.guild);
 	if (!config?.goodbyeEnabled) return;
 	await (
 		(await member.guild.channels.fetch(config.channel)) as

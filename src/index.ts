@@ -15,26 +15,28 @@ import {
 } from 'discord.js';
 import { CommandClient } from './struct/discord/Extend';
 import { Methods, createServer } from './server';
-import { PORT, permissionsBits } from './config';
+import { DENO_KV_URL, DatabaseKeys, PORT, permissionsBits } from './config';
 import { argv, cwd, stdout } from 'process';
 import { Command, Event } from './struct/discord/types';
 import { InteractionHandlers } from './interactionHandlers';
-import { TypedJsoning } from 'typed-jsoning';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from './logger';
 import { readdirSync } from 'fs';
 import { scheduleJob } from 'node-schedule';
 import { SerializedCommandHelpEntry } from './struct/CommandHelpEntry';
+import { openKv } from '@deno/kv';
+import TypedJsoning from 'typed-jsoning';
 
 argv.shift();
 argv.shift();
 if (argv.includes('-d')) {
 	logger.level = 'debug';
-	logger.info('Debug mode enabled.');
+	logger.debug('Debug mode enabled.');
 }
 
-const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
+// const devdb = new TypedJsoning<Snowflake[]>('botfiles/dev.db.json');
+const db = await openKv(DENO_KV_URL);
 logger.debug('Loaded dev database.');
 
 const client = new CommandClient({
@@ -153,8 +155,10 @@ client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async interaction => {
 		if (interaction.user.bot) return;
+		const blacklisted = (await db.get<Snowflake[]>([DatabaseKeys.Blacklist]))
+			?.value;
 		if (
-			devdb.get('blacklist')?.includes(interaction.user.id) &&
+			(blacklisted ?? []).includes(interaction.user.id) &&
 			interaction.isCommand()
 		) {
 			await interaction.reply({
@@ -278,11 +282,10 @@ process.on('SIGINT', () => {
 
 // Schedule the bdayInterval function to run every day at 12:00 AM PST for a server running 7 hours ahead of PST
 scheduleJob('0 7 * * *', () => bdayInterval().catch(e => logger.error(e)));
-scheduleJob('0 7 * * *', () => bdayInterval().catch(e => logger.error(e)));
 logger.debug('Scheduled birthday interval.');
 
-server.listen(PORT);
-logger.info(`Listening to HTTP server on port ${PORT}.`);
+server.listen(process.env.PORT ?? PORT);
+logger.info(`Listening to HTTP server on port ${process.env.PORT ?? PORT}.`);
 
 logger.info('Process setup complete.');
 

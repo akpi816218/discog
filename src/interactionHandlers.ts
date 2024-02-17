@@ -7,6 +7,7 @@ import {
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
 	PermissionFlagsBits,
+	Snowflake,
 	StageChannel,
 	StringSelectMenuInteraction,
 	UserContextMenuCommandInteraction,
@@ -15,15 +16,17 @@ import {
 	time,
 	userMention
 } from 'discord.js';
-import TypedJsoning from 'typed-jsoning';
 import { format } from 'prettier';
 import { logger } from './logger';
-import { scheduleJob } from 'node-schedule';
+import { openKv } from '@deno/kv';
+import { DENO_KV_URL, DatabaseKeys } from './config';
+
+const db = await openKv(DENO_KV_URL);
 
 export const InteractionHandlers = {
 	async Button(interaction: ButtonInteraction): Promise<void> {
 		switch (interaction.customId) {
-			case '/admin_channel_clear':
+			case '/admin_channel_clear': {
 				await interaction.deferReply({ ephemeral: true });
 				if (
 					!interaction.inGuild() ||
@@ -53,6 +56,7 @@ export const InteractionHandlers = {
 				}
 				await interaction.editReply('Deleted all messages in this channel.');
 				break;
+			}
 		}
 	},
 	ContextMenu: {
@@ -60,7 +64,7 @@ export const InteractionHandlers = {
 			interaction: MessageContextMenuCommandInteraction
 		): Promise<void> {
 			switch (interaction.commandName) {
-				case 'Message JSON':
+				case 'Message JSON': {
 					const json = await format(
 						JSON.stringify(interaction.targetMessage.toJSON()),
 						{
@@ -84,11 +88,12 @@ export const InteractionHandlers = {
 						}
 					} else await interaction.reply(codeBlock(json));
 					break;
+				}
 			}
 		},
 		async User(interaction: UserContextMenuCommandInteraction): Promise<void> {
 			switch (interaction.commandName) {
-				case 'User Info':
+				case 'User Info': {
 					const infouser = await interaction.targetUser.fetch(true);
 					const mutfields: APIEmbedField[] = [];
 					if (interaction.guild && interaction.targetMember) {
@@ -123,6 +128,7 @@ export const InteractionHandlers = {
 						]
 					});
 					break;
+				}
 				case 'User JSON':
 					await interaction.reply(
 						codeBlock(
@@ -138,12 +144,12 @@ export const InteractionHandlers = {
 	},
 	async ModalSubmit(interaction: ModalSubmitInteraction): Promise<void> {
 		switch (interaction.customId) {
-			case '/contact_suggestion':
-				const devs = new TypedJsoning<string[]>('botfiles/dev.db.json').get(
-						'whitelist'
-					),
+			case '/contact_suggestion': {
+				const devs =
+						(await db.get<Snowflake[]>([DatabaseKeys.Devs])).value ?? [],
 					suggestion = interaction.fields.getTextInputValue('suggestion');
-				if (!devs) throw new Error('No developers found in the database.');
+				if (!devs || devs.length === 0)
+					throw new Error('No developers found in the database.');
 				for (const devId of devs) {
 					const dev = await interaction.client.users.fetch(devId);
 					await dev.send({
@@ -162,7 +168,8 @@ export const InteractionHandlers = {
 					});
 				}
 				break;
-			case '/global':
+			}
+			case '/global': {
 				await interaction.reply('Working...');
 				const content = interaction.fields.getTextInputValue('/global.text');
 				const badGuilds: string[] = [];
@@ -251,6 +258,7 @@ export const InteractionHandlers = {
 					}`
 				);
 				break;
+			}
 		}
 	},
 	async StringSelectMenu(

@@ -1,0 +1,18 @@
+{
+	"913584348937207839": {
+		"auditlog": {
+			"channel": "1152785893904621629",
+			"enabled": true
+		},
+		"systemchannel": "1023790070135799868",
+		"birthdays": {
+			"channel": "1023790070135799868",
+			"enabled": true
+		},
+		"greetings": {
+			"channel": "1023790070135799868",
+			"goodbyeEnabled": true,
+			"welcomeEnabled": false
+		}
+	}
+}

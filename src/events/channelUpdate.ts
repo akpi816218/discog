@@ -19,19 +19,23 @@ import {
 	userMention
 } from 'discord.js';
 import { BaseGuildConfig } from '../struct/database';
-import TypedJsoning from 'typed-jsoning';
+import { openKv } from '@deno/kv';
+import { DENO_KV_URL, DatabaseKeys } from '../config';
 
 export const name = Events.ChannelUpdate;
 export const once = false;
 
-const db = new TypedJsoning<BaseGuildConfig>('botfiles/guildconf.db.json');
+const db = await openKv(DENO_KV_URL);
+
 export const execute = async (
 	before: DMChannel | GuildChannel,
 	after: DMChannel | GuildChannel
 ) => {
 	if (before instanceof DMChannel || after instanceof DMChannel) return;
-	const config = db.get(after.guild.id);
-	if (!config?.auditlog?.enabled || !config?.auditlog?.channel) return;
+	const config =
+		(await db.get<BaseGuildConfig>([DatabaseKeys.GuildConfig, after.guild.id]))
+			.value ?? {};
+	if (!config.auditlog?.enabled || !config.auditlog?.channel) return;
 	const auditlogChannel = after.guild.channels.cache.get(
 		config.auditlog.channel
 	);
@@ -65,8 +69,6 @@ export const execute = async (
 		);
 
 	const differentProperties = getDifferentProperties(before, after);
-
-	console.log(entry);
 
 	if (differentProperties.name)
 		embed.addFields({
@@ -217,7 +219,6 @@ export const execute = async (
 					.join('\n')
 			)}`
 		});
-		console.log(differentProperties.permissionOverwrites);
 	}
 
 	await auditlogChannel.send({

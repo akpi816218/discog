@@ -5,8 +5,9 @@ import {
 	SlashCommandSubcommandBuilder,
 	userMention
 } from 'discord.js';
-import { TypedJsoning } from 'typed-jsoning';
 import { CommandHelpEntry } from '../struct/CommandHelpEntry';
+import { openKv } from '@deno/kv';
+import { DENO_KV_URL, DatabaseKeys } from '../config';
 
 export const data = new SlashCommandBuilder()
 	.setName('bday')
@@ -62,7 +63,7 @@ export const help = new CommandHelpEntry(
 );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-	const db = new TypedJsoning<string>('botfiles/bday.db.json');
+	const db = await openKv(DENO_KV_URL);
 	switch (interaction.options.getSubcommand()) {
 		case 'register': {
 			await interaction.deferReply({
@@ -74,7 +75,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				interaction.options.getInteger('month', true) - 1,
 				interaction.options.getInteger('date', true)
 			);
-			await db.set(interaction.user.id, bday.toLocaleDateString());
+			await db.set(
+				[DatabaseKeys.Bday, interaction.user.id],
+				bday.toLocaleDateString()
+			);
 			await interaction.editReply({
 				content: `Your birthday is set to ${bday.toLocaleDateString()}`
 			});
@@ -85,7 +89,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 				await interaction.deferReply();
 				const id =
 					interaction.options.getUser('user')?.id ?? interaction.user.id;
-				const ubday = db.get(id);
+				const ubday = (await db.get([DatabaseKeys.Bday, id])).value;
 				await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
