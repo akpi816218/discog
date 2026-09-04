@@ -91,16 +91,16 @@ async function sendError(client: Client<true>, e: unknown, oldMessage: Message, 
 							)
 						})
 						.addFields({
-							name: 'Old Message',
+							name: 'Old Message (truncated)',
 							value: codeBlock(
 								oldMessage
-									? JSON.stringify(oldMessage, undefined, 2)
+									? JSON.stringify(oldMessage.slice(0, 1000), undefined, 2)
 									: 'undefined'
 							)
 						})
 						.addFields({
-							name: 'New Message',
-							value: codeBlock(JSON.stringify(newMessage, undefined, 2))
+							name: 'New Message (truncated)',
+							value: codeBlock(JSON.stringify(newMessage.slice(0, 1000), undefined, 2))
 						})
 						.addFields({
 							name: 'ISO 8601 Timestamp',
