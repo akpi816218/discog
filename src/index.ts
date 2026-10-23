@@ -192,6 +192,19 @@ for (const dir of dirResult.filter((file) => file.isDirectory())) {
 client.guildCommands.freeze();
 logger.info('Loaded guild commands.');
 
+const eventsPath = join(cwd(), 'src', 'events');
+const eventFiles = (await readdir(eventsPath)).filter((file) =>
+	file.endsWith('.ts')
+);
+for (const file of eventFiles) {
+	const filePath = join(eventsPath, file);
+	const event = await import(filePath);
+	if (event.once)
+		client.once(event.name, async (...args) => await event.execute(...args));
+	else client.on(event.name, async (...args) => await event.execute(...args));
+}
+logger.info('Loaded events.');
+
 client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
 	.on(Events.InteractionCreate, async (interaction) => {

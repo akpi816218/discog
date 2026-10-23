@@ -4,6 +4,31 @@ export const memberData: {
 		roles: { id: string; name: string; color: string }[];
 	};
 } = {
+	'1520864346153160775': {
+		nickname: 'crash test dummy',
+		roles: [
+			{
+				id: '1458319610268090572',
+				name: '@everyone',
+				color: '#000000'
+			},
+			{
+				id: '1458319610268090575',
+				name: 'Base Role',
+				color: '#000000'
+			},
+			{
+				id: '1458319610641383476',
+				name: 'she/her',
+				color: '#000000'
+			},
+			{
+				id: '1532625745313009694',
+				name: 'goo 🫟',
+				color: '#b371d1'
+			}
+		]
+	},
 	'308703733821210635': {
 		nickname: null,
 		roles: [
@@ -20,6 +45,11 @@ export const memberData: {
 			{
 				id: '1458319610268090572',
 				name: '@everyone',
+				color: '#000000'
+			},
+			{
+				id: '1458319610268090575',
+				name: 'Base Role',
 				color: '#000000'
 			}
 		]
