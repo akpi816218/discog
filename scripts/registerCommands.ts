@@ -17,22 +17,49 @@ export async function registerCommands(token: string, commandFiles?: string[]) {
 	commandFiles =
 		commandFiles ??
 		(await readdir(commandsPath)).filter((file) => file.endsWith('.ts'));
+
 	const cmndb = new Jsoning('botfiles/cmnds.db.json');
+
 	for (const file of commandFiles) {
 		const filePath = join(commandsPath, file);
 		const command: Command = await import(filePath);
+
 		if (command.help)
 			cmndb.set(
 				command.data.name,
 				command.help.toJSON() as unknown as JSONValue
 			);
 	}
+
 	const commands = [];
 	for (const file of commandFiles)
 		commands.push(
 			((await import(join(commandsPath, file))) as Command).data.toJSON()
 		);
+
 	await new REST().setToken(token).put(Routes.applicationCommands(clientId), {
 		body: commands
 	});
+}
+
+export async function registerGuildCommands(
+	token: string,
+	guildId: string,
+) {
+	const guildCommandsPath = join(commandsPath, guildId);
+
+	const guildCommandFiles =
+		(await readdir(guildCommandsPath)).filter((file) => file.endsWith('.ts'));
+
+	const commands = [];
+	for (const file of guildCommandFiles)
+		commands.push(
+			((await import(join(guildCommandsPath, file))) as Command).data.toJSON()
+		);
+
+	await new REST()
+		.setToken(token)
+		.put(Routes.applicationGuildCommands(clientId, guildId), {
+			body: commands
+		});
 }

@@ -21,7 +21,7 @@ import { InteractionHandlers } from './interactionHandlers';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from './logger';
-import { readdirSync } from 'fs';
+import { readdir } from 'fs/promises';
 import { Jsoning, JSONValue } from 'jsoning';
 import { Request, Response } from 'express';
 import {
@@ -145,9 +145,11 @@ const server = createServer(
 );
 
 const commandsPath = join(dirname(fileURLToPath(import.meta.url)), 'commands');
-const commandFiles = readdirSync(commandsPath).filter((file) =>
-	file.endsWith('.ts')
-);
+const dirResult = await readdir(commandsPath, { withFileTypes: true });
+
+const commandFiles = dirResult
+	.filter((file) => file.isFile() && file.name.endsWith('.ts'))
+	.map((file) => file.name);
 
 const cmndb = new Jsoning('botfiles/cmnds.db.json');
 for (const file of commandFiles) {
@@ -162,20 +164,33 @@ for (const file of commandFiles) {
 		);
 }
 client.commands.freeze();
-logger.info('Loaded commands.');
+logger.info('Loaded global commands.');
 
-const eventsPath = join(cwd(), 'src', 'events');
-const eventFiles = readdirSync(eventsPath).filter((file) =>
-	file.endsWith('.ts')
-);
-for (const file of eventFiles) {
-	const filePath = join(eventsPath, file);
-	const event = await import(filePath);
-	if (event.once)
-		client.once(event.name, async (...args) => await event.execute(...args));
-	else client.on(event.name, async (...args) => await event.execute(...args));
+for (const dir of dirResult.filter((file) => file.isDirectory())) {
+	const guildId = dir.name;
+	if (!/^\d+$/.test(guildId)) continue;
+
+	const guildCommandsPath = join(commandsPath, guildId);
+	const guildCommandFiles = (
+		await readdir(guildCommandsPath, { withFileTypes: true })
+	)
+		.filter((file) => file.isFile() && file.name.endsWith('.ts'))
+		.map((file) => file.name);
+
+	for (const file of guildCommandFiles) {
+		const filePath = join(guildCommandsPath, file);
+		logger.debug(`Loading guild command ${filePath}`);
+		const command: Command = await import(filePath);
+		client.setGuildCommand(guildId, command.data.name, command);
+		// if (command.help)
+		// 	await cmndb.set(
+		// 		command.data.name,
+		// 		command.help.toJSON() as unknown as JSONValue
+		// 	);
+	}
 }
-logger.info('Loaded events.');
+client.guildCommands.freeze();
+logger.info('Loaded guild commands.');
 
 client
 	.on(Events.ClientReady, () => logger.info('Client#ready'))
@@ -198,7 +213,12 @@ client
 		}
 
 		if (interaction.isChatInputCommand()) {
-			const command = client.commands.get(interaction.commandName);
+			const command = interaction.commandGuildId
+				? client.getGuildCommand(
+						interaction.commandGuildId,
+						interaction.commandName
+					)
+				: client.commands.get(interaction.commandName);
 			if (!command) {
 				await interaction.reply('Internal error: Command not found');
 				return;
